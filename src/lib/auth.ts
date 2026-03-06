@@ -89,6 +89,6 @@ export const authOptions: NextAuthOptions = {
   secret:
     process.env.NEXTAUTH_SECRET ||
     (process.env.NODE_ENV === "development" ? "dev-secret-min-32-characters-long-for-nextauth" : undefined),
-  trustHost: true,
+  
   debug: process.env.NODE_ENV === "development",
 };
