@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --primary: #1d4ed8;
+  --primary-light: #3b82f6;
+  --muted: #64748b;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    margin: 0;
+    min-height: 100vh;
+  }
+}

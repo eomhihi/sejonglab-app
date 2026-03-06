@@ -1,0 +1,76 @@
+import { EungBridgeGraphic, SejongBackground } from "./SejongBackground";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+export function SejongHeroSection() {
+  return (
+    <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-white via-sky-50/30 to-mint-50/20 overflow-hidden">
+      <SejongBackground />
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12 sm:py-20 w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* 좌측 텍스트 */}
+          <div className="text-center lg:text-left order-2 lg:order-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-6">
+              <span className="w-2 h-2 bg-mint-500 rounded-full animate-pulse" />
+              <span className="text-sm font-bold text-[#004B8D] drop-shadow-sm">
+                세종시 스마트 시티 & 데이터 리서치
+              </span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-6 drop-shadow-sm">
+              <span className="text-[#004B8D]">세종의 미래</span>
+              <span className="text-slate-900">를</span>
+              <br />
+              <span className="text-[#004B8D]">데이터로 설계</span>
+              <span className="text-slate-900">합니다</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-[#002D56] font-medium mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm">
+              세종시민의 목소리를 데이터로 담아,<br />
+              더 나은 정책과 서비스를 만들어갑니다.<br />
+              시민 패널로 참여하여 우리 도시의 변화를 함께 이끌어 주세요.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Link
+                href="/auth/signin"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#004B8D] text-white font-bold rounded-xl hover:bg-[#003666] transition-all shadow-lg shadow-sejong-blue/25 hover:shadow-xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
+              >
+                패널 참여 신청
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="#features"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-[#004B8D] font-bold rounded-xl border-2 border-[#004B8D]/30 hover:border-[#004B8D] hover:bg-sky-50 transition-all shadow-sm"
+              >
+                서비스 알아보기
+              </Link>
+            </div>
+
+            {/* 통계 */}
+            <div className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-slate-300/50">
+              <div className="text-center lg:text-left">
+                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">38.2</p>
+                <p className="text-xs sm:text-sm text-[#002D56] font-medium">평균 연령(전국 최저)</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">95%</p>
+                <p className="text-xs sm:text-sm text-[#002D56] font-medium">스마트서비스 인지도</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">1위</p>
+                <p className="text-xs sm:text-sm text-[#002D56] font-medium">지능형 도시화 지수</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 우측 그래픽 */}
+          <div className="order-1 lg:order-2">
+            <EungBridgeGraphic />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

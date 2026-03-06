@@ -1,0 +1,45 @@
+type UserOnboardingData = {
+  onboardingCompleted: boolean;
+  gender: string | null;
+  ageGroup: string | null;
+  region: string | null;
+  interestTopics: string[];
+};
+
+export async function checkOnboardingStatus(
+  email: string | null | undefined
+): Promise<{ onboardingCompleted: boolean; userData: UserOnboardingData | null }> {
+  if (!email) {
+    return { onboardingCompleted: false, userData: null };
+  }
+
+  if (!process.env.DATABASE_URL) {
+    return { onboardingCompleted: false, userData: null };
+  }
+
+  try {
+    const { prisma } = await import("./prisma");
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        onboardingCompleted: true,
+        gender: true,
+        ageGroup: true,
+        region: true,
+        interestTopics: true,
+      },
+    });
+
+    if (!user) {
+      return { onboardingCompleted: false, userData: null };
+    }
+
+    return {
+      onboardingCompleted: user.onboardingCompleted,
+      userData: user,
+    };
+  } catch (error) {
+    console.error("온보딩 상태 확인 오류:", error);
+    return { onboardingCompleted: false, userData: null };
+  }
+}
