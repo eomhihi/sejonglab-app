@@ -92,6 +92,12 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             © 2026 세종랩. Powered by AirBBot
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-500">
+            <Link
+              href="/api/auth/signout?callbackUrl=/"
+              className="hover:text-sky-400 transition-colors"
+            >
+              세션 종료 (로그아웃)
+            </Link>
             {isAdmin && (
               <Link href="/admin" className="hover:text-sky-400 transition-colors">
                 관리자

@@ -1,45 +1,31 @@
-import Link from "next/link";
-import { Session } from "next-auth";
-import { SignOutButton } from "./SignOutButton";
+'use client';
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
-export function Header({ session }: { session: Session | null }) {
+export default function Header() {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.email?.toLowerCase().trim() === 'eomhihi007@gmail.com';
+
   return (
-    <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-semibold text-lg">
-          Next App
-        </Link>
-        <nav className="flex items-center gap-4">
-          {session ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-sm text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-              >
-                대시보드
+    <header className="flex justify-between items-center p-4 bg-white border-b">
+      <Link href="/" className="text-xl font-bold text-[#004B8D]">Sejong Lab</Link>
+      <nav className="flex gap-4 items-center">
+        {session && (
+          <>
+            {isAdmin && (
+              <Link href="/admin" className="text-[#004B8D] font-bold border-b-2 border-[#004B8D]">
+                「관리자」
               </Link>
-              <SignOutButton />
-            </>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className="text-sm font-medium text-neutral-900 dark:text-white"
+            )}
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="px-3 py-1 text-sm text-gray-500 border rounded hover:bg-gray-50"
             >
-              로그인
-            </Link>
-          )}
-        </nav>
-      </div>
+              로그아웃
+            </button>
+          </>
+        )}
+      </nav>
     </header>
   );
 }
-const isAdmin = session?.user?.email === 'eomhihi007@gmail.com';
-
-{/* 메뉴 목록 */}
-{isAdmin && (
-  <Link href="/admin" className="text-[#004B8D] font-bold">「관리자」</Link>
-)}
-<button onClick={() => signOut({ callbackUrl: '/' })} className="text-gray-500">
-  로그아웃
-</button>

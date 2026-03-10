@@ -54,7 +54,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
         body: JSON.stringify(data),
       });
       if (res.ok) {
-        router.push("/");
+        router.push("/main");
         router.refresh();
       } else {
         const err = await res.json();

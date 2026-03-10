@@ -128,9 +128,17 @@ export default async function AdminPage() {
                 <span className="font-bold text-white">관리자 대시보드</span>
               </div>
             </div>
-            <span className="text-sm text-slate-400 truncate max-w-[200px]">
-              {session.user?.email}
-            </span>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/api/auth/signout?callbackUrl=/"
+                className="text-xs text-slate-400 hover:text-sky-400 transition-colors"
+              >
+                세션 종료
+              </Link>
+              <span className="text-sm text-slate-400 truncate max-w-[200px]">
+                {session.user?.email}
+              </span>
+            </div>
           </div>
         </div>
       </header>
