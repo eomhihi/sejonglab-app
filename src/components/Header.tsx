@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Session } from "next-auth";
 import { SignOutButton } from "./SignOutButton";
+import { signOut, useSession } from "next-auth/react";
 
 export function Header({ session }: { session: Session | null }) {
   return (
@@ -33,3 +34,12 @@ export function Header({ session }: { session: Session | null }) {
     </header>
   );
 }
+const isAdmin = session?.user?.email === 'eomhihi007@gmail.com';
+
+{/* 메뉴 목록 */}
+{isAdmin && (
+  <Link href="/admin" className="text-[#004B8D] font-bold">「관리자」</Link>
+)}
+<button onClick={() => signOut({ callbackUrl: '/' })} className="text-gray-500">
+  로그아웃
+</button>

@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { MapPin, Mail, Phone } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
 
-export function SejongFooter() {
+type SejongFooterProps = {
+  isAdmin?: boolean;
+};
+
+export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
   return (
     <footer className="bg-slate-900 text-slate-300">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
@@ -88,6 +92,11 @@ export function SejongFooter() {
             © 2026 세종랩. Powered by AirBBot
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-500">
+            {isAdmin && (
+              <Link href="/admin" className="hover:text-sky-400 transition-colors">
+                관리자
+              </Link>
+            )}
             <Link href="#" className="hover:text-sky-400 transition-colors">
               이용약관
             </Link>

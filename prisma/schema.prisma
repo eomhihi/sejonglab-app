@@ -21,6 +21,7 @@ model User {
 
   // 온보딩 정보
   onboardingCompleted Boolean  @default(false)
+  phone               String?
   gender              String?
   ageGroup            String?
   region              String?

@@ -9,6 +9,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 // Kakao: KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET
 // Naver: NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 // 각 OAuth 콘솔에 Redirect URI를 정확히 등록: ${NEXTAUTH_URL}/api/auth/callback/{google|kakao|naver}
+//
+// [배포 시] 수정 사항이 반영되지 않을 때: Vercel 대시보드 → 프로젝트 → Settings → Environment Variables 에서
+// NEXTAUTH_URL 이 현재 배포된 실제 도메인과 일치하는지 확인하세요. (예: https://www.sejonglab.com)
 
 function getAdapter(): NextAuthOptions["adapter"] {
   if (!process.env.DATABASE_URL) return undefined;
@@ -92,3 +95,4 @@ export const authOptions: NextAuthOptions = {
   
   debug: process.env.NODE_ENV === "development",
 };
+

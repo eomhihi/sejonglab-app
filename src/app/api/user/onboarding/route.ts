@@ -20,13 +20,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const { gender, ageGroup, region, interestTopics } = validation.data;
+    const { phone, gender, ageGroup, region, interestTopics } = validation.data;
 
     // DB가 연결되어 있지 않은 경우를 위한 처리
     if (!process.env.DATABASE_URL) {
       // DB 없이 세션 기반으로만 동작하는 경우 쿠키/로컬 처리 또는 임시 성공 반환
       // 실제 환경에서는 아래 Prisma 코드 사용
-      console.log("온보딩 데이터 (DB 미연결):", { gender, ageGroup, region, interestTopics });
+      console.log("온보딩 데이터 (DB 미연결):", { phone, gender, ageGroup, region, interestTopics });
       return NextResponse.json({ success: true, message: "저장 완료 (테스트 모드)" });
     }
 
@@ -36,6 +36,7 @@ export async function POST(request: Request) {
     await prisma.user.update({
       where: { email: session.user.email },
       data: {
+        phone: phone || null,
         gender,
         ageGroup,
         region,

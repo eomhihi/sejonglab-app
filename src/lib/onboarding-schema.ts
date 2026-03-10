@@ -1,6 +1,16 @@
 import { z } from "zod";
 
+// 휴대폰 번호: 010-XXXX-XXXX 등 (선택 입력)
 export const onboardingSchema = z.object({
+  phone: z
+    .string()
+    .optional()
+    .transform((val) => (val?.trim() === "" ? undefined : val))
+    .refine((val) => {
+      if (!val) return true;
+      const digits = val.replace(/[^0-9]/g, "");
+      return digits.length >= 10 && digits.length <= 11 && digits.startsWith("01");
+    }, "올바른 휴대폰 번호를 입력해 주세요. (예: 010-1234-5678)"),
   gender: z.enum(["male", "female"], {
     required_error: "성별을 선택해 주세요.",
   }),

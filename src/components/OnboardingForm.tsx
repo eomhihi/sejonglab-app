@@ -25,6 +25,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
   } = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
+      phone: "",
       interestTopics: [],
     },
   });
@@ -68,10 +69,29 @@ export function OnboardingForm({ userName }: { userName?: string }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      {/* 휴대폰 번호 - 폼 최상단 */}
+      <div className="bg-white rounded-xl border-2 border-slate-200 p-5 sm:p-6">
+        <label className="block text-sm font-semibold text-slate-700 mb-3">
+          휴대폰 번호
+        </label>
+        <input
+          type="tel"
+          placeholder="010-1234-5678 (선택)"
+          {...register("phone")}
+          className="w-full border-2 border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#004B8D] focus:border-[#004B8D]"
+        />
+        <p className="mt-1.5 text-xs text-slate-500">
+          설문 참여 연락 등에 활용됩니다. (선택 입력)
+        </p>
+        {errors.phone && (
+          <p className="mt-2 text-sm text-red-500">{errors.phone.message}</p>
+        )}
+      </div>
+
       {userName && (
         <div className="bg-white rounded-xl border border-slate-200 p-5 text-center">
           <p className="text-slate-600">
-            <span className="font-semibold text-primary-700">{userName}</span>님, 환영합니다!
+            <span className="font-semibold text-[#004B8D]">{userName}</span>님, 환영합니다!
           </p>
         </div>
       )}
@@ -85,13 +105,13 @@ export function OnboardingForm({ userName }: { userName?: string }) {
           {GENDER_OPTIONS.map((opt) => (
             <label
               key={opt.value}
-              className="flex-1 flex items-center justify-center gap-2 border border-slate-200 rounded-lg py-3 px-4 cursor-pointer hover:border-primary-400 transition has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50"
+              className="flex-1 flex items-center justify-center gap-2 border border-slate-200 rounded-lg py-3 px-4 cursor-pointer hover:border-[#004B8D]/50 transition has-[:checked]:border-[#004B8D] has-[:checked]:bg-[#004B8D]/5"
             >
               <input
                 type="radio"
                 value={opt.value}
                 {...register("gender")}
-                className="accent-primary-600"
+                className="accent-[#004B8D]"
               />
               <span className="font-medium text-slate-700">{opt.label}</span>
             </label>
@@ -109,7 +129,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
         </label>
         <select
           {...register("ageGroup")}
-          className="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#004B8D] focus:border-[#004B8D]"
         >
           <option value="">연령대를 선택해 주세요</option>
           {AGE_GROUP_OPTIONS.map((opt) => (
@@ -130,7 +150,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
         </label>
         <select
           {...register("region")}
-          className="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full border border-slate-300 rounded-lg px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#004B8D] focus:border-[#004B8D]"
         >
           <option value="">거주지역을 선택해 주세요</option>
           {REGION_OPTIONS.map((region) => (
@@ -168,10 +188,10 @@ export function OnboardingForm({ userName }: { userName?: string }) {
                       key={topic}
                       type="button"
                       onClick={() => toggleTopic(topic)}
-                      className={`text-left px-4 py-2.5 rounded-lg border text-sm font-medium transition ${
+                        className={`text-left px-4 py-2.5 rounded-lg border text-sm font-medium transition ${
                         isSelected
-                          ? "border-primary-500 bg-primary-50 text-primary-700"
-                          : "border-slate-200 text-slate-600 hover:border-primary-300 hover:bg-slate-50"
+                          ? "border-[#004B8D] bg-[#004B8D]/10 text-[#004B8D]"
+                          : "border-slate-200 text-slate-600 hover:border-[#004B8D]/50 hover:bg-slate-50"
                       }`}
                     >
                       <span className="mr-2">{isSelected ? "✓" : "○"}</span>
@@ -189,7 +209,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
         )}
 
         {selectedTopics && selectedTopics.length > 0 && (
-          <p className="mt-4 text-sm text-primary-600">
+          <p className="mt-4 text-sm text-[#004B8D] font-medium">
             {selectedTopics.length}개 분야 선택됨
           </p>
         )}
@@ -199,7 +219,7 @@ export function OnboardingForm({ userName }: { userName?: string }) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-primary-600 text-white font-semibold py-4 rounded-xl hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg shadow-primary-600/20"
+        className="w-full bg-[#004B8D] text-white font-semibold py-4 rounded-xl hover:bg-[#003666] disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg"
       >
         {isSubmitting ? "저장 중..." : "정보 저장하고 시작하기"}
       </button>
