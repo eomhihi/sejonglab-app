@@ -10,10 +10,15 @@ export interface NewsItem {
 const NAVER_NEWS_URL = "https://openapi.naver.com/v1/search/news.json";
 const REVALIDATE_SECONDS = 3600;
 const DISPLAY_PER_QUERY = 10;
-const MAX_OUTPUT = 20;
+const MAX_OUTPUT = 5;
 
-/** query 파라미터: 세종시 정책, 데이터 혁신 (네이버 검색 API 권장 쿼리) */
-const SEARCH_QUERIES = ["세종시 정책", "데이터 혁신"];
+/**
+ * 검색 쿼리(구문검색 + OR 조합)
+ * ("데이터 행정") OR ("빅데이터 정책") OR (세종시 + "디지털 혁신")
+ */
+const SEARCH_QUERY = "\"데이터 행정\" OR \"빅데이터 정책\" OR (세종시 \"디지털 혁신\")";
+
+const HARD_FILTER_KEYWORDS = ["데이터", "정책", "혁신", "디지털", "지능형"] as const;
 
 /** 제목에서 HTML 태그·엔티티 제거 (<b>, &quot; 등) */
 function sanitizeTitle(raw: string): string {
@@ -30,6 +35,17 @@ function sanitizeTitle(raw: string): string {
 function parsePubDate(pubDate: string): number {
   const d = new Date(pubDate);
   return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+}
+
+function sanitizeText(raw: string): string {
+  return (raw || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#39;/g, "'")
+    .trim();
 }
 
 function dedupeByLink(items: NewsItem[]): NewsItem[] {
@@ -84,7 +100,7 @@ function getNaverSearchErrorHint(status: number): string {
  */
 async function fetchNaverNews(
   query: string
-): Promise<{ items: NewsItem[]; errorHint?: string; status?: number; raw?: unknown }> {
+): Promise<{ items: (NewsItem & { description: string })[]; errorHint?: string; status?: number; raw?: unknown }> {
   const creds = getNaverNewsCreds();
   if (!creds) {
     return {
@@ -153,13 +169,14 @@ async function fetchNaverNews(
 
   return {
     items: (items as any[]).map(
-    (item: { title?: string; originallink?: string; link?: string; pubDate?: string }) => {
+    (item: { title?: string; originallink?: string; link?: string; pubDate?: string; description?: string }) => {
       const link = (item.originallink || item.link || "").trim();
       return {
         title: sanitizeTitle(item.title || ""),
         source: extractSource(link),
         link,
         pubDate: item.pubDate || "",
+        description: sanitizeText(item.description || ""),
       };
     }
     ),
@@ -178,22 +195,50 @@ const FALLBACK_NEWS: NewsItem[] = [
 
 export async function GET() {
   try {
-    const merged: NewsItem[] = [];
+    const merged: (NewsItem & { description: string })[] = [];
     const errorHints: string[] = [];
 
     if (getNaverNewsCreds()) {
-      for (const query of SEARCH_QUERIES) {
-        const result = await fetchNaverNews(query);
-        merged.push(...result.items);
-        if (result.errorHint) errorHints.push(`[${query}] ${result.errorHint}`);
-      }
+      const result = await fetchNaverNews(SEARCH_QUERY);
+      merged.push(...result.items);
+      if (result.errorHint) errorHints.push(`[query] ${result.errorHint}`);
     } else {
       errorHints.push("환경 변수가 없습니다: NAVER_NEWS_CLIENT_ID / NAVER_NEWS_CLIENT_SECRET");
     }
 
-    const deduped = dedupeByLink(merged);
-    deduped.sort((a, b) => parsePubDate(b.pubDate) - parsePubDate(a.pubDate));
-    let news = deduped.slice(0, MAX_OUTPUT);
+    // Hard filter: title/description 중 하나라도 키워드 1개 이상 포함해야 함
+    const hardFiltered = merged.filter((item) => {
+      const text = `${item.title} ${item.description}`;
+      return HARD_FILTER_KEYWORDS.some((k) => text.includes(k));
+    });
+
+    const deduped = dedupeByLink(hardFiltered.map(({ description: _d, ...rest }) => rest));
+
+    // 정렬 우선순위:
+    // 1) 제목에 '세종'과 '데이터' 동시 포함 최상단
+    // 2) 최신순(pubDate desc)
+    // 3) 제목/요약에 하드키워드가 많이 포함될수록 상단
+    const score = (title: string, description: string) => {
+      const t = `${title} ${description}`;
+      const count = HARD_FILTER_KEYWORDS.reduce((acc, k) => acc + (t.includes(k) ? 1 : 0), 0);
+      const sejongDataBoost = title.includes("세종") && title.includes("데이터") ? 100 : 0;
+      return sejongDataBoost + count;
+    };
+
+    const descriptionByLink = new Map<string, string>();
+    for (const it of hardFiltered) descriptionByLink.set(it.link.trim(), it.description);
+
+    const sorted = deduped
+      .map((n) => ({ n, desc: descriptionByLink.get(n.link.trim()) || "" }))
+      .sort((a, b) => {
+        const as = score(a.n.title, a.desc);
+        const bs = score(b.n.title, b.desc);
+        if (bs !== as) return bs - as;
+        return parsePubDate(b.n.pubDate) - parsePubDate(a.n.pubDate);
+      })
+      .map(({ n }) => n);
+
+    let news = sorted.slice(0, MAX_OUTPUT);
 
     if (news.length === 0) {
       const reason = errorHints.length > 0 ? errorHints.join(" / ") : "검색 결과가 없습니다 (items.length === 0).";

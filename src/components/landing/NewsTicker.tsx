@@ -115,10 +115,10 @@ export function NewsSection({ initialNews, error = false, message }: NewsTickerP
           </div>
 
           <div
-            className="flex-1 min-h-[10rem] overflow-y-auto pr-2 scrollbar-thin"
+            className="flex-1"
             style={{
-              scrollbarWidth: "thin",
-              scrollbarColor: "#004B8D #e0f2fe",
+              scrollbarWidth: "auto",
+              scrollbarColor: "auto",
             }}
           >
             {error || initialNews.length === 0 ? (
@@ -127,7 +127,7 @@ export function NewsSection({ initialNews, error = false, message }: NewsTickerP
               </div>
             ) : (
               <div className="space-y-2">
-                {initialNews.map((item, index) => (
+                {initialNews.slice(0, 5).map((item, index) => (
                   <a
                     key={`${item.link || item.title}-${index}`}
                     href={
