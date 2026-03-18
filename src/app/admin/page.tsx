@@ -33,6 +33,8 @@ async function getMembers() {
         ageGroup: true,
         region: true,
         interestTopics: true,
+        interests: true,
+        participationActivities: true,
         createdAt: true,
       },
     });
@@ -179,7 +181,7 @@ export default async function AdminPage() {
           <div className="px-6 py-4 border-b border-slate-700">
             <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
             <p className="text-sm text-slate-400 mt-0.5">
-              {members.length}명의 회원이 등록되어 있습니다.
+              DB 실시간 연동 · {members.length}명
             </p>
           </div>
 
@@ -191,10 +193,10 @@ export default async function AdminPage() {
                     이름
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    연락처
+                    이메일
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    이메일
+                    전화번호
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
                     성별
@@ -206,7 +208,7 @@ export default async function AdminPage() {
                     가입일
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    관심 분야
+                    관심·참여
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
                     거주지
@@ -233,10 +235,10 @@ export default async function AdminPage() {
                         {user.name ?? "-"}
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.phone ?? "-"}
+                        {user.email ?? "-"}
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.email ?? "-"}
+                        {user.phone ?? "-"}
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-300">
                         {formatGender(user.gender)}
@@ -247,21 +249,39 @@ export default async function AdminPage() {
                       <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">
                         {formatDate(user.createdAt)}
                       </td>
-                      <td className="px-4 py-3">
-                        {user.interestTopics && user.interestTopics.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {user.interestTopics.map((topic) => (
+                      <td className="px-4 py-3 max-w-[280px]">
+                        {(() => {
+                          const tags =
+                            user.interests?.length > 0 ? user.interests : user.interestTopics ?? [];
+                          return tags.length > 0 ? (
+                            <div className="flex flex-wrap gap-1 mb-1">
+                              {tags.map((topic) => (
+                                <span
+                                  key={topic}
+                                  className="px-2 py-0.5 text-xs bg-sky-500/20 text-sky-200 rounded"
+                                >
+                                  {topic}
+                                </span>
+                              ))}
+                            </div>
+                          ) : null;
+                        })()}
+                        {user.participationActivities && user.participationActivities.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {user.participationActivities.map((a) => (
                               <span
-                                key={topic}
-                                className="px-2 py-0.5 text-xs bg-sky-500/20 text-sky-200 rounded"
+                                key={a}
+                                className="px-2 py-0.5 text-[10px] bg-emerald-500/15 text-emerald-200 rounded"
                               >
-                                {topic}
+                                {a}
                               </span>
                             ))}
                           </div>
-                        ) : (
+                        ) : null}
+                        {(!user.interests?.length && !user.interestTopics?.length) &&
+                        !user.participationActivities?.length ? (
                           <span className="text-slate-500">-</span>
-                        )}
+                        ) : null}
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-300">
                         {user.region ?? "-"}

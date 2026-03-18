@@ -24,8 +24,10 @@ model User {
   phone               String?
   gender              String?
   ageGroup            String?
-  region              String?
-  interestTopics      String[] @default([])
+  region                  String?  // 거주 지역(area)
+  interestTopics          String[] @default([]) // 레거시 (이전 온보딩)
+  interests               String[] @default([]) // 세종 정책 관심 카테고리 (다중)
+  participationActivities String[] @default([]) // 설문/FGI/IDI 등 참여 가능 활동 (다중)
 }
 
 model Account {

@@ -8,9 +8,15 @@ export const metadata = {
   description: "Google, 카카오, 네이버로 간편 로그인하세요.",
 };
 
-export default async function SignInPage() {
+type Props = { searchParams: { callbackUrl?: string } };
+
+export default async function SignInPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
-  if (session) redirect("/dashboard");
+  const next =
+    typeof searchParams?.callbackUrl === "string" ? searchParams.callbackUrl.trim() : "";
+  const afterLogin =
+    next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  if (session) redirect(afterLogin);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
@@ -19,7 +25,7 @@ export default async function SignInPage() {
         <p className="text-neutral-600 dark:text-neutral-400 text-center text-sm mb-6">
           Google, 카카오, 네이버 계정으로 간편 로그인
         </p>
-        <SignInButtons />
+        <SignInButtons callbackUrl={afterLogin} />
       </div>
     </div>
   );

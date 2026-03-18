@@ -9,7 +9,8 @@ const messages: Record<string, string> = {
   OAuthCreateAccount: "계정 생성이 허용되지 않습니다.",
   EmailCreateAccount: "계정 생성이 허용되지 않습니다.",
   Callback: "콜백 처리 중 오류가 발생했습니다.",
-  OAuthAccountNotLinked: "이 이메일로 이미 다른 로그인 방식이 등록되어 있습니다.",
+  OAuthAccountNotLinked:
+    "이 이메일로 이미 다른 로그인 방식(Google/카카오/네이버)이 등록되어 있습니다. 해당 방식으로 로그인하거나, 아래에서 다시 시도해 보세요.",
   EmailSignin: "이메일 로그인 링크를 확인해 주세요.",
   CredentialsSignin: "로그인 정보가 올바르지 않습니다.",
   SessionRequired: "로그인이 필요합니다.",

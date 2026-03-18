@@ -3,15 +3,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { onboardingSchema } from "@/lib/onboarding-schema";
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ message: "인증되지 않았습니다." }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const validation = onboardingSchema.safeParse(body);
+    const body = (await request.json()) as Record<string, unknown>;
+    const { userId, email, ...rest } = body;
+    const validation = onboardingSchema.safeParse(rest);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -20,27 +18,35 @@ export async function POST(request: Request) {
       );
     }
 
-    const { phone, gender, ageGroup, region, interestTopics } = validation.data;
+    const userEmail = typeof email === "string" ? email.toLowerCase().trim() : undefined;
+    const userIdStr = typeof userId === "string" ? userId : undefined;
 
-    // DB가 연결되어 있지 않은 경우를 위한 처리
+    if (!userIdStr && !userEmail) {
+      console.log("[onboarding][POST] no userId/email in body");
+      return NextResponse.json({ message: "인증되지 않았습니다." }, { status: 401 });
+    }
+
+    const { phone, gender, ageGroup, region, interests, participationActivities } = validation.data;
+    const areaOrRegion = region ?? (body.area as string | undefined) ?? null;
+    const activities = participationActivities ?? [];
+
     if (!process.env.DATABASE_URL) {
-      // DB 없이 세션 기반으로만 동작하는 경우 쿠키/로컬 처리 또는 임시 성공 반환
-      // 실제 환경에서는 아래 Prisma 코드 사용
-      console.log("온보딩 데이터 (DB 미연결):", { phone, gender, ageGroup, region, interestTopics });
+      console.log("온보딩 데이터 (DB 미연결):", { phone, gender, ageGroup, region: areaOrRegion, interests, activities });
       return NextResponse.json({ success: true, message: "저장 완료 (테스트 모드)" });
     }
 
-    // Prisma를 사용한 DB 업데이트
     const { prisma } = await import("@/lib/prisma");
 
     await prisma.user.update({
-      where: { email: session.user.email },
+      where: userIdStr ? { id: userIdStr } : { email: userEmail! },
       data: {
-        phone: phone || null,
+        phone: phone ?? null,
+        region: areaOrRegion,
         gender,
         ageGroup,
-        region,
-        interestTopics,
+        interests,
+        participationActivities: activities,
+        interestTopics: interests,
         onboardingCompleted: true,
       },
     });
@@ -55,7 +61,14 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    console.log("[onboarding][GET] session:", JSON.stringify(session ?? null));
+
+    const userFromSession = session?.user as { id?: string; email?: string } | undefined;
+    const userId = userFromSession?.id;
+    const userEmail = userFromSession?.email?.toLowerCase().trim();
+
+    if (!session || (!userId && !userEmail)) {
+      console.log("[onboarding][GET] no valid user in session");
       return NextResponse.json({ message: "인증되지 않았습니다." }, { status: 401 });
     }
 
@@ -65,7 +78,7 @@ export async function GET() {
 
     const { prisma } = await import("@/lib/prisma");
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: userId ? { id: userId } : { email: userEmail! },
       select: { onboardingCompleted: true },
     });
 

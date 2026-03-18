@@ -20,7 +20,10 @@ export const onboardingSchema = z.object({
   region: z.string({
     required_error: "거주지역을 선택해 주세요.",
   }).min(1, "거주지역을 선택해 주세요."),
-  interestTopics: z.array(z.string()).min(1, "관심 분야를 1개 이상 선택해 주세요."),
+  interests: z
+    .array(z.string())
+    .min(1, "관심 정책 분야를 1개 이상 선택해 주세요."),
+  participationActivities: z.array(z.string()).default([]),
 });
 
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;

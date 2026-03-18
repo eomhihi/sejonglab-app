@@ -2,11 +2,16 @@
 
 import { signIn } from "next-auth/react";
 
-const callbackUrl = "/dashboard";
+const DEFAULT_CALLBACK = "/dashboard";
 
-export function SignInButtons() {
+export function SignInButtons({ callbackUrl = DEFAULT_CALLBACK }: { callbackUrl?: string }) {
+  const next =
+    callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
+      ? callbackUrl
+      : DEFAULT_CALLBACK;
+
   const handleSignIn = (provider: string) => {
-    signIn(provider, { callbackUrl }).catch(() => {});
+    signIn(provider, { callbackUrl: next }).catch(() => {});
   };
 
   return (

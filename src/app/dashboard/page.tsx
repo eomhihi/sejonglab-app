@@ -71,19 +71,37 @@ export default async function DashboardPage() {
             </dl>
           </div>
 
-          {userData && userData.interestTopics && userData.interestTopics.length > 0 && (
+          {userData &&
+            ((userData.interests?.length ?? 0) > 0 || (userData.interestTopics?.length ?? 0) > 0) && (
             <div className="rounded-xl border border-slate-200 bg-white p-6">
-              <h2 className="font-semibold text-slate-900 mb-4">관심 분야</h2>
+              <h2 className="font-semibold text-slate-900 mb-4">관심 정책 분야</h2>
               <div className="flex flex-wrap gap-2">
-                {userData.interestTopics.map((topic: string) => (
-                  <span
-                    key={topic}
-                    className="px-3 py-1 text-sm bg-primary-50 text-primary-700 rounded-full"
-                  >
-                    {topic}
-                  </span>
-                ))}
+                {(userData.interests?.length ? userData.interests : userData.interestTopics).map(
+                  (topic: string) => (
+                    <span
+                      key={topic}
+                      className="px-3 py-1 text-sm bg-[#004B8D]/10 text-[#004B8D] rounded-full font-medium"
+                    >
+                      {topic}
+                    </span>
+                  )
+                )}
               </div>
+              {(userData.participationActivities?.length ?? 0) > 0 && (
+                <div className="mt-4 pt-4 border-t border-slate-100">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-2">참여 가능 활동</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {userData.participationActivities.map((a: string) => (
+                      <span
+                        key={a}
+                        className="px-3 py-1 text-sm bg-slate-100 text-slate-700 rounded-full"
+                      >
+                        {a}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

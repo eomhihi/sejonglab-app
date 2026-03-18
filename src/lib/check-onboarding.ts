@@ -4,6 +4,8 @@ type UserOnboardingData = {
   ageGroup: string | null;
   region: string | null;
   interestTopics: string[];
+  interests: string[];
+  participationActivities: string[];
 };
 
 export async function checkOnboardingStatus(
@@ -27,6 +29,8 @@ export async function checkOnboardingStatus(
         ageGroup: true,
         region: true,
         interestTopics: true,
+        interests: true,
+        participationActivities: true,
       },
     });
 

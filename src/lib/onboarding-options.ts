@@ -18,50 +18,60 @@ export const REGION_OPTIONS = [
   "아름동", "소담동", "반곡동", "가람동", "합강동", "해밀동", "한별동", "가온동", "산울동", "온빛동", "장지동",
 ] as const;
 
-export const INTEREST_CATEGORIES = [
+/** 세종시 정책 중심 관심 카테고리 — title이 DB interests 배열에 저장됨 */
+export const SEJONG_POLICY_INTEREST_GROUPS = [
   {
-    category: "보육 및 교육",
-    icon: "📚",
-    topics: ["어린이집/학교 시설", "방과 후 프로그램", "평생교육"],
+    id: "city_transport",
+    title: "도시·교통",
+    keywords: "BRT 노선 확충, 주차난 해소, 스마트시티, 도로 정비 등",
   },
   {
-    category: "교통 및 이동",
-    icon: "🚌",
-    topics: ["시내버스 노선", "주차 문제", "자전거 도로(어울링)", "공유 킥보드"],
+    id: "housing",
+    title: "주거·부동산",
+    keywords: "임대주택 보급, 부동산 규제·완화, 층간소음, 정주 여건 등",
   },
   {
-    category: "문화 및 여가",
-    icon: "🎭",
-    topics: ["지역 축제", "도서관 서비스", "공원 및 녹지 조성", "체육 시설"],
+    id: "economy_jobs",
+    title: "경제·일자리",
+    keywords: "여민전(지역화폐), 소상공인 지원, 청년 창업, 상가 공실 해결 등",
   },
   {
-    category: "환경 및 안전",
-    icon: "🌿",
-    topics: ["쓰레기 배출/재활용", "미세먼지 대응", "방범 CCTV", "가로등"],
+    id: "education_care",
+    title: "교육·보육",
+    keywords: "공동육아나눔터, 학교 환경 개선, 방과 후 활동, 돌봄 공백 등",
   },
   {
-    category: "지역 경제",
-    icon: "💰",
-    topics: ["지역화폐(여민전)", "전통시장 활성화", "청년 창업 지원"],
+    id: "welfare_safety",
+    title: "복지·안전",
+    keywords: "노인·장애인 복지, 치안·방범, 재난 대응, 1인 가구 지원 등",
   },
   {
-    category: "복지 및 건강",
-    icon: "❤️",
-    topics: ["노인 복지", "장애인 지원", "보건소 서비스", "마음건강 상담"],
+    id: "culture_env",
+    title: "문화·관광·환경",
+    keywords: "세종축제, 중앙공원 관리, 도서관 확충, 탄소중립·재활용 등",
   },
   {
-    category: "도시 개발",
-    icon: "🏗️",
-    topics: ["신도시 건설", "상가 공실 문제", "스마트시티 서비스"],
+    id: "health_medical",
+    title: "보건·의료",
+    keywords: "응급 의료 체계, 소아 야간 진료, 공공의료 확충, 전염병 대응 등",
   },
   {
-    category: "미래 신사업",
-    icon: "🚀",
-    topics: ["자율주행 셔틀", "드론 배송 서비스", "AI 기반 스마트 홈", "로봇 순찰"],
-  },
-  {
-    category: "시민 참여 및 정책",
-    icon: "🗳️",
-    topics: ["예산 편성 참여", "시민 위원회 활동", "정책 아이디어 제안", "동네 문제 토론"],
+    id: "admin_participation",
+    title: "행정·참여",
+    keywords: "주민자치회, 온라인 시민투표, 예산 낭비 감시, 친절도 등",
   },
 ] as const;
+
+/** 참여 가능 활동 (중복 선택, DB participationActivities에 저장) */
+export const PARTICIPATION_ACTIVITY_OPTIONS = [
+  { id: "survey_online", label: "설문조사 (온라인)" },
+  { id: "fgi_offline", label: "FGI (오프라인 간담회)" },
+  { id: "idi_interview", label: "IDI (심층 인터뷰)" },
+] as const;
+
+/** 레거시 호환 (일부 페이지) */
+export const INTEREST_CATEGORIES = SEJONG_POLICY_INTEREST_GROUPS.map((g) => ({
+  category: g.title,
+  icon: "📌",
+  topics: [g.title],
+}));
