@@ -47,7 +47,8 @@ export async function getNews(): Promise<GetNewsResult> {
       process.env.NEXTAUTH_URL ||
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
     const res = await fetch(`${baseUrl}/api/news`, {
-      next: { revalidate: 3600 },
+      cache: "no-store",
+      next: { revalidate: 0 },
     });
 
     if (!res.ok) {

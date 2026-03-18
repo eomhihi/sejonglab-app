@@ -8,17 +8,26 @@ export interface NewsItem {
 }
 
 const NAVER_NEWS_URL = "https://openapi.naver.com/v1/search/news.json";
-const REVALIDATE_SECONDS = 3600;
+// 배포/로컬 결과 불일치 원인(캐시) 제거: 매 요청 실시간 조회
+const REVALIDATE_SECONDS = 0;
 const DISPLAY_PER_QUERY = 10;
 const MAX_OUTPUT = 5;
 
 /**
- * 검색 쿼리(구문검색 + OR 조합)
- * ("데이터 행정") OR ("빅데이터 정책") OR (세종시 + "디지털 혁신")
+ * 검색 키워드 타겟팅: 로컬에서 확인한 기사 주제에 맞춰 매우 구체적으로 고정.
+ * + 반드시 포함 조합: (세종시 OR 공공) + (생성형 AI OR 행정 혁신 OR 데이터 기반)
  */
-const SEARCH_QUERY = "\"데이터 행정\" OR \"빅데이터 정책\" OR (세종시 \"디지털 혁신\")";
+const MUST_INCLUDE_QUERY =
+  "(세종시 OR 공공) (\"생성형 AI\" OR \"행정 혁신\" OR \"데이터 기반\")";
+const TARGETED_QUERIES = [
+  "\"공공 AI\" \"행정 혁신\"",
+  "\"데이터 기반\" \"행정 활성화\"",
+  "\"생성형 AI\" \"공공 플랫폼\"",
+  MUST_INCLUDE_QUERY,
+] as const;
 
 const HARD_FILTER_KEYWORDS = ["데이터", "정책", "혁신", "디지털", "지능형"] as const;
+const TOPIC_PHRASES = ["공공", "행정", "생성형", "AI", "데이터 기반", "혁신"] as const;
 
 /** 제목에서 HTML 태그·엔티티 제거 (<b>, &quot; 등) */
 function sanitizeTitle(raw: string): string {
@@ -132,6 +141,7 @@ async function fetchNaverNews(
       "X-Naver-Client-Id": clientId,
       "X-Naver-Client-Secret": clientSecret,
     },
+    cache: "no-store",
     next: { revalidate: REVALIDATE_SECONDS },
   });
 
@@ -225,9 +235,11 @@ export async function GET() {
     const errorHints: string[] = [];
 
     if (getNaverNewsCreds()) {
-      const result = await fetchNaverNews(SEARCH_QUERY);
-      merged.push(...result.items);
-      if (result.errorHint) errorHints.push(`[query] ${result.errorHint}`);
+      for (const q of TARGETED_QUERIES) {
+        const result = await fetchNaverNews(q);
+        merged.push(...result.items);
+        if (result.errorHint) errorHints.push(`[${q}] ${result.errorHint}`);
+      }
     } else {
       errorHints.push("환경 변수가 없습니다: NAVER_NEWS_CLIENT_ID / NAVER_NEWS_CLIENT_SECRET");
     }
@@ -245,13 +257,15 @@ export async function GET() {
 
     // 정렬 우선순위:
     // 1) 제목에 '세종'과 '데이터' 동시 포함 최상단
-    // 2) 최신순(pubDate desc)
-    // 3) 제목/요약에 하드키워드가 많이 포함될수록 상단
+    // 2) 주제 적합도(공공/행정/생성형/AI/데이터 기반/혁신) 높을수록 상단
+    // 3) 최신순(pubDate desc)
+    // 4) 제목/요약에 하드키워드가 많이 포함될수록 상단
     const score = (title: string, description: string) => {
       const t = `${title} ${description}`;
       const count = HARD_FILTER_KEYWORDS.reduce((acc, k) => acc + (t.includes(k) ? 1 : 0), 0);
       const sejongDataBoost = title.includes("세종") && title.includes("데이터") ? 100 : 0;
-      return sejongDataBoost + count;
+      const topicCount = TOPIC_PHRASES.reduce((acc, p) => acc + (t.includes(p) ? 1 : 0), 0);
+      return sejongDataBoost + topicCount * 10 + count;
     };
 
     const descriptionByLink = new Map<string, string>();

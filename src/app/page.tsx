@@ -13,8 +13,8 @@ import { getNews } from "@/lib/get-news";
 // Footer 「관리자」 링크: 이 이메일로 로그인한 경우에만 노출
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
-/** 뉴스 섹션 갱신과 맞춤(1시간). 이전 604800이면 페이지·뉴스가 7일 동안 동일 */
-export const revalidate = 3600;
+/** 뉴스는 실시간 조회(배포 캐시로 인한 불일치 방지) */
+export const revalidate = 0;
 
 export default async function LandingPage() {
   const [newsResult, session] = await Promise.all([getNews(), getServerSession(authOptions)]);
