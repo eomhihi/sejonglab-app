@@ -48,10 +48,10 @@ if (kakaoId && kakaoSecret) {
         authorization: {
           params: {
             scope: "profile_nickname account_email",
-            // Kakao OAuth: prompt=login 으로 항상 명시적 로그인/동의 플로우 유도
-            // (네이버처럼 곧바로 동의 화면으로 보내는 것은 콘솔의 동의항목/약관 설정에 더 큰 영향이 있으므로,
-            //  카카오 개발자 콘솔에서 "동의 화면"을 최적화해 주는 것이 UX 일관성에 중요합니다.)
-            prompt: "login",
+            // 카카오 OAuth 동의 화면/자동 로그인 플로우는 카카오 개발자 콘솔의
+            // "동의 화면" 및 앱 설정에 더 크게 의존합니다.
+            // 여기서는 scope만 명시하고, 추가 prompt 옵션은 주지 않아
+            // 브라우저/카카오톡에 이미 로그인된 경우 곧바로 동의 화면이 나오도록 위임합니다.
           },
         },
         profile(profile: Record<string, unknown>) {
@@ -117,6 +117,13 @@ export const authOptions: NextAuthOptions = {
         email: user?.email ? "(있음)" : "(없음)",
         hasName: !!user?.name,
       });
+      if (provider === "kakao") {
+        // 로컬 테스트용: 카카오 OAuth 콜백까지 도달했다는 것은
+        // 사용자가 브라우저/카카오톡에서 로그인 상태이거나, ID/PW 입력을 완료했다는 뜻입니다.
+        console.log("[auth][kakao] signIn: 브라우저에서 카카오 인증 완료. profile keys:", {
+          profileKeys: profile ? Object.keys(profile as Record<string, unknown>) : [],
+        });
+      }
       return true;
     },
     async jwt({ token, user }) {
