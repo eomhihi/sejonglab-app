@@ -18,49 +18,27 @@ export const REGION_OPTIONS = [
   "아름동", "소담동", "반곡동", "가람동", "합강동", "해밀동", "한별동", "가온동", "산울동", "온빛동", "장지동",
 ] as const;
 
-/** 세종시 정책 중심 관심 카테고리 — title이 DB interests 배열에 저장됨 */
-export const SEJONG_POLICY_INTEREST_GROUPS = [
-  {
-    id: "city_transport",
-    title: "도시·교통",
-    keywords: "BRT 노선 확충, 주차난 해소, 스마트시티, 도로 정비 등",
-  },
-  {
-    id: "housing",
-    title: "주거·부동산",
-    keywords: "임대주택 보급, 부동산 규제·완화, 층간소음, 정주 여건 등",
-  },
-  {
-    id: "economy_jobs",
-    title: "경제·일자리",
-    keywords: "여민전(지역화폐), 소상공인 지원, 청년 창업, 상가 공실 해결 등",
-  },
-  {
-    id: "education_care",
-    title: "교육·보육",
-    keywords: "공동육아나눔터, 학교 환경 개선, 방과 후 활동, 돌봄 공백 등",
-  },
-  {
-    id: "welfare_safety",
-    title: "복지·안전",
-    keywords: "노인·장애인 복지, 치안·방범, 재난 대응, 1인 가구 지원 등",
-  },
-  {
-    id: "culture_env",
-    title: "문화·관광·환경",
-    keywords: "세종축제, 중앙공원 관리, 도서관 확충, 탄소중립·재활용 등",
-  },
-  {
-    id: "health_medical",
-    title: "보건·의료",
-    keywords: "응급 의료 체계, 소아 야간 진료, 공공의료 확충, 전염병 대응 등",
-  },
-  {
-    id: "admin_participation",
-    title: "행정·참여",
-    keywords: "주민자치회, 온라인 시민투표, 예산 낭비 감시, 친절도 등",
-  },
+/** 온보딩 관심 분야 10개 (DB User.interests 배열에 이 문자열 그대로 저장) */
+export const ONBOARDING_INTEREST_CATEGORIES = [
+  { id: "city_transport", label: "도시/교통" },
+  { id: "housing", label: "주거/부동산" },
+  { id: "economy_jobs", label: "경제/일자리" },
+  { id: "education_care", label: "교육/보육" },
+  { id: "welfare_safety", label: "복지/안전" },
+  { id: "culture_env", label: "문화/환경" },
+  { id: "health_medical", label: "보건/의료" },
+  { id: "admin_participation", label: "행정/참여" },
+  { id: "future_tech", label: "미래과학/신기술" },
+  { id: "regional_balance", label: "지역균형/상생" },
 ] as const;
+
+/** 레거시·타입 호환용 (폼에서는 ONBOARDING_INTEREST_CATEGORIES 사용) */
+export const SEJONG_POLICY_INTEREST_GROUPS = ONBOARDING_INTEREST_CATEGORIES.map((c) => ({
+  id: c.id,
+  title: c.label,
+  keywords: "",
+  topics: [c.label],
+}));
 
 /** 참여 가능 활동 (중복 선택, DB participationActivities에 저장) */
 export const PARTICIPATION_ACTIVITY_OPTIONS = [
@@ -69,9 +47,8 @@ export const PARTICIPATION_ACTIVITY_OPTIONS = [
   { id: "idi_interview", label: "IDI (심층 인터뷰)" },
 ] as const;
 
-/** 레거시 호환 (일부 페이지) */
-export const INTEREST_CATEGORIES = SEJONG_POLICY_INTEREST_GROUPS.map((g) => ({
-  category: g.title,
+export const INTEREST_CATEGORIES = ONBOARDING_INTEREST_CATEGORIES.map((c) => ({
+  category: c.label,
   icon: "📌",
-  topics: [g.title],
+  topics: [c.label],
 }));

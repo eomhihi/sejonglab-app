@@ -26,7 +26,8 @@ model User {
   ageGroup            String?
   region                  String?  // 거주 지역(area)
   interestTopics          String[] @default([]) // 레거시 (이전 온보딩)
-  interests               String[] @default([]) // 세종 정책 관심 카테고리 (다중)
+  // 관심 분야: 도시/교통~지역균형/상생 등 최대 10개 라벨 중 사용자가 선택한 항목만 저장 (PostgreSQL text[])
+  interests               String[] @default([])
   participationActivities String[] @default([]) // 설문/FGI/IDI 등 참여 가능 활동 (다중)
 }
 
