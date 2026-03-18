@@ -56,7 +56,7 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {error || news.length === 0 ? (
+            {news.length === 0 ? (
               <p className="text-sm text-slate-600 font-medium">{statusText}</p>
             ) : (
               <div
@@ -121,7 +121,7 @@ export function NewsSection({ initialNews, error = false, message }: NewsTickerP
               scrollbarColor: "auto",
             }}
           >
-            {error || initialNews.length === 0 ? (
+            {initialNews.length === 0 ? (
               <div className="flex items-center justify-center h-40 rounded-lg bg-white border border-sky-200 text-slate-600 font-medium">
                 {statusText}
               </div>

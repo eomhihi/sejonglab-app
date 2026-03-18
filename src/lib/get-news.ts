@@ -8,9 +8,36 @@ export interface NewsItem {
 export type GetNewsResult = { news: NewsItem[]; error: boolean; message?: string };
 
 const FALLBACK_NEWS: NewsItem[] = [
-  { title: "세종시, 데이터 기반 정책 추진", source: "연합뉴스", link: "https://www.yna.co.kr", pubDate: new Date().toISOString() },
-  { title: "지자체 데이터·AI 혁신 사례", source: "전자신문", link: "https://www.etnews.com", pubDate: new Date().toISOString() },
-  { title: "시민 참여와 스마트시티", source: "뉴시스", link: "https://www.newsis.com", pubDate: new Date().toISOString() },
+  {
+    title: "범정부 생성형 AI 플랫폼 구축…'공공 AI법' 국회 본회의 통과",
+    source: "연합뉴스",
+    link: "https://www.yna.co.kr/view/AKR20260129138900530",
+    pubDate: new Date().toISOString(),
+  },
+  {
+    title: "생성형을 넘어 에이전트로…공공 행정 분야 AI 2.0 전환 박차",
+    source: "동아일보",
+    link: "https://www.donga.com/news/It/article/all/20260116/133171582/1",
+    pubDate: new Date().toISOString(),
+  },
+  {
+    title: "AI 기반 행정혁신 나선 관악구…주민체감형 스마트서비스 확충",
+    source: "연합뉴스",
+    link: "https://www.yna.co.kr/view/AKR20260303152200004",
+    pubDate: new Date().toISOString(),
+  },
+  {
+    title: "민원 답변부터 정책 결정까지…지자체 행정에 생성형 AI가 들어왔다",
+    source: "더포스트",
+    link: "http://www.thepostkorea.com/17160",
+    pubDate: new Date().toISOString(),
+  },
+  {
+    title: "데이터 기반 행정 활성화…공공부문 AI 활용 법적 기반 마련",
+    source: "연합뉴스",
+    link: "https://www.yna.co.kr/view/AKR20260129138900530",
+    pubDate: new Date().toISOString(),
+  },
 ];
 
 /** /api/news 호출. 실패 시에도 폴백 목록 반환해 빈 화면 방지. */
