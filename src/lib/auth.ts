@@ -4,12 +4,23 @@ import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
-// NEXTAUTH_URL 누락 시 Vercel에서는 VERCEL_URL로 자동 보정
-const _vercelUrl = process.env.VERCEL_URL;
-if (!process.env.NEXTAUTH_URL && _vercelUrl) {
-  process.env.NEXTAUTH_URL = `https://${_vercelUrl}`;
-  console.log("[auth] NEXTAUTH_URL 미설정 → VERCEL_URL로 보정:", process.env.NEXTAUTH_URL);
+/** NEXTAUTH_URL 정규화 (트레일링 슬래시 제거) — redirect_uri·쿠키 도메인과 일치 */
+function normalizeAuthUrl(): string {
+  const fromEnv = process.env.NEXTAUTH_URL?.trim();
+  if (fromEnv) return fromEnv.replace(/\/$/, "");
+  const v = process.env.VERCEL_URL;
+  if (v) return `https://${v.replace(/\/$/, "")}`;
+  return "http://localhost:3003";
 }
+
+const authBaseUrl = normalizeAuthUrl();
+if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL !== authBaseUrl) {
+  process.env.NEXTAUTH_URL = authBaseUrl;
+  console.log("[auth] NEXTAUTH_URL 정규화:", authBaseUrl);
+}
+
+const isHttps = authBaseUrl.startsWith("https://");
+const cookieSecure = isHttps;
 
 const kakaoId = process.env.KAKAO_CLIENT_ID;
 const kakaoSecret = process.env.KAKAO_CLIENT_SECRET;
@@ -27,20 +38,20 @@ function getAdapter(): NextAuthOptions["adapter"] {
 }
 
 const providers: NextAuthOptions["providers"] = [];
-// 같은 이메일로 Google/카카오/네이버 여러 소셜 로그인 시 한 계정으로 묶기 위해 필요 (OAuthAccountNotLinked 방지)
 const linkByEmail = { allowDangerousEmailAccountLinking: true } as const;
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   providers.push(
-    Object.assign(GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }), linkByEmail)
+    Object.assign(
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      }),
+      linkByEmail
+    )
   );
 }
-// Kakao: NextAuth 기본 authorize URL이 `...?scope`만 있어 scope 미지정 시 빈 요청이 됨.
-// 네이버는 Provider 기본값에 scope가 포함되므로 오버라이드가 없음. 카카오는 닉네임·이메일 동의에 필요한 scope만 명시.
-// prompt 등 추가 옵션은 넣지 않음 → 이미 로그인 시 동의 화면으로 이어지는 기본 플로우 유지.
+
 if (kakaoId && kakaoSecret) {
   providers.push(
     Object.assign(
@@ -60,10 +71,16 @@ if (kakaoId && kakaoSecret) {
           const rawId = p.id != null ? String(p.id) : "";
           const account = p.kakao_account ?? {};
           const accountProfile = account.profile ?? {};
-
-          const email = account.email?.trim() || null;
+          const rawEmail = account.email?.trim() || null;
           const name = accountProfile.nickname ?? null;
           const image = accountProfile.profile_image_url ?? null;
+          // 이메일 미동의 시 어댑터/세션 생성 실패·루프 방지용 (고유 식별)
+          const email =
+            rawEmail && rawEmail.length > 0
+              ? rawEmail
+              : rawId
+                ? `kakao_${rawId}@users.noemail.local`
+                : null;
 
           return {
             id: rawId,
@@ -77,19 +94,30 @@ if (kakaoId && kakaoSecret) {
     )
   );
 }
-// 네이버: 기본 프로필 사용. 응답이 response.id, response.email, response.name 등으로 이미 표준 형태라 별도 profile 불필요.
+
 if (naverId && naverSecret) {
   providers.push(
-    Object.assign(NaverProvider({
-      clientId: naverId,
-      clientSecret: naverSecret,
-    }), linkByEmail)
+    Object.assign(
+      NaverProvider({
+        clientId: naverId,
+        clientSecret: naverSecret,
+      }),
+      linkByEmail
+    )
   );
 }
 
 if (process.env.NODE_ENV === "development") {
   console.log("[auth] 등록된 OAuth providers:", providers.map((p) => (p as { id?: string }).id));
+  console.log("[auth] Kakao callback URL (카카오 콘솔과 동일해야 함):", `${authBaseUrl}/api/auth/callback/kakao`);
 }
+
+const pkceCookieOptions = {
+  httpOnly: true as const,
+  sameSite: "lax" as const,
+  path: "/",
+  secure: cookieSecure,
+};
 
 export const authOptions: NextAuthOptions = {
   adapter: getAdapter(),
@@ -99,30 +127,45 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
-  // signIn: 인증 필요 시 이동할 페이지. error: OAuth/콜백 실패 시 이동할 페이지 (예: ?error=Callback).
-  // 리다이렉트 루프 원인은 보통 콜백 실패 → /auth/error → (에러 페이지에서 다시 signin으로) 반복이므로, signIn 페이지 자체보다는 콜백 실패 원인 해결이 필요함.
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
+  useSecureCookies: cookieSecure,
+  cookies: {
+    pkceCodeVerifier: {
+      name: cookieSecure ? "__Secure-next-auth.pkce.code_verifier" : "next-auth.pkce.code_verifier",
+      options: pkceCookieOptions,
+    },
+    state: {
+      name: cookieSecure ? "__Secure-next-auth.state" : "next-auth.state",
+      options: pkceCookieOptions,
+    },
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
-      const provider = account?.provider ?? "";
-      console.log("[auth] signIn callback:", {
-        provider,
-        userId: user?.id,
-        hasEmail: !!user?.email,
-        email: user?.email ? "(있음)" : "(없음)",
-        hasName: !!user?.name,
-      });
-      if (provider === "kakao") {
-        // 로컬 테스트용: 카카오 OAuth 콜백까지 도달했다는 것은
-        // 사용자가 브라우저/카카오톡에서 로그인 상태이거나, ID/PW 입력을 완료했다는 뜻입니다.
-        console.log("[auth][kakao] signIn: 브라우저에서 카카오 인증 완료. profile keys:", {
-          profileKeys: profile ? Object.keys(profile as Record<string, unknown>) : [],
+      try {
+        const provider = account?.provider ?? "";
+        console.log("[auth] signIn callback:", {
+          provider,
+          userId: user?.id,
+          hasEmail: !!user?.email,
+          hasName: !!user?.name,
         });
+        if (provider === "kakao") {
+          if (!user?.email) {
+            console.error("[Auth Error] Kakao signIn: email 없음 — profile/동의항목 확인", {
+              accountId: account?.providerAccountId,
+              profileKeys: profile ? Object.keys(profile as Record<string, unknown>) : [],
+            });
+            return false;
+          }
+        }
+        return true;
+      } catch (e) {
+        console.error("[Auth Error] signIn callback 예외:", e instanceof Error ? e.message : String(e), e);
+        return false;
       }
-      return true;
     },
     async jwt({ token, user }) {
       if (user) {
@@ -143,23 +186,40 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      console.log("[auth] redirect callback:", { url, baseUrl, hasError: url.includes("error=") });
-      if (url.includes("error=")) {
-        console.log("[auth] redirect: 에러 포함 URL → 에러 페이지로 유지. error param:", url.split("error=")[1]?.split("&")[0]);
+      const canonical = authBaseUrl.replace(/\/$/, "");
+      const b = baseUrl.replace(/\/$/, "");
+      if (b !== canonical) {
+        console.warn("[auth] redirect: baseUrl 불일치 가능성", { baseUrl: b, NEXTAUTH_URL: canonical });
       }
-      // 로그인 성공 후 항상 온보딩으로 이동
-      if (url.includes("/api/auth/callback") && !url.includes("error=")) return `${baseUrl}/onboarding`;
-      // 같은 origin이면 허용
-      if (url.startsWith(baseUrl)) return url;
-      // 상대 경로 허용
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      return baseUrl;
+      if (url.includes("error=")) {
+        const err = url.split("error=")[1]?.split("&")[0];
+        console.error("[Auth Error] OAuth redirect에 error 포함:", err, { url });
+        return url.startsWith("/") ? `${canonical}${url}` : url;
+      }
+      // OAuth 콜백 성공 직후: 온보딩 페이지로 바로 이동 (/onboarding 한 번 더 거치지 않음 → 세션 누락·루프 완화)
+      if (url.includes("/api/auth/callback") && !url.includes("error=")) {
+        return `${canonical}/auth/onboarding`;
+      }
+      if (url.startsWith(canonical)) return url;
+      if (url.startsWith("/")) return `${canonical}${url}`;
+      return canonical;
+    },
+  },
+  events: {
+    async signIn({ user, account, isNewUser }) {
+      console.log("[auth] events.signIn:", {
+        provider: account?.provider,
+        isNewUser,
+        userId: user?.id,
+        hasEmail: !!user?.email,
+      });
     },
   },
   secret:
     process.env.NEXTAUTH_SECRET ||
     (process.env.NODE_ENV === "development" ? "dev-secret-min-32-characters-long-for-nextauth" : undefined),
-  
   debug: process.env.NODE_ENV === "development",
 };
 
+// App Router + Vercel 등에서 호스트 검증 완화 (next-auth 타입에 없을 수 있음)
+(authOptions as NextAuthOptions & { trustHost?: boolean }).trustHost = true;
