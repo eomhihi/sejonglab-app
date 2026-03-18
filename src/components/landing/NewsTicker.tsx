@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Newspaper, ExternalLink, Clock } from "lucide-react";
 
 interface NewsItem {
@@ -45,7 +44,7 @@ export function NewsTicker({ initialNews, error = false }: NewsTickerProps) {
           <div className="flex-shrink-0 flex items-center gap-2 pr-4 border-r border-sky-200">
             <Newspaper className="w-5 h-5 text-[#004B8D]" />
             <span className="font-bold text-sm whitespace-nowrap text-[#004B8D]">
-              데이터로 변화하는 세상과 세종
+              오늘의 데이터 정책 뉴스
             </span>
           </div>
 
@@ -97,10 +96,10 @@ export function NewsSection({ initialNews, error = false }: NewsTickerProps) {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-[#002D56]">
-                  데이터로 변화하는 세상과 세종
+                  오늘의 데이터 정책 뉴스
                 </h2>
                 <p className="text-xs text-[#004B8D] font-bold">
-                  데이터가 어떻게 실제 삶을 바꾸는지
+                  데이터가 세상을 바꾼다
                 </p>
               </div>
             </div>
@@ -120,37 +119,25 @@ export function NewsSection({ initialNews, error = false }: NewsTickerProps) {
             ) : (
               <div className="space-y-2">
                 {initialNews.map((item, index) => (
-                  <div
+                  <a
                     key={`${item.link}-${index}`}
-                    className="rounded-lg bg-white border border-sky-200 shadow-sm overflow-hidden"
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 p-4 rounded-lg bg-white hover:bg-sky-100 transition-colors group border border-sky-200 shadow-sm"
                   >
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 hover:bg-sky-50 transition-colors group"
-                    >
-                      <span className="text-xs px-2 py-1 bg-[#004B8D] text-white rounded font-bold min-w-[70px] text-center">
-                        {item.source}
-                      </span>
-                      <span className="flex-1 text-sm text-[#002D56] font-medium group-hover:text-[#004B8D] transition-colors">
-                        {item.title}
-                      </span>
-                      <div className="flex items-center gap-1 text-xs text-slate-500 flex-shrink-0 font-medium">
-                        <Clock className="w-3 h-3" />
-                        <span>{formatTimeAgo(item.pubDate)}</span>
-                      </div>
-                      <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#004B8D] transition-colors flex-shrink-0" />
-                    </a>
-                    <div className="px-4 pb-3 pt-0">
-                      <Link
-                        href="/auth/onboarding"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#004B8D] hover:text-[#003666] hover:underline"
-                      >
-                        나도 데이터로 참여하기
-                      </Link>
+                    <span className="text-xs px-2 py-1 bg-[#004B8D] text-white rounded font-bold min-w-[70px] text-center">
+                      {item.source}
+                    </span>
+                    <span className="flex-1 text-sm text-[#002D56] font-medium group-hover:text-[#004B8D] transition-colors">
+                      {item.title}
+                    </span>
+                    <div className="flex items-center gap-1 text-xs text-slate-500 flex-shrink-0 font-medium">
+                      <Clock className="w-3 h-3" />
+                      <span>{formatTimeAgo(item.pubDate)}</span>
                     </div>
-                  </div>
+                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#004B8D] transition-colors flex-shrink-0" />
+                  </a>
                 ))}
               </div>
             )}
