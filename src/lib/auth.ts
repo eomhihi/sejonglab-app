@@ -48,6 +48,10 @@ if (kakaoId && kakaoSecret) {
         authorization: {
           params: {
             scope: "profile_nickname account_email",
+            // Kakao OAuth: prompt=login 으로 항상 명시적 로그인/동의 플로우 유도
+            // (네이버처럼 곧바로 동의 화면으로 보내는 것은 콘솔의 동의항목/약관 설정에 더 큰 영향이 있으므로,
+            //  카카오 개발자 콘솔에서 "동의 화면"을 최적화해 주는 것이 UX 일관성에 중요합니다.)
+            prompt: "login",
           },
         },
         profile(profile: Record<string, unknown>) {
