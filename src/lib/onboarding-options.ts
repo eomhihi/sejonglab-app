@@ -18,49 +18,90 @@ export const REGION_OPTIONS = [
   "아름동", "소담동", "반곡동", "가람동", "합강동", "해밀동", "한별동", "가온동", "산울동", "온빛동", "장지동",
 ] as const;
 
-/** 온보딩 관심 분야 10개 (DB User.interests 배열에 label 그대로 저장) */
-export const ONBOARDING_INTEREST_CATEGORIES = [
-  { id: "city_transport", label: "도시/교통" },
-  { id: "housing", label: "주거/부동산" },
-  { id: "economy_jobs", label: "경제/일자리" },
-  { id: "education_care", label: "교육/보육" },
-  { id: "welfare_safety", label: "복지/안전" },
-  { id: "culture_env", label: "문화/환경" },
-  { id: "health_medical", label: "보건/의료" },
-  { id: "admin_participation", label: "행정/참여" },
-  { id: "future_tech", label: "미래과학/신기술" },
-  { id: "regional_balance", label: "지역균형/상생" },
-] as const;
-
-/** 2컬럼 구성: 상위 카테고리(선택 안함) 아래 하위 분야 5개씩 */
-export const ONBOARDING_INTEREST_COLUMNS = [
+/**
+ * 관심 분야: 섹션 제목(비선택) + 키워드(다중 선택).
+ * User.interests 에 선택된 키워드 문자열 배열로 저장.
+ */
+export const ONBOARDING_INTEREST_SECTIONS = [
   {
-    upperLabel: "생활·경제",
-    items: ONBOARDING_INTEREST_CATEGORIES.slice(0, 5),
+    id: "city_transport",
+    title: "도시/교통",
+    keywords: ["BRT 노선", "주차난", "도로 정비", "대중교통 만족도"],
   },
   {
-    upperLabel: "사회·미래",
-    items: ONBOARDING_INTEREST_CATEGORIES.slice(5, 10),
+    id: "housing",
+    title: "주거/부동산",
+    keywords: ["임대주택", "부동산 규제", "층간소음", "정주 실태"],
+  },
+  {
+    id: "economy_jobs",
+    title: "경제/일자리",
+    keywords: ["소상공인 지원", "일자리 창출", "창업 정책", "지역경제 활성화"],
+  },
+  {
+    id: "education_care",
+    title: "교육/보육",
+    keywords: ["유·보육", "교육 인프라", "평생교육", "학급 규모"],
+  },
+  {
+    id: "welfare_safety",
+    title: "복지/안전",
+    keywords: ["노인·장애인 돌봄", "아동·청소년 복지", "재난·안전", "사회서비스"],
+  },
+  {
+    id: "culture_env",
+    title: "문화/환경",
+    keywords: ["문화시설·축제", "녹지·하천", "대기·수질", "쓰레기·재활용"],
+  },
+  {
+    id: "health_medical",
+    title: "보건/의료",
+    keywords: ["의료 접근성", "건강검진", "정신건강", "응급·필수의료"],
+  },
+  {
+    id: "admin_participation",
+    title: "행정/참여",
+    keywords: ["주민참여 예산", "정책 설명회", "민원·온라인 참여", "투명 행정"],
+  },
+  {
+    id: "future_tech",
+    title: "미래과학/신기술",
+    keywords: ["스마트시티", "AI·데이터", "디지털 격차 해소", "혁신 R&D"],
+  },
+  {
+    id: "regional_balance",
+    title: "지역균형/상생",
+    keywords: ["읍면·도심 균형", "지역 인센티브", "광역 연계 교통", "상생 사업"],
   },
 ] as const;
 
-/** 레거시·타입 호환용 (폼에서는 ONBOARDING_INTEREST_CATEGORIES 사용) */
-export const SEJONG_POLICY_INTEREST_GROUPS = ONBOARDING_INTEREST_CATEGORIES.map((c) => ({
-  id: c.id,
-  title: c.label,
-  keywords: "",
-  topics: [c.label],
+export const ONBOARDING_INTEREST_KEYWORDS = ONBOARDING_INTEREST_SECTIONS.flatMap((s) => [...s.keywords]) as [
+  string,
+  ...string[],
+];
+
+/** 카테고리 라벨만 (레거시·표시용) */
+export const ONBOARDING_INTEREST_CATEGORIES = ONBOARDING_INTEREST_SECTIONS.map((s) => ({
+  id: s.id,
+  label: s.title,
 }));
 
-/** 참여 가능 활동 (중복 선택, DB participationActivities에 저장) */
+/** 참여 가능 활동 */
 export const PARTICIPATION_ACTIVITY_OPTIONS = [
   { id: "survey_online", label: "설문조사 (온라인)" },
   { id: "fgi_offline", label: "FGI (오프라인 간담회)" },
   { id: "idi_interview", label: "IDI (심층 인터뷰)" },
 ] as const;
 
-export const INTEREST_CATEGORIES = ONBOARDING_INTEREST_CATEGORIES.map((c) => ({
-  category: c.label,
+export const SEJONG_POLICY_INTEREST_GROUPS = ONBOARDING_INTEREST_SECTIONS.map((s) => ({
+  id: s.id,
+  title: s.title,
+  keywords: s.keywords.join(", "),
+  topics: [...s.keywords],
+}));
+
+export const INTEREST_CATEGORIES = ONBOARDING_INTEREST_SECTIONS.map((s) => ({
+  category: s.title,
   icon: "📌",
-  topics: [c.label],
+  topics: [...s.keywords],
 }));

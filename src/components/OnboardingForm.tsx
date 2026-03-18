@@ -10,7 +10,7 @@ import {
   GENDER_OPTIONS,
   AGE_GROUP_OPTIONS,
   REGION_OPTIONS,
-  ONBOARDING_INTEREST_COLUMNS,
+  ONBOARDING_INTEREST_SECTIONS,
   PARTICIPATION_ACTIVITY_OPTIONS,
 } from "@/lib/onboarding-options";
 
@@ -52,16 +52,20 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
   const selectedInterests = watch("interests") ?? [];
   const selectedParticipation = watch("participationActivities") ?? [];
 
-  const toggleInterest = (topic: string) => {
+  const toggleKeyword = (keyword: string) => {
     const current = selectedInterests;
-    if (current.includes(topic)) {
+    if (current.includes(keyword as (typeof current)[number])) {
       setValue(
         "interests",
-        current.filter((t: string) => t !== topic),
+        current.filter((k: string) => k !== keyword) as OnboardingFormData["interests"],
         { shouldValidate: true }
       );
     } else {
-      setValue("interests", [...current, topic], { shouldValidate: true });
+      setValue(
+        "interests",
+        [...current, keyword] as OnboardingFormData["interests"],
+        { shouldValidate: true }
+      );
     }
   };
 
@@ -193,42 +197,42 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         {errors.region && <p className="mt-2 text-sm text-red-600">{errors.region.message}</p>}
       </div>
 
-      {/* 관심 분야: 2컬럼, 상위 카테고리(선택 안함) 아래 하위 분야 */}
-      <div className="bg-white rounded-2xl border border-[#004B8D]/15 shadow-md p-5 sm:p-6">
-        <p className="text-center text-slate-700 font-medium mb-1">관심 분야를 선택해 주세요</p>
-        <p className="text-center text-sm text-slate-500 mb-5">
-          해당되는 하위 분야를 눌러 선택할 수 있습니다. <span className="text-red-500">*</span>
-        </p>
+      {/* 관심 분야: 카테고리(섹션 제목) + 키워드 다중 선택 */}
+      <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50 to-white p-5 sm:p-7 shadow-sm ring-1 ring-slate-100">
+        <div className="mb-6 text-center">
+          <p className="text-lg font-bold text-[#003666]">관심 정책 키워드</p>
+          <p className="mt-1 text-sm text-slate-600">
+            분야별 키워드를 눌러 <strong>복수 선택</strong>해 주세요.{" "}
+            <span className="text-red-500">*</span>
+          </p>
+        </div>
 
-        <div className="grid grid-cols-2 gap-6">
-          {ONBOARDING_INTEREST_COLUMNS.map((col) => (
-            <div key={col.upperLabel} className="flex flex-col rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">
-                상위 카테고리 (선택 안함)
-              </p>
-              <p className="text-sm font-bold text-[#003666] mb-3">{col.upperLabel}</p>
-              <div className="space-y-2">
-                {col.items.map((cat) => {
-                  const on = selectedInterests.includes(cat.label);
+        <div className="space-y-5">
+          {ONBOARDING_INTEREST_SECTIONS.map((section) => (
+            <div
+              key={section.id}
+              className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-[0_2px_12px_-4px_rgba(0,54,102,0.08)]"
+            >
+              <div className="mb-3 flex items-center gap-3 border-b border-slate-100 pb-3">
+                <span className="flex h-9 w-1 shrink-0 rounded-full bg-[#004B8D]" aria-hidden />
+                <h3 className="text-base font-bold tracking-tight text-[#003666] sm:text-lg">{section.title}</h3>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {section.keywords.map((kw) => {
+                  const on = selectedInterests.includes(kw);
                   return (
                     <button
-                      key={cat.id}
+                      key={kw}
                       type="button"
-                      onClick={() => toggleInterest(cat.label)}
-                      className={`w-full flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-left text-sm font-medium transition ${
+                      onClick={() => toggleKeyword(kw)}
+                      className={`rounded-xl border-2 px-3.5 py-2 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#004B8D] focus-visible:ring-offset-2 ${
                         on
-                          ? "border-[#004B8D] bg-[#004B8D]/10 text-[#003666]"
-                          : "border-slate-200 bg-white text-slate-700 hover:border-[#004B8D]/40 hover:bg-slate-50"
+                          ? "border-[#004B8D] bg-[#004B8D] text-white shadow-md shadow-[#004B8D]/25"
+                          : "border-slate-200 bg-slate-50 text-slate-700 hover:border-[#004B8D]/50 hover:bg-white"
                       }`}
                     >
-                      <span
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 text-xs ${
-                          on ? "border-[#004B8D] bg-[#004B8D] text-white" : "border-slate-300 bg-white"
-                        }`}
-                      >
-                        {on ? "✓" : ""}
-                      </span>
-                      {cat.label}
+                      {on ? "✓ " : ""}
+                      {kw}
                     </button>
                   );
                 })}
@@ -236,10 +240,13 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
             </div>
           ))}
         </div>
-        {errors.interests && <p className="mt-3 text-center text-sm text-red-600">{errors.interests.message}</p>}
+
+        {errors.interests && (
+          <p className="mt-4 text-center text-sm font-medium text-red-600">{errors.interests.message}</p>
+        )}
         {selectedInterests.length > 0 && (
-          <p className="mt-4 text-center text-sm font-medium text-[#004B8D]">
-            {selectedInterests.length}개 선택됨
+          <p className="mt-4 rounded-xl bg-[#004B8D]/8 py-2.5 text-center text-sm font-semibold text-[#003666]">
+            선택한 키워드 {selectedInterests.length}개
           </p>
         )}
       </div>
