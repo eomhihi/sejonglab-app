@@ -15,7 +15,7 @@ export default async function SignInPage({ searchParams }: Props) {
   const next =
     typeof searchParams?.callbackUrl === "string" ? searchParams.callbackUrl.trim() : "";
   const afterLogin =
-    next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+    next.startsWith("/") && !next.startsWith("//") ? next : "/onboarding";
   if (session) redirect(afterLogin);
 
   return (

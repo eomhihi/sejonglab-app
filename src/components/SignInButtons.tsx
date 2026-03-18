@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 
-const DEFAULT_CALLBACK = "/dashboard";
+const DEFAULT_CALLBACK = "/onboarding";
 
 export function SignInButtons({ callbackUrl = DEFAULT_CALLBACK }: { callbackUrl?: string }) {
   const next =
