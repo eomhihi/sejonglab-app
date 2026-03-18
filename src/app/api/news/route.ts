@@ -71,13 +71,27 @@ function getNaverNewsCreds(): { id: string; secret: string } | null {
   return { id, secret };
 }
 
+function getNaverSearchErrorHint(status: number): string {
+  if (status === 401) return "API 키가 유효하지 않음";
+  if (status === 403) return "네이버 콘솔에서 뉴스 API 권한 미설정";
+  if (status === 400) return "검색어 쿼리 오류";
+  return `네이버 뉴스 API 호출 실패 (HTTP ${status})`;
+}
+
 /**
  * 네이버 검색(Search) API - 뉴스
  * 헤더: X-Naver-Client-Id, X-Naver-Client-Secret
  */
-async function fetchNaverNews(query: string): Promise<NewsItem[]> {
+async function fetchNaverNews(
+  query: string
+): Promise<{ items: NewsItem[]; errorHint?: string; status?: number; raw?: unknown }> {
   const creds = getNaverNewsCreds();
-  if (!creds) return [];
+  if (!creds) {
+    return {
+      items: [],
+      errorHint: "NAVER_NEWS_CLIENT_ID / NAVER_NEWS_CLIENT_SECRET 환경 변수가 로드되지 않았습니다.",
+    };
+  }
 
   const clientId = creds.id;
   const clientSecret = creds.secret;
@@ -88,7 +102,15 @@ async function fetchNaverNews(query: string): Promise<NewsItem[]> {
     sort: "date",
   });
 
-  const res = await fetch(`${NAVER_NEWS_URL}?${params.toString()}`, {
+  const requestUrl = `${NAVER_NEWS_URL}?${params.toString()}`;
+  console.log("[news][naver] ID 존재 여부:", !!clientId);
+  console.log("[news][naver] 요청 URL:", requestUrl);
+  console.log("[news][naver] 요청 헤더:", {
+    "X-Naver-Client-Id": `${clientId.slice(0, 4)}***`,
+    "X-Naver-Client-Secret": "***",
+  });
+
+  const res = await fetch(requestUrl, {
     method: "GET",
     headers: {
       "X-Naver-Client-Id": clientId,
@@ -97,14 +119,40 @@ async function fetchNaverNews(query: string): Promise<NewsItem[]> {
     next: { revalidate: REVALIDATE_SECONDS },
   });
 
-  if (!res.ok) return [];
+  console.log("[news][naver] 응답 status:", res.status);
 
-  const data = await res.json();
-  if (data.errorMessage || data.errorCode) return [];
+  let data: unknown = null;
+  try {
+    data = await res.json();
+  } catch (error) {
+    console.log("[news][naver] 응답 JSON 파싱 실패:", String(error));
+    return { items: [], status: res.status, errorHint: getNaverSearchErrorHint(res.status) };
+  }
+  console.log("[news][naver] 응답 데이터:", data);
 
-  const items = data.items || [];
+  if (!res.ok) {
+    return { items: [], status: res.status, raw: data, errorHint: getNaverSearchErrorHint(res.status) };
+  }
 
-  return items.map(
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    ("errorMessage" in data || "errorCode" in data)
+  ) {
+    const errorMessage = "errorMessage" in data ? String((data as any).errorMessage) : "";
+    const errorCode = "errorCode" in data ? String((data as any).errorCode) : "";
+    return {
+      items: [],
+      status: res.status,
+      raw: data,
+      errorHint: `네이버 뉴스 API 에러 응답: ${errorCode} ${errorMessage}`.trim(),
+    };
+  }
+
+  const items = (data as any)?.items || [];
+
+  return {
+    items: (items as any[]).map(
     (item: { title?: string; originallink?: string; link?: string; pubDate?: string }) => {
       const link = (item.originallink || item.link || "").trim();
       return {
@@ -114,7 +162,10 @@ async function fetchNaverNews(query: string): Promise<NewsItem[]> {
         pubDate: item.pubDate || "",
       };
     }
-  );
+    ),
+    status: res.status,
+    raw: data,
+  };
 }
 
 const FALLBACK_NEWS: NewsItem[] = [
@@ -128,12 +179,16 @@ const FALLBACK_NEWS: NewsItem[] = [
 export async function GET() {
   try {
     const merged: NewsItem[] = [];
+    const errorHints: string[] = [];
 
     if (getNaverNewsCreds()) {
       for (const query of SEARCH_QUERIES) {
-        const batch = await fetchNaverNews(query);
-        merged.push(...batch);
+        const result = await fetchNaverNews(query);
+        merged.push(...result.items);
+        if (result.errorHint) errorHints.push(`[${query}] ${result.errorHint}`);
       }
+    } else {
+      errorHints.push("환경 변수가 없습니다: NAVER_NEWS_CLIENT_ID / NAVER_NEWS_CLIENT_SECRET");
     }
 
     const deduped = dedupeByLink(merged);
@@ -141,7 +196,13 @@ export async function GET() {
     let news = deduped.slice(0, MAX_OUTPUT);
 
     if (news.length === 0) {
-      news = FALLBACK_NEWS;
+      const reason = errorHints.length > 0 ? errorHints.join(" / ") : "검색 결과가 없습니다 (items.length === 0).";
+      return NextResponse.json({
+        news: FALLBACK_NEWS,
+        updatedAt: new Date().toISOString(),
+        error: true,
+        message: reason,
+      });
     }
 
     return NextResponse.json({
@@ -153,7 +214,8 @@ export async function GET() {
     return NextResponse.json({
       news: FALLBACK_NEWS,
       updatedAt: new Date().toISOString(),
-      error: false,
+      error: true,
+      message: "뉴스 API 처리 중 예외가 발생했습니다.",
     });
   }
 }

@@ -23,10 +23,10 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <SejongHeader />
-      <NewsTicker initialNews={newsResult.news} error={newsResult.error} />
+      <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
       <main className="flex-1">
         <SejongHeroSection />
-        <NewsSection initialNews={newsResult.news} error={newsResult.error} />
+        <NewsSection initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
         <SejongFeatureCards />
         <AirBBotFeatureSection />
         <BenefitsSection />

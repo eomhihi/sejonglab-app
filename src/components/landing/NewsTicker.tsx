@@ -13,6 +13,7 @@ interface NewsItem {
 interface NewsTickerProps {
   initialNews: NewsItem[];
   error?: boolean;
+  message?: string;
 }
 
 function formatTimeAgo(dateString: string): string {
@@ -31,11 +32,13 @@ function formatTimeAgo(dateString: string): string {
   }
 }
 
-export function NewsTicker({ initialNews, error = false }: NewsTickerProps) {
+export function NewsTicker({ initialNews, error = false, message }: NewsTickerProps) {
   const [isPaused, setIsPaused] = useState(false);
   const [news] = useState<NewsItem[]>(initialNews);
 
   const duplicatedNews = [...news, ...news];
+
+  const statusText = message || "최신 뉴스를 불러오는 중입니다";
 
   return (
     <section className="bg-sky-50 border-b border-sky-100 py-3 overflow-hidden">
@@ -54,7 +57,7 @@ export function NewsTicker({ initialNews, error = false }: NewsTickerProps) {
             onMouseLeave={() => setIsPaused(false)}
           >
             {error || news.length === 0 ? (
-              <p className="text-sm text-slate-600 font-medium">최신 뉴스를 불러오는 중입니다</p>
+              <p className="text-sm text-slate-600 font-medium">{statusText}</p>
             ) : (
               <div
                 className={`flex gap-8 ${isPaused ? "" : "animate-ticker"}`}
@@ -63,7 +66,11 @@ export function NewsTicker({ initialNews, error = false }: NewsTickerProps) {
                 {duplicatedNews.map((item, index) => (
                   <a
                     key={`${item.link}-${index}`}
-                    href={item.link}
+                    href={
+                      item.link?.trim()
+                        ? item.link
+                        : `https://search.naver.com/search.naver?where=news&query=${encodeURIComponent(item.title)}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 group whitespace-nowrap hover:text-[#004B8D] transition-colors"
@@ -84,7 +91,9 @@ export function NewsTicker({ initialNews, error = false }: NewsTickerProps) {
   );
 }
 
-export function NewsSection({ initialNews, error = false }: NewsTickerProps) {
+export function NewsSection({ initialNews, error = false, message }: NewsTickerProps) {
+  const statusText = message || "최신 뉴스를 불러오는 중입니다";
+
   return (
     <section className="bg-sky-50 py-10 border-y border-sky-100">
       <div className="max-w-7xl mx-auto px-4">
@@ -114,17 +123,23 @@ export function NewsSection({ initialNews, error = false }: NewsTickerProps) {
           >
             {error || initialNews.length === 0 ? (
               <div className="flex items-center justify-center h-40 rounded-lg bg-white border border-sky-200 text-slate-600 font-medium">
-                최신 뉴스를 불러오는 중입니다
+                {statusText}
               </div>
             ) : (
               <div className="space-y-2">
                 {initialNews.map((item, index) => (
                   <a
-                    key={`${item.link}-${index}`}
-                    href={item.link}
+                    key={`${item.link || item.title}-${index}`}
+                    href={
+                      item.link?.trim()
+                        ? item.link
+                        : `https://search.naver.com/search.naver?where=news&query=${encodeURIComponent(item.title)}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-lg bg-white hover:bg-sky-100 transition-colors group border border-sky-200 shadow-sm"
+                    className={`flex items-center gap-4 p-4 rounded-lg bg-white transition-colors group border border-sky-200 shadow-sm ${
+                      item.link?.trim() ? "hover:bg-sky-100" : "opacity-75"
+                    }`}
                   >
                     <span className="text-xs px-2 py-1 bg-[#004B8D] text-white rounded font-bold min-w-[70px] text-center">
                       {item.source}
