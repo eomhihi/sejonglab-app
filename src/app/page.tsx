@@ -13,19 +13,19 @@ import { getNews } from "@/lib/get-news";
 // Footer 「관리자」 링크: 이 이메일로 로그인한 경우에만 노출
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
-export const revalidate = 86400;
+export const revalidate = 604800;
 
 export default async function LandingPage() {
-  const [news, session] = await Promise.all([getNews(), getServerSession(authOptions)]);
+  const [newsResult, session] = await Promise.all([getNews(), getServerSession(authOptions)]);
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
   return (
     <div className="min-h-screen flex flex-col">
       <SejongHeader />
-      <NewsTicker initialNews={news} />
+      <NewsTicker initialNews={newsResult.news} error={newsResult.error} />
       <main className="flex-1">
         <SejongHeroSection />
-        <NewsSection initialNews={news} />
+        <NewsSection initialNews={newsResult.news} error={newsResult.error} />
         <SejongFeatureCards />
         <AirBBotFeatureSection />
         <BenefitsSection />

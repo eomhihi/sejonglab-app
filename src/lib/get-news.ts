@@ -1,9 +1,11 @@
-interface NewsItem {
+export interface NewsItem {
   title: string;
   source: string;
   link: string;
   pubDate: string;
 }
+
+export type GetNewsResult = { news: NewsItem[]; error: boolean };
 
 const FALLBACK_NEWS: NewsItem[] = [
   {
@@ -38,20 +40,26 @@ const FALLBACK_NEWS: NewsItem[] = [
   },
 ];
 
-export async function getNews(): Promise<NewsItem[]> {
+/** 주간(604800초) 캐시로 뉴스 API 호출. 실패 시 error: true 반환. */
+export async function getNews(): Promise<GetNewsResult> {
   try {
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3003";
     const res = await fetch(`${baseUrl}/api/news`, {
-      next: { revalidate: 86400 },
+      next: { revalidate: 604800 },
     });
-    
+
     if (!res.ok) {
-      return FALLBACK_NEWS;
+      return { news: [], error: true };
     }
-    
+
     const data = await res.json();
-    return data.news || FALLBACK_NEWS;
+    if (data.error === true) {
+      return { news: [], error: true };
+    }
+
+    const news = Array.isArray(data.news) ? data.news : [];
+    return { news: news.length > 0 ? news : FALLBACK_NEWS, error: false };
   } catch {
-    return FALLBACK_NEWS;
+    return { news: [], error: true };
   }
 }

@@ -8,6 +8,39 @@ export interface NewsItem {
 }
 
 const KEYWORDS = ["데이터 기반 정책", "AI 행정 혁신"];
+const REVALIDATE_SECONDS = 604800; // 1주일
+const MAX_AGE_DAYS = 7;
+const MAX_ITEMS = 10;
+
+function parsePubDate(pubDate: string): number {
+  const d = new Date(pubDate);
+  return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+}
+
+/** 제목·링크 기준 중복 제거 (먼저 나온 항목 유지) */
+function dedupeByTitleAndLink(items: NewsItem[]): NewsItem[] {
+  const seenTitles = new Set<string>();
+  const seenLinks = new Set<string>();
+  return items.filter((item) => {
+    const titleNorm = item.title.trim().toLowerCase();
+    const linkNorm = (item.link || "").trim().toLowerCase();
+    if (seenTitles.has(titleNorm) || seenLinks.has(linkNorm)) return false;
+    seenTitles.add(titleNorm);
+    seenLinks.add(linkNorm);
+    return true;
+  });
+}
+
+/** 최근 7일 이내만 필터, pubDate 내림차순, 최대 10건 */
+function filterSortAndLimit(items: NewsItem[]): NewsItem[] {
+  const now = Date.now();
+  const cutoff = now - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+  return items
+    .filter((item) => parsePubDate(item.pubDate) >= cutoff)
+    .sort((a, b) => parsePubDate(b.pubDate) - parsePubDate(a.pubDate))
+    .slice(0, MAX_ITEMS);
+}
 
 async function fetchNaverNews(query: string): Promise<NewsItem[]> {
   const clientId = process.env.NAVER_NEWS_CLIENT_ID;
@@ -18,23 +51,23 @@ async function fetchNaverNews(query: string): Promise<NewsItem[]> {
   }
 
   try {
-    const url = `https://openapi.naver.com/v1/search/news.json?query=${encodeURIComponent(query)}&display=5&sort=date`;
+    const url = `https://openapi.naver.com/v1/search/news.json?query=${encodeURIComponent(query)}&display=10&sort=date`;
     const res = await fetch(url, {
       headers: {
         "X-Naver-Client-Id": clientId,
         "X-Naver-Client-Secret": clientSecret,
       },
-      next: { revalidate: 86400 },
+      next: { revalidate: REVALIDATE_SECONDS },
     });
 
     if (!res.ok) return [];
 
     const data = await res.json();
-    return data.items.map((item: { title: string; originallink: string; link: string; pubDate: string }) => ({
-      title: item.title.replace(/<[^>]*>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&"),
+    return (data.items || []).map((item: { title: string; originallink: string; link: string; pubDate: string }) => ({
+      title: (item.title || "").replace(/<[^>]*>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&"),
       source: extractSource(item.originallink || item.link),
-      link: item.originallink || item.link,
-      pubDate: item.pubDate,
+      link: item.originallink || item.link || "",
+      pubDate: item.pubDate || "",
     }));
   } catch {
     return [];
@@ -77,15 +110,15 @@ async function fetchRssNews(): Promise<NewsItem[]> {
 
   for (const feedUrl of feeds) {
     try {
-      const res = await fetch(feedUrl, { next: { revalidate: 86400 } });
+      const res = await fetch(feedUrl, { next: { revalidate: REVALIDATE_SECONDS } });
       if (!res.ok) continue;
 
       const xml = await res.text();
       const items = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
 
-      for (const item of items.slice(0, 3)) {
-        const title = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] 
-                   || item.match(/<title>(.*?)<\/title>/)?.[1] || "";
+      for (const item of items.slice(0, 5)) {
+        const title = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1]
+          || item.match(/<title>(.*?)<\/title>/)?.[1] || "";
         const link = item.match(/<link>(.*?)<\/link>/)?.[1] || "";
         const pubDate = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || "";
 
@@ -142,26 +175,51 @@ const FALLBACK_NEWS: NewsItem[] = [
 export async function GET() {
   let allNews: NewsItem[] = [];
 
-  for (const keyword of KEYWORDS) {
-    const news = await fetchNaverNews(keyword);
-    allNews.push(...news);
+  try {
+    for (const keyword of KEYWORDS) {
+      const news = await fetchNaverNews(keyword);
+      allNews.push(...news);
+    }
+
+    if (allNews.length < 5) {
+      const rssNews = await fetchRssNews();
+      allNews.push(...rssNews);
+    }
+
+    const deduped = dedupeByTitleAndLink(allNews);
+    const filtered = filterSortAndLimit(deduped);
+
+    if (filtered.length > 0) {
+      return NextResponse.json({
+        news: filtered,
+        updatedAt: new Date().toISOString(),
+        error: false,
+      });
+    }
+
+    // 7일 이내 기사가 없으면 폴백 사용 (오래된 폴백도 정렬·제한 적용)
+    const fallbackProcessed = filterSortAndLimit(dedupeByTitleAndLink(FALLBACK_NEWS));
+    if (fallbackProcessed.length > 0) {
+      return NextResponse.json({
+        news: fallbackProcessed,
+        updatedAt: new Date().toISOString(),
+        error: false,
+      });
+    }
+
+    // 폴백도 7일 필터 통과 못 하면 최신순 10개만
+    const fallbackSorted = dedupeByTitleAndLink(FALLBACK_NEWS)
+      .sort((a, b) => parsePubDate(b.pubDate) - parsePubDate(a.pubDate))
+      .slice(0, MAX_ITEMS);
+    return NextResponse.json({
+      news: fallbackSorted,
+      updatedAt: new Date().toISOString(),
+      error: false,
+    });
+  } catch {
+    return NextResponse.json(
+      { news: [], updatedAt: new Date().toISOString(), error: true },
+      { status: 200 }
+    );
   }
-
-  if (allNews.length < 3) {
-    const rssNews = await fetchRssNews();
-    allNews.push(...rssNews);
-  }
-
-  if (allNews.length === 0) {
-    allNews = FALLBACK_NEWS;
-  }
-
-  const uniqueNews = allNews.filter(
-    (item, index, self) => self.findIndex((t) => t.title === item.title) === index
-  );
-
-  return NextResponse.json({
-    news: uniqueNews.slice(0, 5),
-    updatedAt: new Date().toISOString(),
-  });
 }
