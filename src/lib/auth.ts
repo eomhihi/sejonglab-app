@@ -38,7 +38,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     }), linkByEmail)
   );
 }
-// Kakao: 표준 Provider 설정 + profile 매핑만 사용 (Google/네이버와 동일한 형태)
+// Kakao: NextAuth 기본 authorize URL이 `...?scope`만 있어 scope 미지정 시 빈 요청이 됨.
+// 네이버는 Provider 기본값에 scope가 포함되므로 오버라이드가 없음. 카카오는 닉네임·이메일 동의에 필요한 scope만 명시.
+// prompt 등 추가 옵션은 넣지 않음 → 이미 로그인 시 동의 화면으로 이어지는 기본 플로우 유지.
 if (kakaoId && kakaoSecret) {
   providers.push(
     Object.assign(
@@ -48,10 +50,6 @@ if (kakaoId && kakaoSecret) {
         authorization: {
           params: {
             scope: "profile_nickname account_email",
-            // 카카오 OAuth 동의 화면/자동 로그인 플로우는 카카오 개발자 콘솔의
-            // "동의 화면" 및 앱 설정에 더 크게 의존합니다.
-            // 여기서는 scope만 명시하고, 추가 prompt 옵션은 주지 않아
-            // 브라우저/카카오톡에 이미 로그인된 경우 곧바로 동의 화면이 나오도록 위임합니다.
           },
         },
         profile(profile: Record<string, unknown>) {
