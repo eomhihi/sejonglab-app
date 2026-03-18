@@ -18,7 +18,7 @@ export const REGION_OPTIONS = [
   "아름동", "소담동", "반곡동", "가람동", "합강동", "해밀동", "한별동", "가온동", "산울동", "온빛동", "장지동",
 ] as const;
 
-/** 온보딩 관심 분야 10개 (DB User.interests 배열에 이 문자열 그대로 저장) */
+/** 온보딩 관심 분야 10개 (DB User.interests 배열에 label 그대로 저장) */
 export const ONBOARDING_INTEREST_CATEGORIES = [
   { id: "city_transport", label: "도시/교통" },
   { id: "housing", label: "주거/부동산" },
@@ -30,6 +30,18 @@ export const ONBOARDING_INTEREST_CATEGORIES = [
   { id: "admin_participation", label: "행정/참여" },
   { id: "future_tech", label: "미래과학/신기술" },
   { id: "regional_balance", label: "지역균형/상생" },
+] as const;
+
+/** 2컬럼 구성: 상위 카테고리(선택 안함) 아래 하위 분야 5개씩 */
+export const ONBOARDING_INTEREST_COLUMNS = [
+  {
+    upperLabel: "생활·경제",
+    items: ONBOARDING_INTEREST_CATEGORIES.slice(0, 5),
+  },
+  {
+    upperLabel: "사회·미래",
+    items: ONBOARDING_INTEREST_CATEGORIES.slice(5, 10),
+  },
 ] as const;
 
 /** 레거시·타입 호환용 (폼에서는 ONBOARDING_INTEREST_CATEGORIES 사용) */

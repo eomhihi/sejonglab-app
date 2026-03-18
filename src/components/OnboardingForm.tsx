@@ -10,7 +10,7 @@ import {
   GENDER_OPTIONS,
   AGE_GROUP_OPTIONS,
   REGION_OPTIONS,
-  ONBOARDING_INTEREST_CATEGORIES,
+  ONBOARDING_INTEREST_COLUMNS,
   PARTICIPATION_ACTIVITY_OPTIONS,
 } from "@/lib/onboarding-options";
 
@@ -193,36 +193,48 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         {errors.region && <p className="mt-2 text-sm text-red-600">{errors.region.message}</p>}
       </div>
 
-      {/* 관심 분야 (10개 카테고리, 다중 선택) */}
+      {/* 관심 분야: 2컬럼, 상위 카테고리(선택 안함) 아래 하위 분야 */}
       <div className="bg-white rounded-2xl border border-[#004B8D]/15 shadow-md p-5 sm:p-6">
         <p className="text-center text-slate-700 font-medium mb-1">관심 분야를 선택해 주세요</p>
-        <p className="text-center text-sm text-slate-500 mb-4">
-          해당되는 항목을 모두 눌러 선택할 수 있습니다. <span className="text-red-500">*</span>
+        <p className="text-center text-sm text-slate-500 mb-5">
+          해당되는 하위 분야를 눌러 선택할 수 있습니다. <span className="text-red-500">*</span>
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {ONBOARDING_INTEREST_CATEGORIES.map((cat) => {
-            const on = selectedInterests.includes(cat.label);
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => toggleInterest(cat.label)}
-                className={`relative flex min-h-[3.25rem] items-center justify-center rounded-xl border-2 px-3 py-3 text-center text-sm font-semibold transition sm:text-[0.95rem] ${
-                  on
-                    ? "border-[#004B8D] bg-[#004B8D]/10 text-[#003666] shadow-sm"
-                    : "border-slate-200 bg-slate-50/80 text-slate-800 hover:border-[#004B8D]/45 hover:bg-white"
-                }`}
-              >
-                {on && (
-                  <span className="absolute left-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#004B8D] text-[10px] text-white">
-                    ✓
-                  </span>
-                )}
-                <span className={on ? "pl-4" : ""}>{cat.label}</span>
-              </button>
-            );
-          })}
+        <div className="grid grid-cols-2 gap-6">
+          {ONBOARDING_INTEREST_COLUMNS.map((col) => (
+            <div key={col.upperLabel} className="flex flex-col rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">
+                상위 카테고리 (선택 안함)
+              </p>
+              <p className="text-sm font-bold text-[#003666] mb-3">{col.upperLabel}</p>
+              <div className="space-y-2">
+                {col.items.map((cat) => {
+                  const on = selectedInterests.includes(cat.label);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => toggleInterest(cat.label)}
+                      className={`w-full flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-left text-sm font-medium transition ${
+                        on
+                          ? "border-[#004B8D] bg-[#004B8D]/10 text-[#003666]"
+                          : "border-slate-200 bg-white text-slate-700 hover:border-[#004B8D]/40 hover:bg-slate-50"
+                      }`}
+                    >
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 text-xs ${
+                          on ? "border-[#004B8D] bg-[#004B8D] text-white" : "border-slate-300 bg-white"
+                        }`}
+                      >
+                        {on ? "✓" : ""}
+                      </span>
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
         {errors.interests && <p className="mt-3 text-center text-sm text-red-600">{errors.interests.message}</p>}
         {selectedInterests.length > 0 && (
