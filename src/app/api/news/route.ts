@@ -14,20 +14,19 @@ const DISPLAY_PER_QUERY = 10;
 const MAX_OUTPUT = 5;
 
 /**
- * 검색 키워드 타겟팅: 로컬에서 확인한 기사 주제에 맞춰 매우 구체적으로 고정.
- * + 반드시 포함 조합: (세종시 OR 공공) + (생성형 AI OR 행정 혁신 OR 데이터 기반)
+ * 완전 리셋된 검색 로직
+ * - 검색 키워드 타겟팅: 아래 3개 주제에 집중
+ * - 검색어 조합(필수): (세종시 OR 공공) + (생성형 AI OR 행정 혁신 OR 데이터 기반)
+ *   → 모든 요청의 query 파라미터에 반드시 포함
  */
-const MUST_INCLUDE_QUERY =
-  "(세종시 OR 공공) (\"생성형 AI\" OR \"행정 혁신\" OR \"데이터 기반\")";
-const TARGETED_QUERIES = [
+const MUST_INCLUDE_QUERY = "(세종시 OR 공공) (\"생성형 AI\" OR \"행정 혁신\" OR \"데이터 기반\")";
+const TOPIC_QUERIES = [
   "\"공공 AI\" \"행정 혁신\"",
   "\"데이터 기반\" \"행정 활성화\"",
   "\"생성형 AI\" \"공공 플랫폼\"",
-  MUST_INCLUDE_QUERY,
 ] as const;
 
-const HARD_FILTER_KEYWORDS = ["데이터", "정책", "혁신", "디지털", "지능형"] as const;
-const TOPIC_PHRASES = ["공공", "행정", "생성형", "AI", "데이터 기반", "혁신"] as const;
+const SEARCH_QUERIES = TOPIC_QUERIES.map((q) => `${MUST_INCLUDE_QUERY} ${q}`);
 
 /** 제목에서 HTML 태그·엔티티 제거 (<b>, &quot; 등) */
 function sanitizeTitle(raw: string): string {
@@ -235,7 +234,7 @@ export async function GET() {
     const errorHints: string[] = [];
 
     if (getNaverNewsCreds()) {
-      for (const q of TARGETED_QUERIES) {
+      for (const q of SEARCH_QUERIES) {
         const result = await fetchNaverNews(q);
         merged.push(...result.items);
         if (result.errorHint) errorHints.push(`[${q}] ${result.errorHint}`);
@@ -244,42 +243,17 @@ export async function GET() {
       errorHints.push("환경 변수가 없습니다: NAVER_NEWS_CLIENT_ID / NAVER_NEWS_CLIENT_SECRET");
     }
 
-    // Hard filter: title/description 중 하나라도 키워드 1개 이상 포함해야 함
-    const hardFiltered = merged.filter((item) => {
-      const text = `${item.title} ${item.description}`;
-      return HARD_FILTER_KEYWORDS.some((k) => text.includes(k));
-    });
-
-    // 0건이면(필터가 너무 강함) 네이버 원본 결과로 한 단계 완화해서라도 노출
-    const candidate = hardFiltered.length > 0 ? hardFiltered : merged;
-
-    const deduped = dedupeByLink(candidate.map(({ description: _d, ...rest }) => rest));
+    const deduped = dedupeByLink(merged.map(({ description: _d, ...rest }) => rest));
 
     // 정렬 우선순위:
-    // 1) 제목에 '세종'과 '데이터' 동시 포함 최상단
-    // 2) 주제 적합도(공공/행정/생성형/AI/데이터 기반/혁신) 높을수록 상단
-    // 3) 최신순(pubDate desc)
-    // 4) 제목/요약에 하드키워드가 많이 포함될수록 상단
-    const score = (title: string, description: string) => {
-      const t = `${title} ${description}`;
-      const count = HARD_FILTER_KEYWORDS.reduce((acc, k) => acc + (t.includes(k) ? 1 : 0), 0);
-      const sejongDataBoost = title.includes("세종") && title.includes("데이터") ? 100 : 0;
-      const topicCount = TOPIC_PHRASES.reduce((acc, p) => acc + (t.includes(p) ? 1 : 0), 0);
-      return sejongDataBoost + topicCount * 10 + count;
-    };
-
-    const descriptionByLink = new Map<string, string>();
-    for (const it of candidate) descriptionByLink.set(it.link.trim(), it.description);
-
-    const sorted = deduped
-      .map((n) => ({ n, desc: descriptionByLink.get(n.link.trim()) || "" }))
-      .sort((a, b) => {
-        const as = score(a.n.title, a.desc);
-        const bs = score(b.n.title, b.desc);
-        if (bs !== as) return bs - as;
-        return parsePubDate(b.n.pubDate) - parsePubDate(a.n.pubDate);
-      })
-      .map(({ n }) => n);
+    // 1) 제목에 '세종' + '데이터' 동시 포함 최상단
+    // 2) 최신순(pubDate desc)
+    const sorted = deduped.sort((a, b) => {
+      const aBoost = a.title.includes("세종") && a.title.includes("데이터") ? 1 : 0;
+      const bBoost = b.title.includes("세종") && b.title.includes("데이터") ? 1 : 0;
+      if (bBoost !== aBoost) return bBoost - aBoost;
+      return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+    });
 
     let news = sorted.slice(0, MAX_OUTPUT);
 
