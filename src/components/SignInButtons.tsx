@@ -11,6 +11,11 @@ export function SignInButtons({ callbackUrl = DEFAULT_CALLBACK }: { callbackUrl?
       : DEFAULT_CALLBACK;
 
   const handleSignIn = (provider: string) => {
+    // 카카오: through_account 등 추가 파라미터 방지를 위해 옵션 없이 호출 (리다이렉트는 auth redirect 콜백에서 처리)
+    if (provider === "kakao") {
+      signIn("kakao").catch(() => {});
+      return;
+    }
     signIn(provider, { callbackUrl: next }).catch(() => {});
   };
 

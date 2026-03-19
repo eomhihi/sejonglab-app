@@ -4,6 +4,11 @@ import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
+/**
+ * 이전 잘못된 카카오 인증 세션이 남아 있으면: .env의 NEXTAUTH_SECRET을 변경하거나
+ * 브라우저에서 next-auth 관련 쿠키를 삭제한 뒤 다시 로그인하면 리프레시됨.
+ */
+
 /** NEXTAUTH_URL 정규화 (트레일링 슬래시 제거) — redirect_uri·쿠키 도메인과 일치 */
 function normalizeAuthUrl(): string {
   const fromEnv = process.env.NEXTAUTH_URL?.trim();
@@ -58,11 +63,12 @@ if (kakaoId && kakaoSecret) {
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
+        // authorization params 비움 → 카카오 기본 '간편 로그인' 동작 (through_account 강제 로그인 방지)
         authorization: {
-          params: {
-            scope: "profile_nickname account_email",
-          },
+          url: "https://kauth.kakao.com/oauth/authorize",
+          params: {},
         },
+        checks: ["pkce", "state"],
         profile(profile: Record<string, unknown>) {
           const p = profile as {
             id?: string | number;
@@ -215,6 +221,7 @@ export const authOptions: NextAuthOptions = {
       });
     },
   },
+  // NEXTAUTH_SECRET 필수. 변경 시 기존 세션/쿠키 무효화 → 사용자는 재로그인 필요
   secret:
     process.env.NEXTAUTH_SECRET ||
     (process.env.NODE_ENV === "development" ? "dev-secret-min-32-characters-long-for-nextauth" : undefined),
