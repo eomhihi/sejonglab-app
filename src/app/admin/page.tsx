@@ -1,3 +1,4 @@
+// 엑셀 다운로드 기능 사용 시 터미널에서: npm install xlsx
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import {
   LayoutDashboard,
   ArrowLeft,
 } from "lucide-react";
+import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
 
 // 이 이메일만 /admin 접근 및 헤더 「관리자」 링크 노출 (유일한 관리자 계정)
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
@@ -178,11 +180,16 @@ export default async function AdminPage() {
 
         {/* 회원 목록 테이블 */}
         <div className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden shadow-xl">
-          <div className="px-6 py-4 border-b border-slate-700">
-            <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
-            <p className="text-sm text-slate-400 mt-0.5">
-              DB 실시간 연동 · {members.length}명
-            </p>
+          <div className="px-6 py-4 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
+              <p className="text-sm text-slate-400 mt-0.5">
+                DB 실시간 연동 · {members.length}명
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <ExcelDownloadButton />
+            </div>
           </div>
 
           <div className="overflow-x-auto">
