@@ -2,19 +2,20 @@
 
 import { signIn } from "next-auth/react";
 
-const DEFAULT_CALLBACK = "/onboarding";
+/** 로그인 후 이동할 URL. signin/에러 페이지가 아닌 고정 경로만 사용해 콜백 루프 방지 */
+const SAFE_CALLBACK_URL = "/onboarding";
 
-export function SignInButtons({ callbackUrl = DEFAULT_CALLBACK }: { callbackUrl?: string }) {
+export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
+  // 현재 페이지나 /auth/* 경로가 넘어와도 사용하지 않고, 메인/온보딩만 허용
   const next =
-    callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
+    callbackUrl &&
+    callbackUrl.startsWith("/") &&
+    !callbackUrl.startsWith("//") &&
+    !callbackUrl.startsWith("/auth/")
       ? callbackUrl
-      : DEFAULT_CALLBACK;
+      : SAFE_CALLBACK_URL;
 
   const handleSignIn = (provider: string) => {
-    if (provider === "kakao") {
-      signIn("kakao").catch(() => {});
-      return;
-    }
     signIn(provider, { callbackUrl: next }).catch(() => {});
   };
 

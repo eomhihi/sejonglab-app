@@ -12,10 +12,12 @@ type Props = { searchParams: { callbackUrl?: string } };
 
 export default async function SignInPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
-  const next =
+  const raw =
     typeof searchParams?.callbackUrl === "string" ? searchParams.callbackUrl.trim() : "";
   const afterLogin =
-    next.startsWith("/") && !next.startsWith("//") ? next : "/onboarding";
+    raw.startsWith("/") && !raw.startsWith("//") && !raw.startsWith("/auth/")
+      ? raw
+      : "/onboarding";
   if (session) redirect(afterLogin);
 
   return (

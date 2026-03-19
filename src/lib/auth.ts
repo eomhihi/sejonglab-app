@@ -73,7 +73,6 @@ if (kakaoId && kakaoSecret) {
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
-        // Authorization 파라미터 강제 고정: scope 채우고 through_account=false로 덮어씀 (카카오/NextAuth 기본값 충돌 방지)
         authorization: {
           url: "https://kauth.kakao.com/oauth/authorize",
           params: {
@@ -84,35 +83,37 @@ if (kakaoId && kakaoSecret) {
         },
         checks: ["state"],
         profile(profile: Record<string, unknown>) {
-          const p = profile as {
-            id?: string | number;
-            kakao_account?: { email?: string | null; profile?: { nickname?: string; profile_image_url?: string } };
-          };
-          const rawId = p.id != null ? String(p.id) : "";
-          const account = p.kakao_account ?? {};
-          const accountProfile = account.profile ?? {};
-          const rawEmail = account.email?.trim() || null;
-          const name = accountProfile.nickname ?? null;
-          const image = accountProfile.profile_image_url ?? null;
-          // 이메일 미동의 시 어댑터/세션 생성 실패·루프 방지용 (고유 식별)
-          const email =
-            rawEmail && rawEmail.length > 0
-              ? rawEmail
-              : rawId
-                ? `kakao_${rawId}@users.noemail.local`
-                : null;
+          try {
+            const p = profile as {
+              id?: string | number;
+              kakao_account?: { email?: string | null; profile?: { nickname?: string; profile_image_url?: string } };
+            };
+            const rawId = p.id != null ? String(p.id) : "";
+            const account = p.kakao_account ?? {};
+            const accountProfile = account.profile ?? {};
+            const rawEmail = account.email?.trim() || null;
+            const name = accountProfile.nickname ?? null;
+            const image = accountProfile.profile_image_url ?? null;
+            const email =
+              rawEmail && rawEmail.length > 0
+                ? rawEmail
+                : rawId
+                  ? `kakao_${rawId}@users.noemail.local`
+                  : null;
 
-          return {
-            id: rawId,
-            email,
-            name,
-            image,
-          };
+            return { id: rawId, email, name, image };
+          } catch (e) {
+            console.error("[Auth Error] Kakao profile 매핑 실패 — raw profile:", JSON.stringify(profile, null, 2));
+            console.error("[Auth Error] Kakao profile 예외:", e instanceof Error ? e.message : String(e), e instanceof Error ? e.stack : "");
+            throw e;
+          }
         },
       }),
       linkByEmail
     )
   );
+} else if (kakaoId || kakaoSecret) {
+  console.warn("[auth] Kakao: clientSecret이 없거나 clientId만 설정됨. KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET 둘 다 필요합니다.");
 }
 
 if (naverId && naverSecret) {
@@ -132,11 +133,13 @@ if (process.env.NODE_ENV === "development") {
   console.log("[auth] Kakao callback URL (카카오 콘솔과 동일해야 함):", `${authBaseUrl}/api/auth/callback/kakao`);
 }
 
-const pkceCookieOptions = {
+// 카카오 등 OAuth 리다이렉트 호환: sameSite=lax, path=/ (strict·다른 path는 콜백 시 쿠키 미전송으로 실패 가능)
+const cookieOptions = {
   httpOnly: true as const,
   sameSite: "lax" as const,
-  path: "/",
+  path: "/" as const,
   secure: cookieSecure,
+  maxAge: 60 * 15,
 };
 
 export const authOptions: NextAuthOptions = {
@@ -155,11 +158,11 @@ export const authOptions: NextAuthOptions = {
   cookies: {
     pkceCodeVerifier: {
       name: cookieSecure ? "__Secure-next-auth.pkce.code_verifier" : "next-auth.pkce.code_verifier",
-      options: pkceCookieOptions,
+      options: cookieOptions,
     },
     state: {
       name: cookieSecure ? "__Secure-next-auth.state" : "next-auth.state",
-      options: pkceCookieOptions,
+      options: cookieOptions,
     },
   },
   callbacks: {
@@ -211,12 +214,13 @@ export const authOptions: NextAuthOptions = {
       if (b !== canonical) {
         console.warn("[auth] redirect: baseUrl 불일치 가능성", { baseUrl: b, NEXTAUTH_URL: canonical });
       }
+      // 에러 시 signin으로 돌리면 callbackUrl 중첩으로 무한 루프 → 에러 전용 페이지로만 이동
       if (url.includes("error=")) {
-        const err = url.split("error=")[1]?.split("&")[0];
+        const err = (url.split("error=")[1]?.split("&")[0] ?? "Callback").replace(/#.*$/, "");
         console.error("[Auth Error] OAuth redirect에 error 포함:", err, { url });
-        return url.startsWith("/") ? `${canonical}${url}` : url;
+        return `${canonical}/auth/error?error=${encodeURIComponent(err)}`;
       }
-      // OAuth 콜백 성공 직후: 온보딩 페이지로 바로 이동 (/onboarding 한 번 더 거치지 않음 → 세션 누락·루프 완화)
+      // OAuth 콜백 성공 직후: 온보딩 페이지로 바로 이동
       if (url.includes("/api/auth/callback") && !url.includes("error=")) {
         return `${canonical}/auth/onboarding`;
       }
