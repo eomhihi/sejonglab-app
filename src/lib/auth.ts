@@ -23,6 +23,16 @@ if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL !== authBaseUrl) {
   process.env.NEXTAUTH_URL = authBaseUrl;
   console.log("[auth] NEXTAUTH_URL 정규화:", authBaseUrl);
 }
+// 배포 환경 NEXTAUTH_URL 검증 (Vercel: https://sejonglab-app.vercel.app)
+const expectedProdUrl = "https://sejonglab-app.vercel.app";
+if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+  const actual = process.env.NEXTAUTH_URL ?? authBaseUrl;
+  console.log("[auth] NEXTAUTH_URL 확인:", {
+    actual,
+    expected: expectedProdUrl,
+    match: actual.replace(/\/$/, "") === expectedProdUrl,
+  });
+}
 
 const isHttps = authBaseUrl.startsWith("https://");
 const cookieSecure = isHttps;
@@ -63,12 +73,16 @@ if (kakaoId && kakaoSecret) {
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
-        // authorization params 비움 → 카카오 기본 '간편 로그인' 동작 (through_account 강제 로그인 방지)
+        // Authorization 파라미터 강제 고정: scope 채우고 through_account=false로 덮어씀 (카카오/NextAuth 기본값 충돌 방지)
         authorization: {
           url: "https://kauth.kakao.com/oauth/authorize",
-          params: {},
+          params: {
+            scope: "profile_nickname account_email",
+            prompt: "none",
+            through_account: "false",
+          },
         },
-        checks: ["pkce", "state"],
+        checks: ["state"],
         profile(profile: Record<string, unknown>) {
           const p = profile as {
             id?: string | number;
