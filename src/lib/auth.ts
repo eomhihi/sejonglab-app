@@ -74,11 +74,28 @@ if (kakaoId && kakaoSecret) {
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
+        allowDangerousEmailAccountLinking: true,
         authorization: {
           url: "https://kauth.kakao.com/oauth/authorize",
           params: {
             scope: "profile_nickname account_email",
           },
+        },
+        profile(profile: Record<string, unknown>) {
+          const p = profile as {
+            id?: string | number;
+            kakao_account?: {
+              email?: string | null;
+              profile?: { nickname?: string; profile_image_url?: string };
+            };
+          };
+          const id = p?.id != null ? String(p.id) : "unknown";
+          const name =
+            p?.kakao_account?.profile?.nickname?.trim() || "카카오유저";
+          const email =
+            p?.kakao_account?.email?.trim() || `kakao_${id}@temp.com`;
+          const image = p?.kakao_account?.profile?.profile_image_url || null;
+          return { id, name, email, image };
         },
       }),
       linkByEmail
@@ -166,8 +183,9 @@ export const authOptions: NextAuthOptions = {
           }
         }
         return true;
-      } catch (e) {
-        console.error("[Auth Error] signIn callback 예외:", e instanceof Error ? e.message : String(e), e);
+      } catch (error) {
+        console.error("NextAuth 콜백 에러:", error);
+        console.error("[Auth Error] signIn callback 예외:", error instanceof Error ? error.message : String(error), error);
         return false;
       }
     },
