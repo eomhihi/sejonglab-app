@@ -68,17 +68,24 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 if (kakaoId && kakaoSecret) {
+  console.log("[auth] Kakao: clientId·clientSecret 환경변수 로드됨 (scope 강제 주입)");
   providers.push(
     Object.assign(
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
+        authorization: {
+          url: "https://kauth.kakao.com/oauth/authorize",
+          params: {
+            scope: "profile_nickname profile_image account_email",
+          },
+        },
       }),
       linkByEmail
     )
   );
 } else if (kakaoId || kakaoSecret) {
-  console.warn("[auth] Kakao: KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET 둘 다 필요합니다.");
+  console.warn("[auth] Kakao: KAKAO_CLIENT_ID 또는 KAKAO_CLIENT_SECRET이 비어 있음. 둘 다 .env에 설정해야 합니다.");
 }
 
 if (naverId && naverSecret) {
