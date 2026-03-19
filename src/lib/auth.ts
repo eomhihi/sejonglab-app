@@ -89,13 +89,18 @@ if (kakaoId && kakaoSecret) {
               profile?: { nickname?: string; profile_image_url?: string };
             };
           };
-          const id = p?.id != null ? String(p.id) : "unknown";
+          const id = (p?.id != null ? String(p.id) : "") || "unknown";
           const name =
-            p?.kakao_account?.profile?.nickname?.trim() || "카카오유저";
+            (p?.kakao_account?.profile?.nickname?.trim() ?? "") || "카카오유저";
           const email =
-            p?.kakao_account?.email?.trim() || `kakao_${id}@temp.com`;
-          const image = p?.kakao_account?.profile?.profile_image_url || null;
-          return { id, name, email, image };
+            (p?.kakao_account?.email?.trim() ?? "") || `kakao_${id}@temp.com`;
+          const image = p?.kakao_account?.profile?.profile_image_url ?? null;
+          return {
+            id,
+            name,
+            email,
+            image: image ?? null,
+          };
         },
       }),
       linkByEmail
@@ -141,6 +146,7 @@ const cookieOptions = {
 };
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   adapter: getAdapter(),
   providers,
   session: {
@@ -165,8 +171,11 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
+      const provider = account?.provider ?? "";
+      if (provider === "kakao") {
+        console.log("🔥 [카카오 로그인 시도]:", { user, account, profile });
+      }
       try {
-        const provider = account?.provider ?? "";
         console.log("[auth] signIn callback:", {
           provider,
           userId: user?.id,
@@ -184,8 +193,9 @@ export const authOptions: NextAuthOptions = {
         }
         return true;
       } catch (error) {
+        console.error("❌ [카카오 DB 저장 에러]:", error);
         console.error("NextAuth 콜백 에러:", error);
-        console.error("[Auth Error] signIn callback 예외:", error instanceof Error ? error.message : String(error), error);
+        console.error("[Auth Error] signIn callback 예외:", error instanceof Error ? (error as Error).message : String(error), error);
         return false;
       }
     },
@@ -247,7 +257,6 @@ export const authOptions: NextAuthOptions = {
   secret:
     process.env.NEXTAUTH_SECRET ||
     (process.env.NODE_ENV === "development" ? "dev-secret-min-32-characters-long-for-nextauth" : undefined),
-  debug: process.env.NODE_ENV === "development",
 };
 
 // App Router + Vercel 등에서 호스트 검증 완화 (next-auth 타입에 없을 수 있음)
