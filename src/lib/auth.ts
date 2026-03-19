@@ -77,7 +77,7 @@ if (kakaoId && kakaoSecret) {
         authorization: {
           url: "https://kauth.kakao.com/oauth/authorize",
           params: {
-            scope: "profile_nickname profile_image account_email",
+            scope: "profile_nickname account_email",
           },
         },
       }),
