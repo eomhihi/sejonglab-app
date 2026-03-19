@@ -73,47 +73,12 @@ if (kakaoId && kakaoSecret) {
       KakaoProvider({
         clientId: kakaoId,
         clientSecret: kakaoSecret,
-        authorization: {
-          url: "https://kauth.kakao.com/oauth/authorize",
-          params: {
-            scope: "profile_nickname account_email",
-            prompt: "none",
-            through_account: "false",
-          },
-        },
-        checks: ["state"],
-        profile(profile: Record<string, unknown>) {
-          try {
-            const p = profile as {
-              id?: string | number;
-              kakao_account?: { email?: string | null; profile?: { nickname?: string; profile_image_url?: string } };
-            };
-            const rawId = p.id != null ? String(p.id) : "";
-            const account = p.kakao_account ?? {};
-            const accountProfile = account.profile ?? {};
-            const rawEmail = account.email?.trim() || null;
-            const name = accountProfile.nickname ?? null;
-            const image = accountProfile.profile_image_url ?? null;
-            const email =
-              rawEmail && rawEmail.length > 0
-                ? rawEmail
-                : rawId
-                  ? `kakao_${rawId}@users.noemail.local`
-                  : null;
-
-            return { id: rawId, email, name, image };
-          } catch (e) {
-            console.error("[Auth Error] Kakao profile 매핑 실패 — raw profile:", JSON.stringify(profile, null, 2));
-            console.error("[Auth Error] Kakao profile 예외:", e instanceof Error ? e.message : String(e), e instanceof Error ? e.stack : "");
-            throw e;
-          }
-        },
       }),
       linkByEmail
     )
   );
 } else if (kakaoId || kakaoSecret) {
-  console.warn("[auth] Kakao: clientSecret이 없거나 clientId만 설정됨. KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET 둘 다 필요합니다.");
+  console.warn("[auth] Kakao: KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET 둘 다 필요합니다.");
 }
 
 if (naverId && naverSecret) {
