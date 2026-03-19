@@ -128,9 +128,18 @@ if (naverId && naverSecret) {
   );
 }
 
+// 카카오 프로바이더 검증: clientId·clientSecret·리다이렉트 URI 확인 (디버깅/배포 시 카카오 콘솔과 대조)
+const kakaoRedirectUri = `${authBaseUrl}/api/auth/callback/kakao`;
+if (kakaoId && kakaoSecret) {
+  console.log("[auth] Kakao 설정:", {
+    hasClientId: !!kakaoId,
+    hasClientSecret: !!kakaoSecret,
+    redirectUri: kakaoRedirectUri,
+    note: "카카오 개발자 콘솔 → 로그인 → Redirect URI에 위 redirectUri를 정확히 등록해야 합니다.",
+  });
+}
 if (process.env.NODE_ENV === "development") {
   console.log("[auth] 등록된 OAuth providers:", providers.map((p) => (p as { id?: string }).id));
-  console.log("[auth] Kakao callback URL (카카오 콘솔과 동일해야 함):", `${authBaseUrl}/api/auth/callback/kakao`);
 }
 
 // 카카오 등 OAuth 리다이렉트 호환: sameSite=lax, path=/ (strict·다른 path는 콜백 시 쿠키 미전송으로 실패 가능)
@@ -211,22 +220,27 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       const canonical = authBaseUrl.replace(/\/$/, "");
       const b = baseUrl.replace(/\/$/, "");
+      let finalUrl: string;
+
       if (b !== canonical) {
         console.warn("[auth] redirect: baseUrl 불일치 가능성", { baseUrl: b, NEXTAUTH_URL: canonical });
       }
-      // 에러 시 signin으로 돌리면 callbackUrl 중첩으로 무한 루프 → 에러 전용 페이지로만 이동
+
       if (url.includes("error=")) {
         const err = (url.split("error=")[1]?.split("&")[0] ?? "Callback").replace(/#.*$/, "");
-        console.error("[Auth Error] OAuth redirect에 error 포함:", err, { url });
-        return `${canonical}/auth/error?error=${encodeURIComponent(err)}`;
+        finalUrl = `${canonical}/auth/error?error=${encodeURIComponent(err)}`;
+        console.error("[Auth Error] OAuth redirect에 error 포함 → /auth/error로 이동:", err, { incomingUrl: url, finalUrl });
+      } else if (url.includes("/api/auth/callback") && !url.includes("error=")) {
+        finalUrl = `${canonical}/auth/onboarding`;
+        console.log("[auth] redirect: OAuth 콜백 성공 → callbackUrl /onboarding으로 이동:", { incomingUrl: url, finalUrl });
+      } else {
+        finalUrl = url.startsWith(canonical) ? url : url.startsWith("/") ? `${canonical}${url}` : canonical;
+        if (process.env.NODE_ENV === "development") {
+          console.log("[auth] redirect: 기타:", { url, baseUrl, finalUrl });
+        }
       }
-      // OAuth 콜백 성공 직후: 온보딩 페이지로 바로 이동
-      if (url.includes("/api/auth/callback") && !url.includes("error=")) {
-        return `${canonical}/auth/onboarding`;
-      }
-      if (url.startsWith(canonical)) return url;
-      if (url.startsWith("/")) return `${canonical}${url}`;
-      return canonical;
+
+      return finalUrl;
     },
   },
   events: {
