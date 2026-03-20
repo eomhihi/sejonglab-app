@@ -5,6 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ArrowLeft, ShieldX, Users, ArrowUpDown, Search } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // 기존 /admin 페이지와 동일한 관리자 이메일 사용
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 

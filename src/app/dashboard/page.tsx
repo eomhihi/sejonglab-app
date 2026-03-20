@@ -5,6 +5,9 @@ import { checkOnboardingStatus } from "@/lib/check-onboarding";
 import Link from "next/link";
 import { SignOutButton } from "@/components/SignOutButton";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "대시보드 | 세종 패널",
   description: "세종시민 패널 대시보드",

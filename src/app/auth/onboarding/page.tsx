@@ -8,6 +8,7 @@ const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
 /** 배포·CDN이 온보딩 HTML을 오래 캐시하지 않도록 */
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   title: "추가 정보 입력 | 세종 패널",

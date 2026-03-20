@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // 이 이메일만 /admin 접근 및 헤더 「관리자」 링크 노출 (유일한 관리자 계정)
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 

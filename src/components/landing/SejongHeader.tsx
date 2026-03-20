@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Menu, X, LogOut } from "lucide-react";
 
@@ -9,17 +10,18 @@ import { Menu, X, LogOut } from "lucide-react";
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
 export function SejongHeader() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
   const isAdmin = isLoggedIn && session?.user?.email === ADMIN_EMAIL;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.clear();
     sessionStorage.clear();
-    signOut({ redirect: false }).then(() => {
-      window.location.href = "/";
-    });
+    await signOut({ callbackUrl: "/", redirect: false });
+    router.refresh();
+    window.location.replace("/");
   };
 
   return (
@@ -73,9 +75,13 @@ export function SejongHeader() {
             )}
           </nav>
 
-          {/* CTA 버튼: 로그인 시 로그아웃 무조건 노출 */}
+          {/* CTA 버튼: 로그인 시 로그아웃 무조건 노출 (뒤로가기·bfcache 후 status 반영) */}
           <div className="flex items-center gap-3">
-            {isLoggedIn ? (
+            {status === "loading" ? (
+              <span className="text-sm text-slate-400 px-2" aria-hidden>
+                …
+              </span>
+            ) : isLoggedIn ? (
               <button
                 type="button"
                 onClick={handleLogout}
