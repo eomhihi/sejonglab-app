@@ -8,6 +8,13 @@
   --primary: #1d4ed8;
   --primary-light: #3b82f6;
   --muted: #64748b;
+  /* 차트 fill — theme.sejong.blue + Tailwind blue-800/300·slate-100 (TSX는 var()만 참조) */
+  --briefing-chart-accent-rgb: 0 75 141;
+  --briefing-chart-track-rgb: 241 245 249;
+  --briefing-chart-gauge-rgb: 30 64 175;
+  --briefing-chart-stack-strong-rgb: 0 75 141;
+  --briefing-chart-stack-mid-rgb: 147 197 253;
+  --briefing-chart-stack-muted-rgb: 241 245 249;
 }
 
 @layer base {

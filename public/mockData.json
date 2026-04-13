@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "totalResponses": 12847,
+    "newPanelsThisWeek": 156,
+    "activePanelsThisMonth": 892,
+    "avgWeeklyResponseRate": 74.2
+  },
+  "dongParticipation": [
+    { "dong": "도담동", "responses": 1820, "panels": 412 },
+    { "dong": "아름동", "responses": 1654, "panels": 378 },
+    { "dong": "고운동", "responses": 1412, "panels": 321 },
+    { "dong": "한솔동", "responses": 1288, "panels": 298 },
+    { "dong": "보람동", "responses": 1156, "panels": 267 },
+    { "dong": "종촌동", "responses": 1098, "panels": 251 },
+    { "dong": "새롬동", "responses": 987, "panels": 229 },
+    { "dong": "대평동", "responses": 876, "panels": 198 },
+    { "dong": "소담동", "responses": 812, "panels": 184 },
+    { "dong": "반곡동", "responses": 744, "panels": 169 }
+  ],
+  "interestKeywords": [
+    { "keyword": "데이터 정책", "count": 420 },
+    { "keyword": "스마트시티", "count": 356 },
+    { "keyword": "교통·환경", "count": 312 },
+    { "keyword": "복지·돌봄", "count": 289 },
+    { "keyword": "청년 일자리", "count": 267 },
+    { "keyword": "주거·임대", "count": 241 },
+    { "keyword": "디지털 행정", "count": 228 },
+    { "keyword": "지역 상권", "count": 195 },
+    { "keyword": "문화·여가", "count": 172 },
+    { "keyword": "안전·방재", "count": 158 }
+  ],
+  "updatedAt": "2025-03-01T09:00:00.000Z"
+}

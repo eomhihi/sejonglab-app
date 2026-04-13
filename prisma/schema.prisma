@@ -29,6 +29,8 @@ model User {
   // 관심 분야: 온보딩에서 선택한 정책 키워드 문자열 배열 (PostgreSQL text[])
   interests               String[] @default([])
   participationActivities String[] @default([]) // 설문/FGI/IDI 등 참여 가능 활동 (다중)
+
+  surveyResults SurveyResult[]
 }
 
 model Account {
@@ -78,4 +80,20 @@ model Panel {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+/// 설문 엔진 Webhook으로 수신한 응답 (테이블명: survey_results)
+model SurveyResult {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  surveyId      String? // 외부 설문 ID
+  respondentId  String? // 설문 플랫폼 응답자 ID 등
+  answer        Json // 파싱된 answer 필드
+  rawPayload    Json? // 원본 요청 전체(감사·재처리용)
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([surveyId])
+  @@map("survey_results")
 }

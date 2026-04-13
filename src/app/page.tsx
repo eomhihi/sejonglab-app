@@ -7,7 +7,8 @@ import { AirBBotFeatureSection } from "@/components/landing/AirBBotFeatureSectio
 import { BenefitsSection } from "@/components/landing/BenefitsSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { SejongFooter } from "@/components/landing/SejongFooter";
-import { NewsTicker, NewsSection } from "@/components/landing/NewsTicker";
+import { NewsTicker } from "@/components/landing/NewsTicker";
+import { MainInteractiveDashboardSection } from "@/components/landing/MainInteractiveDashboardSection";
 import { getNews } from "@/lib/get-news";
 
 // Footer 「관리자」 링크: 이 이메일로 로그인한 경우에만 노출
@@ -26,7 +27,7 @@ export default async function LandingPage() {
       <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
       <main className="flex-1">
         <SejongHeroSection />
-        <NewsSection initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
+        <MainInteractiveDashboardSection />
         <SejongFeatureCards />
         <AirBBotFeatureSection />
         <BenefitsSection />
