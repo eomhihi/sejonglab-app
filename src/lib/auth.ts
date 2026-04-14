@@ -23,15 +23,10 @@ if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL !== authBaseUrl) {
   process.env.NEXTAUTH_URL = authBaseUrl;
   console.log("[auth] NEXTAUTH_URL 정규화:", authBaseUrl);
 }
-// 배포 환경 NEXTAUTH_URL 검증 (Vercel: https://sejonglab-app.vercel.app)
-const expectedProdUrl = "https://sejonglab-app.vercel.app";
+// 배포 시 OAuth redirect_uri·세션과 일치해야 함 — Vercel에는 공개 접속 URL과 동일한 NEXTAUTH_URL 필수
 if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
-  const actual = process.env.NEXTAUTH_URL ?? authBaseUrl;
-  console.log("[auth] NEXTAUTH_URL 확인:", {
-    actual,
-    expected: expectedProdUrl,
-    match: actual.replace(/\/$/, "") === expectedProdUrl,
-  });
+  const actual = (process.env.NEXTAUTH_URL ?? authBaseUrl).replace(/\/$/, "");
+  console.log("[auth] NEXTAUTH_URL (배포):", actual);
 }
 
 const isHttps = authBaseUrl.startsWith("https://");
