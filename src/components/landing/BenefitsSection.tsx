@@ -1,4 +1,4 @@
-import { MessageSquareHeart, ShieldCheck, Smartphone, Gift } from "lucide-react";
+import { MessageSquareHeart, Smartphone, Gift, Coffee } from "lucide-react";
 
 export function BenefitsSection() {
   const benefits = [
@@ -9,9 +9,10 @@ export function BenefitsSection() {
       iconBg: "bg-gradient-to-br from-[#004B8D] to-sky-400",
     },
     {
-      Icon: ShieldCheck,
-      title: "안전한 참여",
-      description: "개인정보는 보호되며, 에어봇 클라우드로 안전하게 관리됩니다.",
+      Icon: Coffee,
+      title: "참여 보상",
+      description:
+        "설문조사에 참여해 주신 분들께는 감사의 의미를 담아 커피 쿠폰 등 리워드를 제공합니다.",
       iconBg: "bg-gradient-to-br from-sky-500 to-sky-400",
     },
     {
