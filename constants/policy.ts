@@ -4,7 +4,7 @@ export const EFFECTIVE_DATE = "2026년 4월 15일" as const;
  * 아래 두 상수는 “전문 원문”을 그대로 붙여넣어야 합니다.
  * (법적 문서이므로 임의 생성/요약 없이 원문을 저장하는 방식)
  */
-export const TERMS_OF_SERVICE_FULL = `1. 서비스 이용약관
+export const TERMS_OF_SERVICE_FULL = `I. 서비스 이용약관
 
 제1조 (목적)
 본 약관은 세종랩(이하 '회사')이 운영하는 온라인 패널 서비스(이하 '서비스')의 이용 조건 및 절차, 회사와 패널 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
@@ -48,7 +48,7 @@ export const TERMS_OF_SERVICE_FULL = `1. 서비스 이용약관
 패널이 본 약관의 의무를 위반할 경우 회사는 자격을 정지하거나 강제 탈퇴 시킬 수 있습니다.
 `;
 
-export const PRIVACY_POLICY_FULL = `2. 개인정보 처리방침
+export const PRIVACY_POLICY_FULL = `II. 개인정보 처리방침
 
 1. 개인정보의 수집 항목 및 방법
 회사는 원활한 리서치 수행을 위해 아래와 같은 개인정보를 수집합니다.

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import { SessionProvider } from "@/components/SessionProvider";
 import { MobileGuard } from "@/components/layout/MobileGuard";
 import "./globals.css";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "세종시민 패널 모집 | 에어봇 기반 설문·리포트 통합 관리",
@@ -27,7 +35,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased min-h-screen bg-background text-foreground">
+      <body
+        className={`antialiased min-h-screen bg-background text-foreground ${montserrat.variable}`}
+      >
         <MobileGuard />
         <SessionProvider>{children}</SessionProvider>
       </body>

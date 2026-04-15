@@ -40,9 +40,23 @@ export async function checkOnboardingStatus(
       return { onboardingCompleted: false, userData: null };
     }
 
+    // 과거 데이터/수동 수정 등으로 null이 들어올 수 있어 렌더링 안전하게 정규화
+    const normalized: UserOnboardingData = {
+      onboardingCompleted: !!user.onboardingCompleted,
+      gender: user.gender ?? null,
+      ageGroup: user.ageGroup ?? null,
+      region: user.region ?? null,
+      occupation: user.occupation ?? null,
+      interestTopics: Array.isArray(user.interestTopics) ? user.interestTopics : [],
+      interests: Array.isArray(user.interests) ? user.interests : [],
+      participationActivities: Array.isArray(user.participationActivities)
+        ? user.participationActivities
+        : [],
+    };
+
     return {
-      onboardingCompleted: user.onboardingCompleted,
-      userData: user,
+      onboardingCompleted: normalized.onboardingCompleted,
+      userData: normalized,
     };
   } catch (error) {
     console.error("온보딩 상태 확인 오류:", error);

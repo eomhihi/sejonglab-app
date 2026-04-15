@@ -41,13 +41,21 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
   const statusText = message || "최신 뉴스를 불러오는 중입니다";
 
   return (
-    <section className="bg-sky-50 border-b border-sky-100 py-3 overflow-hidden">
+    <section className="sticky top-0 z-40 bg-transparent py-3 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center gap-4">
-          <div className="flex-shrink-0 flex items-center gap-2 pr-4 border-r border-sky-200">
-            <Newspaper className="w-5 h-5 text-[#004B8D]" />
-            <span className="font-bold text-sm whitespace-nowrap text-[#004B8D]">
-              오늘의 데이터 정책 뉴스
+          <div className="flex-shrink-0 flex items-center gap-3 pr-4 border-r border-slate-200/60">
+            <span
+              className="text-sm font-extrabold tracking-[0.18em] text-slate-900 uppercase"
+              style={{ fontFamily: "var(--font-montserrat)" }}
+            >
+              SEJONG LAB
+            </span>
+            <span className="hidden sm:inline-flex items-center gap-2">
+              <Newspaper className="w-5 h-5 text-slate-700" />
+              <span className="font-bold text-xs whitespace-nowrap text-slate-700 uppercase tracking-wide">
+                오늘의 데이터 정책 뉴스
+              </span>
             </span>
           </div>
 
@@ -57,7 +65,7 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
             onMouseLeave={() => setIsPaused(false)}
           >
             {news.length === 0 ? (
-              <p className="text-sm text-slate-600 font-medium">{statusText}</p>
+              <p className="text-sm text-slate-700 font-medium">{statusText}</p>
             ) : (
               <div
                 className={`flex gap-8 ${isPaused ? "" : "animate-ticker"}`}
@@ -73,13 +81,13 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 group whitespace-nowrap hover:text-[#004B8D] transition-colors"
+                    className="flex items-center gap-3 group whitespace-nowrap hover:text-slate-900 transition-colors"
                   >
-                    <span className="text-xs px-2 py-0.5 bg-[#004B8D] rounded text-white font-bold group-hover:bg-[#003666] transition-colors">
+                    <span className="text-[11px] px-2 py-0.5 bg-slate-200/80 rounded text-slate-800 font-bold uppercase tracking-wide group-hover:bg-slate-300 transition-colors">
                       {item.source}
                     </span>
-                    <span className="text-sm font-medium text-[#002D56]">{item.title}</span>
-                    <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#004B8D]" />
+                    <span className="text-sm font-medium text-slate-800">{item.title}</span>
+                    <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500" />
                   </a>
                 ))}
               </div>

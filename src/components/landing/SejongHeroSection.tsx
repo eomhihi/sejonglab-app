@@ -32,19 +32,13 @@ export function SejongHeroSection() {
               시민 패널로 참여하여 우리 도시의 변화를 함께 이끌어 주세요.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex justify-center lg:justify-start">
               <Link
-                href="/auth/signin"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#004B8D] text-white font-bold rounded-xl hover:bg-[#003666] transition-all shadow-lg shadow-sejong-blue/25 hover:shadow-xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-[#004B8D] text-white font-extrabold rounded-2xl hover:bg-[#003666] transition-all shadow-lg shadow-sejong-blue/25 hover:shadow-xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
               >
-                패널 참여 신청
+                패널 신청하기
                 <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#features"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-[#004B8D] font-bold rounded-xl border-2 border-[#004B8D]/30 hover:border-[#004B8D] hover:bg-sky-50 transition-all shadow-sm"
-              >
-                서비스 알아보기
               </Link>
             </div>
 
@@ -71,7 +65,16 @@ export function SejongHeroSection() {
 
           {/* 우측 그래픽 */}
           <div className="order-1 lg:order-2">
-            <EungBridgeGraphic />
+            <div className="flex flex-col items-center">
+              <EungBridgeGraphic />
+              <Link
+                href="/signup"
+                className="mt-6 inline-flex items-center justify-center h-14 sm:h-16 px-10 sm:px-12 rounded-2xl bg-[#004B8D] text-white text-lg sm:text-xl font-extrabold shadow-xl shadow-[#004B8D]/25 hover:scale-[1.03] hover:bg-[#0b5aa3] transition"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                패널 신청하기
+              </Link>
+            </div>
           </div>
         </div>
       </div>

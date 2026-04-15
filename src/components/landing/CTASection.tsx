@@ -33,9 +33,6 @@ export function CTASection() {
           <ArrowRight className="w-5 h-5" />
         </Link>
 
-        <p className="mt-6 text-sm text-slate-600 font-medium">
-          가입은 무료이며, 언제든 탈퇴가 가능합니다
-        </p>
       </div>
     </section>
   );
