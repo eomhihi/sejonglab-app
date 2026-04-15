@@ -77,7 +77,7 @@ export default async function AuthErrorPage({
 
         <Link
           href="/auth/signin"
-          className="inline-block rounded-lg bg-primary-600 text-white font-medium px-6 py-3 hover:bg-primary-700 transition"
+          className="inline-flex items-center justify-center h-11 rounded-lg bg-primary-600 text-white font-medium px-6 hover:bg-primary-700 transition"
         >
           로그인 페이지로
         </Link>

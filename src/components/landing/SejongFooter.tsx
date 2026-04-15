@@ -103,12 +103,15 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
                 관리자
               </Link>
             )}
-            <Link href="#" className="hover:text-sky-400 transition-colors">
-              이용약관
-            </Link>
-            <Link href="#" className="hover:text-sky-400 transition-colors">
-              개인정보처리방침
-            </Link>
+            <div className="flex items-center gap-2 text-xs">
+              <Link href="/terms" className="hover:text-sky-400 transition-colors">
+                이용약관
+              </Link>
+              <span className="text-slate-700/60">|</span>
+              <Link href="/privacy" className="hover:text-sky-400 transition-colors">
+                개인정보 처리방침
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -31,6 +31,12 @@ export default async function DashboardPage() {
             <span className="text-sm text-slate-600">
               {session.user?.name ?? session.user?.email}
             </span>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center h-9 px-3 rounded-lg bg-gray-200 text-slate-700 text-sm font-medium hover:bg-gray-300 transition"
+            >
+              내 정보 수정
+            </Link>
             <SignOutButton />
           </div>
         </div>
@@ -115,11 +121,18 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
-          <h2 className="font-semibold text-slate-900 mb-2">참여 가능한 설문</h2>
-          <p className="text-slate-500 text-sm">
-            아직 참여 가능한 설문이 없습니다. 새로운 설문이 등록되면 알려드리겠습니다.
-          </p>
+        <div className="mt-10 flex justify-end">
+          <button
+            type="button"
+            onClick={() => {
+              const ok = confirm("정말 탈퇴하시겠습니까?");
+              if (!ok) return;
+              alert("회원 탈퇴 기능은 준비 중입니다. 필요 시 관리자에게 요청해 주세요.");
+            }}
+            className="inline-flex items-center justify-center h-11 px-4 rounded-lg bg-gray-200 text-slate-700 text-sm font-semibold hover:bg-gray-300 transition"
+          >
+            회원 탈퇴
+          </button>
         </div>
       </main>
     </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "@/components/SessionProvider";
+import { MobileGuard } from "@/components/layout/MobileGuard";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+} as const;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased min-h-screen bg-background text-foreground">
+        <MobileGuard />
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

@@ -32,6 +32,12 @@ export default function Header() {
                 「관리자」
               </Link>
             )}
+            <Link
+              href="/dashboard"
+              className="px-3 py-1 text-sm text-slate-700 rounded bg-gray-200 hover:bg-gray-300"
+            >
+              내 정보 수정
+            </Link>
             <button
               type="button"
               onClick={() => void handleSignOut()}

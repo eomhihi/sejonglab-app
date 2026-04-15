@@ -12,6 +12,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
+import { MembersTable } from "@/components/admin/MembersTable";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -68,13 +69,6 @@ async function getStats() {
   }
 }
 
-function formatGender(g: string | null): string {
-  if (!g) return "-";
-  if (g === "male") return "남성";
-  if (g === "female") return "여성";
-  return g;
-}
-
 function formatDate(d: Date): string {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
@@ -115,6 +109,10 @@ export default async function AdminPage() {
   }
 
   const [members, stats] = await Promise.all([getMembers(), getStats()]);
+  const membersForClient = members.map((m) => ({
+    ...m,
+    createdAt: m.createdAt.toISOString(),
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
@@ -196,119 +194,7 @@ export default async function AdminPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px]">
-              <thead>
-                <tr className="bg-slate-700/50 border-b border-slate-600">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    이름
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    이메일
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    전화번호
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    성별
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    연령대
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    가입일
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    관심·참여
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    거주지
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-                    직업
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-700">
-                {members.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={9}
-                      className="px-4 py-12 text-center text-slate-500 text-sm"
-                    >
-                      DB가 연결되지 않았거나 등록된 회원이 없습니다.
-                    </td>
-                  </tr>
-                ) : (
-                  members.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="hover:bg-slate-700/30 transition-colors"
-                    >
-                      <td className="px-4 py-3 text-sm font-medium text-white">
-                        {user.name ?? "-"}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.email ?? "-"}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.phone ?? "-"}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300">
-                        {formatGender(user.gender)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.ageGroup ?? "-"}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">
-                        {formatDate(user.createdAt)}
-                      </td>
-                      <td className="px-4 py-3 max-w-[280px]">
-                        {(() => {
-                          const tags =
-                            user.interests?.length > 0 ? user.interests : user.interestTopics ?? [];
-                          return tags.length > 0 ? (
-                            <div className="flex flex-wrap gap-1 mb-1">
-                              {tags.map((topic) => (
-                                <span
-                                  key={topic}
-                                  className="px-2 py-0.5 text-xs bg-sky-500/20 text-sky-200 rounded"
-                                >
-                                  {topic}
-                                </span>
-                              ))}
-                            </div>
-                          ) : null;
-                        })()}
-                        {user.participationActivities && user.participationActivities.length > 0 ? (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {user.participationActivities.map((a) => (
-                              <span
-                                key={a}
-                                className="px-2 py-0.5 text-[10px] bg-emerald-500/15 text-emerald-200 rounded"
-                              >
-                                {a}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
-                        {(!user.interests?.length && !user.interestTopics?.length) &&
-                        !user.participationActivities?.length ? (
-                          <span className="text-slate-500">-</span>
-                        ) : null}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300">
-                        {user.region ?? "-"}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-300 max-w-[220px]">
-                        {user.occupation ?? "-"}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <MembersTable initialMembers={membersForClient} />
         </div>
       </main>
     </div>

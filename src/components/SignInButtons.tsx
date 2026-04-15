@@ -24,7 +24,7 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
       <button
         type="button"
         onClick={() => handleSignIn("google")}
-        className="w-full flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 py-3 font-medium hover:bg-neutral-50 transition"
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 px-4 font-medium hover:bg-neutral-50 transition"
       >
         <GoogleIcon />
         Google로 로그인
@@ -32,7 +32,7 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
       <button
         type="button"
         onClick={() => handleSignIn("kakao")}
-        className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-[#191919] py-3 font-medium hover:opacity-90 transition"
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-[#191919] px-4 font-medium hover:opacity-90 transition"
       >
         <KakaoIcon />
         카카오로 로그인
@@ -40,7 +40,7 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
       <button
         type="button"
         onClick={() => handleSignIn("naver")}
-        className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#03C75A] text-white py-3 font-medium hover:opacity-90 transition"
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#03C75A] text-white px-4 font-medium hover:opacity-90 transition"
       >
         <NaverIcon />
         네이버로 로그인

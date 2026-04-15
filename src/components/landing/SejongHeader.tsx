@@ -55,6 +55,12 @@ export function SejongHeader() {
                 <Link href="/admin" className="text-sm font-bold text-[#004B8D] hover:text-[#003666] transition-colors">
                   관리자
                 </Link>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-semibold text-slate-700 bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  내 정보 수정
+                </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -65,13 +71,21 @@ export function SejongHeader() {
               </>
             )}
             {isLoggedIn && !isAdmin && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
-              >
-                로그아웃
-              </button>
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-semibold text-slate-700 bg-gray-200 hover:bg-gray-300 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  내 정보 수정
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
+                >
+                  로그아웃
+                </button>
+              </>
             )}
           </nav>
 
@@ -82,13 +96,21 @@ export function SejongHeader() {
                 …
               </span>
             ) : isLoggedIn ? (
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-md"
-              >
-                로그아웃
-              </button>
+              <>
+                <Link
+                  href="/dashboard"
+                  className="hidden sm:inline-flex items-center justify-center h-9 px-3 rounded-lg bg-gray-200 text-slate-700 text-sm font-semibold hover:bg-gray-300 transition"
+                >
+                  내 정보 수정
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-md"
+                >
+                  로그아웃
+                </button>
+              </>
             ) : (
               <>
                 <Link
@@ -151,6 +173,13 @@ export function SejongHeader() {
                   >
                     관리자
                   </Link>
+                  <Link
+                    href="/dashboard"
+                    className="px-4 py-2 text-sm font-semibold text-slate-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    내 정보 수정
+                  </Link>
                   <button
                     type="button"
                     onClick={() => {
@@ -165,17 +194,26 @@ export function SejongHeader() {
                 </>
               )}
               {isLoggedIn && !isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleLogout();
-                  }}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-left text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  로그아웃
-                </button>
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="px-4 py-2 text-sm font-semibold text-slate-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    내 정보 수정
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-2 text-left text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    로그아웃
+                  </button>
+                </>
               )}
             </nav>
           </div>

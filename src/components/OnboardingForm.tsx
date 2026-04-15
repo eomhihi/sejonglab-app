@@ -130,7 +130,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
           type="tel"
           placeholder="010-1234-5678"
           {...register("phone")}
-          className={`w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
+          className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
         />
         <p className="mt-1.5 text-xs text-slate-500">리서치 참여 연락 등에 활용됩니다.</p>
         {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>}
@@ -168,7 +168,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         </label>
         <select
           {...register("ageGroup")}
-          className={`w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
+          className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
         >
           <option value="">연령대를 선택해 주세요</option>
           {AGE_GROUP_OPTIONS.map((opt) => (
@@ -186,7 +186,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         </label>
         <select
           {...register("region")}
-          className={`w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
+          className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
         >
           <option value="">거주지역을 선택해 주세요</option>
           {REGION_OPTIONS.map((region) => (
@@ -204,7 +204,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         </label>
         <select
           {...register("occupation")}
-          className={`w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
+          className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
         >
           <option value="">직업을 선택해 주세요</option>
           {OCCUPATION_OPTIONS.map((opt) => (
