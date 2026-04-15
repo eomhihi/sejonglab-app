@@ -69,6 +69,12 @@ export default async function DashboardPage() {
                     <dt className="text-slate-500">거주지역</dt>
                     <dd className="font-medium text-slate-900">{userData.region ?? "-"}</dd>
                   </div>
+                  <div className="flex justify-between">
+                    <dt className="text-slate-500">직업</dt>
+                    <dd className="font-medium text-slate-900 text-right max-w-[70%]">
+                      {userData.occupation ?? "-"}
+                    </dd>
+                  </div>
                 </>
               )}
             </dl>

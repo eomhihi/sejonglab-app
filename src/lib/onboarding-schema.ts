@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ONBOARDING_INTEREST_KEYWORDS } from "./onboarding-options";
+import { ONBOARDING_INTEREST_KEYWORDS, OCCUPATION_VALUES } from "./onboarding-options";
 
 // 휴대폰 번호: 010-XXXX-XXXX 등 (필수 입력)
 export const onboardingSchema = z.object({
@@ -27,6 +27,10 @@ export const onboardingSchema = z.object({
   region: z.string({
     required_error: "거주지역을 선택해 주세요.",
   }).min(1, "거주지역을 선택해 주세요."),
+  occupation: z.enum(OCCUPATION_VALUES, {
+    required_error: "직업을 선택해 주세요.",
+    invalid_type_error: "직업을 선택해 주세요.",
+  }),
   interests: z
     .array(z.enum(ONBOARDING_INTEREST_KEYWORDS))
     .min(1, "관심 키워드를 1개 이상 선택해 주세요."),

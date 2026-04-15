@@ -25,6 +25,7 @@ model User {
   gender              String?
   ageGroup            String?
   region                  String?  // 거주 지역(area)
+  occupation              String?  // 직업 (온보딩 단일 선택)
   interestTopics          String[] @default([]) // 레거시 (이전 온보딩)
   // 관심 분야: 온보딩에서 선택한 정책 키워드 문자열 배열 (PostgreSQL text[])
   interests               String[] @default([])

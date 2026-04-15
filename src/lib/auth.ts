@@ -9,33 +9,55 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
  * 브라우저에서 next-auth 관련 쿠키를 삭제한 뒤 다시 로그인하면 리프레시됨.
  */
 
-/** NEXTAUTH_URL 정규화 (트레일링 슬래시 제거) — redirect_uri·쿠키 도메인과 일치 */
+/** 운영 사이트 기준 URL (NEXTAUTH_URL 미설정 시 production에서 OAuth redirect_uri 불일치 방지) */
+const CANONICAL_SITE_URL = "https://sejonglab.com";
+
+const DEV_NEXTAUTH_SECRET_FALLBACK = "dev-secret-min-32-characters-long-for-nextauth";
+
+/** 따옴표·공백 제거 — .env 복사 시 scope/클라이언트 ID 파싱 오류 방지 */
+function trimEnv(value: string | undefined): string | undefined {
+  if (value == null || value === "") return undefined;
+  return value.trim().replace(/^["']|["']$/g, "");
+}
+
+/** NEXTAUTH_URL 정규화 (트레일링 슬래시 제거) — redirect_uri·쿠키·NextAuth 내부 URL과 일치 */
 function normalizeAuthUrl(): string {
-  const fromEnv = process.env.NEXTAUTH_URL?.trim();
+  const fromEnv = trimEnv(process.env.NEXTAUTH_URL);
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-  const v = process.env.VERCEL_URL;
+  const v = trimEnv(process.env.VERCEL_URL);
   if (v) return `https://${v.replace(/\/$/, "")}`;
+  if (process.env.NODE_ENV === "production") return CANONICAL_SITE_URL;
   return "http://localhost:3003";
 }
 
 const authBaseUrl = normalizeAuthUrl();
-if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL !== authBaseUrl) {
+if (!trimEnv(process.env.NEXTAUTH_URL) || trimEnv(process.env.NEXTAUTH_URL) !== authBaseUrl) {
   process.env.NEXTAUTH_URL = authBaseUrl;
-  console.log("[auth] NEXTAUTH_URL 정규화:", authBaseUrl);
+  if (process.env.NODE_ENV === "development") {
+    console.log("[auth] NEXTAUTH_URL 정규화:", authBaseUrl);
+  }
 }
-// 배포 시 OAuth redirect_uri·세션과 일치해야 함 — Vercel에는 공개 접속 URL과 동일한 NEXTAUTH_URL 필수
 if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
   const actual = (process.env.NEXTAUTH_URL ?? authBaseUrl).replace(/\/$/, "");
-  console.log("[auth] NEXTAUTH_URL (배포):", actual);
+  console.log("[auth] NEXTAUTH_URL (배포/미리보기):", actual);
 }
 
 const isHttps = authBaseUrl.startsWith("https://");
 const cookieSecure = isHttps;
 
-const kakaoId = process.env.KAKAO_CLIENT_ID;
-const kakaoSecret = process.env.KAKAO_CLIENT_SECRET;
-const naverId = process.env.NAVER_CLIENT_ID;
-const naverSecret = process.env.NAVER_CLIENT_SECRET;
+const kakaoId = trimEnv(process.env.KAKAO_CLIENT_ID);
+const kakaoSecret = trimEnv(process.env.KAKAO_CLIENT_SECRET);
+const naverId = trimEnv(process.env.NAVER_CLIENT_ID);
+const naverSecret = trimEnv(process.env.NAVER_CLIENT_SECRET);
+const googleClientId = trimEnv(process.env.GOOGLE_CLIENT_ID);
+const googleClientSecret = trimEnv(process.env.GOOGLE_CLIENT_SECRET);
+
+const nextAuthSecret = trimEnv(process.env.NEXTAUTH_SECRET);
+if (process.env.NODE_ENV === "production" && !nextAuthSecret) {
+  console.error(
+    "[auth] NEXTAUTH_SECRET이 설정되지 않았습니다. 운영에서는 반드시 설정해야 세션·OAuth가 안정적으로 동작합니다."
+  );
+}
 
 function getAdapter(): NextAuthOptions["adapter"] {
   if (!process.env.DATABASE_URL) return undefined;
@@ -50,12 +72,12 @@ function getAdapter(): NextAuthOptions["adapter"] {
 const providers: NextAuthOptions["providers"] = [];
 const linkByEmail = { allowDangerousEmailAccountLinking: true } as const;
 
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (googleClientId && googleClientSecret) {
   providers.push(
     Object.assign(
       GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        clientId: googleClientId,
+        clientSecret: googleClientSecret,
       }),
       linkByEmail
     )
@@ -63,7 +85,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 if (kakaoId && kakaoSecret) {
-  console.log("[auth] Kakao: clientId·clientSecret 환경변수 로드됨 (scope 강제 주입)");
+  if (process.env.NODE_ENV === "development") {
+    console.log("[auth] Kakao: clientId·clientSecret 로드됨 (authorization에 scope 고정)");
+  }
   providers.push(
     Object.assign(
       KakaoProvider({
@@ -73,7 +97,9 @@ if (kakaoId && kakaoSecret) {
         authorization: {
           url: "https://kauth.kakao.com/oauth/authorize",
           params: {
+            // 환경변수로 scope를 넘기지 않음 — 카카오 콘솔 동의항목과 불일치·빈 scope 이슈 방지
             scope: "profile_nickname account_email",
+            response_type: "code",
           },
         },
         profile(profile: Record<string, unknown>) {
@@ -141,7 +167,7 @@ const cookieOptions = {
 };
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   adapter: getAdapter(),
   providers,
   session: {
@@ -167,8 +193,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       const provider = account?.provider ?? "";
-      if (provider === "kakao") {
-        console.log("🔥 [카카오 로그인 시도]:", { user, account, profile });
+      if (provider === "kakao" && process.env.NODE_ENV === "development") {
+        console.log("[auth] 카카오 로그인 시도:", { user, account, profile });
       }
       try {
         console.log("[auth] signIn callback:", {
@@ -249,9 +275,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   // NEXTAUTH_SECRET 필수. 변경 시 기존 세션/쿠키 무효화 → 사용자는 재로그인 필요
-  secret:
-    process.env.NEXTAUTH_SECRET ||
-    (process.env.NODE_ENV === "development" ? "dev-secret-min-32-characters-long-for-nextauth" : undefined),
+  secret: nextAuthSecret || (process.env.NODE_ENV === "development" ? DEV_NEXTAUTH_SECRET_FALLBACK : undefined),
 };
 
 // App Router + Vercel 등에서 호스트 검증 완화 (next-auth 타입에 없을 수 있음)

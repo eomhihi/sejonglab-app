@@ -26,12 +26,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "인증되지 않았습니다." }, { status: 401 });
     }
 
-    const { phone, gender, ageGroup, region, interests, participationActivities } = validation.data;
+    const { phone, gender, ageGroup, region, occupation, interests, participationActivities } =
+      validation.data;
     const areaOrRegion = region ?? (body.area as string | undefined) ?? null;
     const activities = participationActivities ?? [];
 
     if (!process.env.DATABASE_URL) {
-      console.log("온보딩 데이터 (DB 미연결):", { phone, gender, ageGroup, region: areaOrRegion, interests, activities });
+      console.log("온보딩 데이터 (DB 미연결):", {
+        phone,
+        gender,
+        ageGroup,
+        region: areaOrRegion,
+        occupation,
+        interests,
+        activities,
+      });
       return NextResponse.json({ success: true, message: "저장 완료 (테스트 모드)" });
     }
 
@@ -42,6 +51,7 @@ export async function POST(request: Request) {
       data: {
         phone: phone ?? null,
         region: areaOrRegion,
+        occupation,
         gender,
         ageGroup,
         interests,

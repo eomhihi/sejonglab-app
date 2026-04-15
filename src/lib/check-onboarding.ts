@@ -3,6 +3,7 @@ type UserOnboardingData = {
   gender: string | null;
   ageGroup: string | null;
   region: string | null;
+  occupation: string | null;
   interestTopics: string[];
   interests: string[];
   participationActivities: string[];
@@ -28,6 +29,7 @@ export async function checkOnboardingStatus(
         gender: true,
         ageGroup: true,
         region: true,
+        occupation: true,
         interestTopics: true,
         interests: true,
         participationActivities: true,

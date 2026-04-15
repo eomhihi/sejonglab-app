@@ -10,6 +10,7 @@ import {
   GENDER_OPTIONS,
   AGE_GROUP_OPTIONS,
   REGION_OPTIONS,
+  OCCUPATION_OPTIONS,
   ONBOARDING_INTEREST_SECTIONS,
   PARTICIPATION_ACTIVITY_OPTIONS,
 } from "@/lib/onboarding-options";
@@ -195,6 +196,24 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
           ))}
         </select>
         {errors.region && <p className="mt-2 text-sm text-red-600">{errors.region.message}</p>}
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
+        <label className="block text-sm font-semibold text-slate-800 mb-2">
+          직업 <span className="text-red-500">*</span>
+        </label>
+        <select
+          {...register("occupation")}
+          className={`w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
+        >
+          <option value="">직업을 선택해 주세요</option>
+          {OCCUPATION_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+        {errors.occupation && <p className="mt-2 text-sm text-red-600">{errors.occupation.message}</p>}
       </div>
 
       {/* 관심 분야: 카테고리(섹션 제목) + 키워드 다중 선택 */}

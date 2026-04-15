@@ -37,6 +37,7 @@ async function getMembers() {
         gender: true,
         ageGroup: true,
         region: true,
+        occupation: true,
         interestTopics: true,
         interests: true,
         participationActivities: true,
@@ -223,13 +224,16 @@ export default async function AdminPage() {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
                     거주지
                   </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
+                    직업
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700">
                 {members.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={9}
                       className="px-4 py-12 text-center text-slate-500 text-sm"
                     >
                       DB가 연결되지 않았거나 등록된 회원이 없습니다.
@@ -295,6 +299,9 @@ export default async function AdminPage() {
                       </td>
                       <td className="px-4 py-3 text-sm text-slate-300">
                         {user.region ?? "-"}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-slate-300 max-w-[220px]">
+                        {user.occupation ?? "-"}
                       </td>
                     </tr>
                   ))

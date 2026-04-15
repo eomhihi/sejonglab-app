@@ -34,6 +34,7 @@ function usersToExcelRows(
     gender: string | null;
     ageGroup: string | null;
     region: string | null;
+    occupation: string | null;
     interestTopics: string[];
     interests: string[];
     participationActivities: string[];
@@ -62,6 +63,7 @@ function usersToExcelRows(
       성별: formatGender(u.gender),
       연령대: u.ageGroup ?? "-",
       거주지: u.region ?? "-",
+      직업: u.occupation ?? "-",
       관심사,
       참여활동,
       가입일: formatDate(u.createdAt),
@@ -93,6 +95,7 @@ export async function GET() {
         gender: true,
         ageGroup: true,
         region: true,
+        occupation: true,
         interestTopics: true,
         interests: true,
         participationActivities: true,
