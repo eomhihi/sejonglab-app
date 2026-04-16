@@ -9,9 +9,11 @@ export interface NewsItem {
 
 // Naver News Search API
 const NAVER_NEWS_ENDPOINT = "https://openapi.naver.com/v1/search/news.json";
-const NAVER_QUERY = '("데이터" "혁신") | ("세종시" "정책")';
+// 네이버 검색 문법: OR는 `|`, 정확 구문은 따옴표로 감싼다.
+const NAVER_QUERY = '"데이터 혁신"|"세종시 정책"';
 const NAVER_DISPLAY = 20;
-const NAVER_SORT: "sim" | "date" = "sim";
+// 최신 정책 반영을 위해 최신순(date) 우선
+const NAVER_SORT: "sim" | "date" = "date";
 
 // Weekly update (7 * 24 * 60 * 60)
 const REVALIDATE_SECONDS = 604800;
@@ -260,24 +262,29 @@ export async function GET() {
     const dedupedLinks = dedupeByLink(recent);
     const dedupedTitles = dedupeByTitle(dedupedLinks);
     const sorted = dedupedTitles.sort((a, b) => {
+      // 최신순 우선, 동점이면 품질 점수로 보조 정렬
+      const t = parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+      if (t !== 0) return t;
       const s =
         titleQualityScore(b.title) +
         publisherQualityScore(b.source, b.link) -
         (titleQualityScore(a.title) + publisherQualityScore(a.source, a.link));
       if (s !== 0) return s;
-      return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+      return normalizeTitleKey(a.title).localeCompare(normalizeTitleKey(b.title));
     });
     let news = sorted.slice(0, MAX_OUTPUT);
 
     if (news.length === 0) {
       // 7일 필터로 비어버리는 경우가 있어, 전체 후보에서 한 번 더 시도
       const fallbackPool = dedupeByTitle(dedupeByLink(parsed)).sort((a, b) => {
+        const t = parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+        if (t !== 0) return t;
         const s =
           titleQualityScore(b.title) +
           publisherQualityScore(b.source, b.link) -
           (titleQualityScore(a.title) + publisherQualityScore(a.source, a.link));
         if (s !== 0) return s;
-        return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+        return normalizeTitleKey(a.title).localeCompare(normalizeTitleKey(b.title));
       });
       news = fallbackPool.slice(0, MAX_OUTPUT);
     }

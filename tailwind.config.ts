@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        oxford: "#1d3557",
         sejong: {
           blue: "#004B8D",
           "blue-light": "#0066B3",
@@ -47,6 +48,9 @@ const config: Config = {
           900: "#001b35",
           950: "#000f1f",
         },
+      },
+      fontFamily: {
+        display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       animation: {
         "ticker": "ticker 30s linear infinite",

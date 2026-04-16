@@ -14,19 +14,17 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex flex-col items-start gap-1.5 mb-4">
               <span
-                className="text-white text-base font-extrabold tracking-[0.22em] uppercase"
-                style={{ fontFamily: "var(--font-montserrat)" }}
+                className="text-white text-base font-extrabold tracking-[0.22em] uppercase font-display"
               >
                 SEJONG LAB
               </span>
               <span
-                className="text-[9px] sm:text-[10px] text-slate-500 tracking-[0.92em] uppercase -mr-[0.92em]"
-                style={{ fontFamily: "var(--font-montserrat)" }}
+                className="text-[9px] sm:text-[10px] text-slate-500 font-bold tracking-[0.98em] uppercase -mr-[0.98em] font-display"
               >
                 Research Data
               </span>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed mb-4">
+            <p className="text-sm text-slate-400 leading-relaxed mb-4 k-keep">
               데이터가 세상을 바꾼다.<br />
               세종시민과 함께 만드는 스마트 시티
             </p>

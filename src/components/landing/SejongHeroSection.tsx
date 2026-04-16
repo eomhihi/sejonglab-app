@@ -13,20 +13,20 @@ export function SejongHeroSection() {
           <div className="text-center lg:text-left order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-6">
               <span className="w-2 h-2 bg-mint-500 rounded-full animate-pulse" />
-              <span className="text-sm font-bold text-[#004B8D] drop-shadow-sm">
+              <span className="text-sm font-bold text-sejong-blue drop-shadow-sm k-keep">
                 세종시 스마트 시티 & 데이터 리서치
               </span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-6 drop-shadow-sm">
-              <span className="text-[#004B8D]">세종의 미래</span>
+              <span className="text-sejong-blue font-display">세종의 미래</span>
               <span className="text-slate-900">를</span>
               <br />
-              <span className="text-[#004B8D]">데이터로 설계</span>
+              <span className="text-sejong-blue font-display">데이터로 설계</span>
               <span className="text-slate-900">합니다</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#002D56] font-medium mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm">
+            <p className="text-base sm:text-lg text-primary-800 font-medium mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm k-keep">
               세종시민의 목소리를 데이터로 담아,<br />
               더 나은 정책과 서비스를 만들어갑니다.<br />
               시민 패널로 참여하여 우리 도시의 변화를 함께 이끌어 주세요.
@@ -35,8 +35,7 @@ export function SejongHeroSection() {
             <div className="flex justify-center lg:justify-start">
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center gap-3 px-9 sm:px-10 py-5 sm:py-5.5 bg-[#004B8D] text-white text-lg sm:text-xl font-extrabold rounded-2xl hover:bg-[#003666] transition-all shadow-xl shadow-sejong-blue/25 hover:shadow-2xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
-                style={{ fontFamily: "var(--font-montserrat)" }}
+                className="btn btn-primary btn-lg font-extrabold shadow-lg hover:-translate-y-0.5 font-display"
               >
                 패널 신청하기
                 <ArrowRight className="w-6 h-6" />

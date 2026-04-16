@@ -209,7 +209,7 @@ export function SejongInsightsDashboard() {
             </p>
             <HeatmapGrid data={dongParticipation} />
             <div className="mt-8 h-[320px] w-full min-h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart
                   data={barData}
                   layout="vertical"
@@ -250,7 +250,7 @@ export function SejongInsightsDashboard() {
               패널 온보딩·관심사 기준 상위 키워드 (막대 차트)
             </p>
             <div className="h-[420px] w-full min-h-[360px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={keywordChartData} margin={{ top: 8, right: 12, left: 4, bottom: 64 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-200 dark:stroke-slate-700" />
                   <XAxis

@@ -103,7 +103,7 @@ export function LifelongEducationInsightsSection() {
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 경험</h3>
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">과거 참여 여부 (비율)</p>
             <div className="flex-1 min-h-[220px]" style={{ fontFamily: "inherit" }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie
                     data={[...EXPERIENCE_DATA]}
@@ -150,7 +150,7 @@ export function LifelongEducationInsightsSection() {
             <h3 className="text-sm font-bold text-slate-800 mb-1">관심 있는 학습 분야</h3>
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">상위 5개 (비율)</p>
             <div className="flex-1 min-h-[240px]" style={{ fontFamily: "inherit" }}>
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart
                   layout="vertical"
                   data={[...INTEREST_DATA]}

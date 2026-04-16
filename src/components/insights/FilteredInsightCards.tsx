@@ -274,7 +274,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
             key={`bar-dong-${gender}-${ageGroup}-${region}`}
             className="h-[280px] w-full min-h-[240px]"
           >
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={barByDong} margin={{ top: 8, right: 12, left: 4, bottom: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700" />
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={68} />
@@ -328,7 +328,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
           key={`bar-kw-${gender}-${ageGroup}-${region}`}
           className="h-[320px] w-full min-h-[280px]"
         >
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
             <BarChart
               layout="vertical"
               data={keywordAgg}

@@ -36,7 +36,7 @@ function formatTimeAgo(dateString: string): string {
 
 function articleHref(item: NewsItem): string {
   if (item.link?.trim()) return item.link.trim();
-  return `https://www.google.com/search?q=${encodeURIComponent(item.title)}&tbm=nws`;
+  return `https://search.naver.com/search.naver?where=news&query=${encodeURIComponent(item.title)}`;
 }
 
 /** 로고 바로 아래: 제목만 가로 흐름, 호버 시 정지, 클릭 시 기사 */
@@ -51,9 +51,9 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
       aria-label="데이터·변화 관련 뉴스"
     >
       <div className="max-w-7xl mx-auto px-4 pt-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full">
-          <Newspaper className="w-4 h-4 text-[#004B8D]" />
-          <span className="text-sm font-bold text-[#004B8D]">오늘의 데이터 정책 뉴스</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
+          <Newspaper className="w-4 h-4 text-oxford" />
+          <span className="text-sm font-bold text-oxford k-keep">오늘의 데이터 정책 뉴스</span>
         </div>
       </div>
 
@@ -85,6 +85,9 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
                       className="max-w-[min(100vw-2rem,42rem)] shrink-0 truncate text-sm font-semibold text-primary-800 transition-colors hover:text-sejong-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-sejong-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:max-w-[min(72vw,36rem)]"
                       title={item.title}
                     >
+                      <span className="mr-2 inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-oxford">
+                        {item.source || "뉴스"}
+                      </span>
                       {item.title}
                     </a>
                   </Fragment>

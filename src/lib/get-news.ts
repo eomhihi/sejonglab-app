@@ -48,7 +48,6 @@ export async function getNews(): Promise<GetNewsResult> {
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
     const res = await fetch(`${baseUrl}/api/news`, {
       // 서버에서 주 1회 갱신되도록 API 응답 캐시를 존중
-      cache: "force-cache",
       next: { revalidate: 604800 },
     });
 
