@@ -35,10 +35,11 @@ export function SejongHeroSection() {
             <div className="flex justify-center lg:justify-start">
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-[#004B8D] text-white font-extrabold rounded-2xl hover:bg-[#003666] transition-all shadow-lg shadow-sejong-blue/25 hover:shadow-xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-3 px-9 sm:px-10 py-5 sm:py-5.5 bg-[#004B8D] text-white text-lg sm:text-xl font-extrabold rounded-2xl hover:bg-[#003666] transition-all shadow-xl shadow-sejong-blue/25 hover:shadow-2xl hover:shadow-sejong-blue/30 hover:-translate-y-0.5"
+                style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 패널 신청하기
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-6 h-6" />
               </Link>
             </div>
 
@@ -67,13 +68,6 @@ export function SejongHeroSection() {
           <div className="order-1 lg:order-2">
             <div className="flex flex-col items-center">
               <EungBridgeGraphic />
-              <Link
-                href="/signup"
-                className="mt-6 inline-flex items-center justify-center h-14 sm:h-16 px-10 sm:px-12 rounded-2xl bg-[#004B8D] text-white text-lg sm:text-xl font-extrabold shadow-xl shadow-[#004B8D]/25 hover:scale-[1.03] hover:bg-[#0b5aa3] transition"
-                style={{ fontFamily: "var(--font-montserrat)" }}
-              >
-                패널 신청하기
-              </Link>
             </div>
           </div>
         </div>

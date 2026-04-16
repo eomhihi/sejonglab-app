@@ -32,7 +32,7 @@ const features = [
 
 export function SejongFeatureCards() {
   return (
-    <section id="features" className="py-16 sm:py-24 bg-gradient-to-b from-white to-sky-50/30">
+    <section id="services" className="py-16 sm:py-24 bg-gradient-to-b from-white to-sky-50/30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">

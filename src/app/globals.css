@@ -5,13 +5,14 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
-  --primary: #1d4ed8;
-  --primary-light: #3b82f6;
+  /* 프로젝트 표준 세종블루 (tailwind theme.sejong.blue) */
+  --primary: #004b8d;
+  --primary-light: #0066b3;
   --muted: #64748b;
   /* 차트 fill — theme.sejong.blue + Tailwind blue-800/300·slate-100 (TSX는 var()만 참조) */
   --briefing-chart-accent-rgb: 0 75 141;
   --briefing-chart-track-rgb: 241 245 249;
-  --briefing-chart-gauge-rgb: 30 64 175;
+  --briefing-chart-gauge-rgb: 0 75 141;
   --briefing-chart-stack-strong-rgb: 0 75 141;
   --briefing-chart-stack-mid-rgb: 147 197 253;
   --briefing-chart-stack-muted-rgb: 241 245 249;

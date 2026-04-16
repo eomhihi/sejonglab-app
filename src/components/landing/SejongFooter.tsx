@@ -12,14 +12,16 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* 브랜드 */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-[#004B8D] to-sky-500 flex items-center justify-center">
-                <span className="text-white font-bold text-xs whitespace-nowrap">Sejong Lab</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-white">세종랩</span>
-                <span className="text-xs text-slate-500">Data Research</span>
-              </div>
+            <div className="flex flex-col items-start gap-1.5 mb-4">
+              <span
+                className="text-white text-base font-extrabold tracking-[0.22em] uppercase"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                SEJONG LAB
+              </span>
+              <span className="text-xs text-slate-500 tracking-[0.38em] uppercase pl-[0.38em]">
+                Research Data
+              </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed mb-4">
               데이터가 세상을 바꾼다.<br />
@@ -31,45 +33,40 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             </div>
           </div>
 
-          {/* 서비스 */}
+          {/* 열 1 */}
           <div>
-            <h4 className="font-semibold text-white mb-4">서비스</h4>
+            <h4 className="font-semibold text-white mb-4">바로가기</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#features" className="hover:text-sky-400 transition-colors">
-                  행정동별 분석
+                <Link href="#services" className="hover:text-sky-400 transition-colors">
+                  핵심서비스
                 </Link>
               </li>
               <li>
-                <Link href="#features" className="hover:text-sky-400 transition-colors">
-                  시민 체감도 조사
-                </Link>
-              </li>
-              <li>
-                <Link href="#features" className="hover:text-sky-400 transition-colors">
-                  신사업 실증
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* 참여 */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">참여하기</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/auth/signin" className="hover:text-sky-400 transition-colors">
-                  패널 신청
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="hover:text-sky-400 transition-colors">
-                  마이페이지
+                <Link href="#airbot" className="hover:text-sky-400 transition-colors">
+                  에어봇 솔루션
                 </Link>
               </li>
               <li>
                 <Link href="#benefits" className="hover:text-sky-400 transition-colors">
                   참여 혜택
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* 열 2 */}
+          <div>
+            <h4 className="font-semibold text-white mb-4">패널</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/signup" className="hover:text-sky-400 transition-colors">
+                  패널신청
+                </Link>
+              </li>
+              <li>
+                <Link href="/mypage" className="hover:text-sky-400 transition-colors">
+                  마이페이지
                 </Link>
               </li>
             </ul>
@@ -92,12 +89,6 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             © 2026 세종랩. Powered by AirBBot
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-500">
-            <Link
-              href="/api/auth/signout?callbackUrl=/"
-              className="hover:text-sky-400 transition-colors"
-            >
-              세션 종료 (로그아웃)
-            </Link>
             {isAdmin && (
               <Link href="/admin" className="hover:text-sky-400 transition-colors">
                 관리자

@@ -15,7 +15,8 @@ import {
   YAxis,
 } from "recharts";
 
-const SEJONG_BLUE = "#0047AB";
+/** tailwind `theme.extend.colors.sejong.blue` (#004B8D) — 차트 fill은 클래스 미지원 */
+const SEJONG_BLUE = "#004B8D";
 const MUTED = "#94a3b8";
 
 const N = 696;
@@ -64,7 +65,7 @@ function ExperienceLabel(props: {
     <text
       x={x}
       y={y}
-      fill="#0f172a"
+      fill="#003666"
       textAnchor="middle"
       dominantBaseline="central"
       className="text-[10px] sm:text-[11px] font-semibold"
@@ -85,11 +86,11 @@ export function LifelongEducationInsightsSection() {
     <section className="bg-slate-50/80 border-y border-slate-200/70 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-8 sm:mb-10 max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0047AB] mb-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sejong-blue mb-2">
             Panel insight
           </p>
           <h2
-            className="text-2xl sm:text-3xl font-extrabold text-[#0f172a] leading-tight"
+            className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight"
             style={montserratStyle()}
           >
             평생교육 수요조사 인사이트
@@ -183,8 +184,8 @@ export function LifelongEducationInsightsSection() {
               </ResponsiveContainer>
             </div>
             <p className="mt-2 text-[11px] text-slate-500 leading-relaxed">
-              <span className="font-semibold text-[#0047AB]">직업능력 향상</span>과{" "}
-              <span className="font-semibold text-[#0047AB]">디지털·AI·코딩</span>은 세종블루로 강조했습니다.
+              <span className="font-semibold text-sejong-blue">직업능력 향상</span>과{" "}
+              <span className="font-semibold text-sejong-blue">디지털·AI·코딩</span>은 세종블루로 강조했습니다.
             </p>
           </div>
 
@@ -193,13 +194,13 @@ export function LifelongEducationInsightsSection() {
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 의향</h3>
             <p className="text-xs text-slate-500 mb-5">태도 분포 (비율)</p>
 
-            <p className="text-lg sm:text-xl font-bold text-[#0f172a] leading-snug mb-6">
+            <p className="text-lg sm:text-xl font-bold text-primary-800 leading-snug mb-6">
               세종 시민{" "}
-              <span className="text-[#0047AB] text-2xl sm:text-3xl align-middle" style={montserratStyle()}>
+              <span className="text-sejong-blue text-2xl sm:text-3xl align-middle" style={montserratStyle()}>
                 10명 중 약 6명
               </span>
               <span className="text-slate-700 font-semibold"> (57.9%)</span>은 배움에 대한{" "}
-              <span className="text-[#0047AB]">강력한 의지</span>가 있습니다.
+              <span className="text-sejong-blue">강력한 의지</span>가 있습니다.
             </p>
 
             <div className="space-y-4 flex-1">
@@ -236,7 +237,7 @@ export function LifelongEducationInsightsSection() {
           </p>
           <Link
             href="/signup"
-            className="mt-5 inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-[#0047AB] text-white text-sm sm:text-base font-bold shadow-md shadow-[#0047AB]/20 hover:scale-[1.02] hover:brightness-110 transition"
+            className="mt-5 inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-sejong-blue text-white text-sm sm:text-base font-bold shadow-md shadow-sejong-blue/25 hover:scale-[1.02] hover:bg-sejong-blue-dark transition"
             style={montserratStyle()}
           >
             패널 신청하기
