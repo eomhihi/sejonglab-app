@@ -19,7 +19,10 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
               >
                 SEJONG LAB
               </span>
-              <span className="text-xs text-slate-500 tracking-[0.38em] uppercase pl-[0.38em]">
+              <span
+                className="text-xs text-slate-500 tracking-[0.62em] uppercase -mr-[0.62em]"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
                 Research Data
               </span>
             </div>
@@ -61,7 +64,7 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/signup" className="hover:text-sky-400 transition-colors">
-                  패널신청
+                  패널 신청
                 </Link>
               </li>
               <li>

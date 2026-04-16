@@ -50,6 +50,12 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
       role="region"
       aria-label="데이터·변화 관련 뉴스"
     >
+      <div className="max-w-7xl mx-auto px-4 pt-3">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight drop-shadow-sm">
+          [오늘의 데이터 정책 뉴스]
+        </h2>
+      </div>
+
       <div className="group/ticker relative overflow-hidden motion-reduce:overflow-x-auto py-2.5 sm:py-3">
         {topNews.length === 0 ? (
           <p className="px-4 text-center text-sm font-medium text-slate-600">{statusText}</p>

@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import {
   Bar,
@@ -22,8 +21,8 @@ const MUTED = "#94a3b8";
 const N = 696;
 
 const EXPERIENCE_DATA = [
-  { name: "참여 경험 있음", value: 22.7, fill: SEJONG_BLUE },
-  { name: "참여 경험 없음", value: 77.3, fill: "#e2e8f0" },
+  { name: "경험 있음", value: 22.7, fill: SEJONG_BLUE },
+  { name: "경험 없음", value: 77.3, fill: "#e2e8f0" },
 ] as const;
 
 const INTEREST_DATA = [
@@ -40,10 +39,6 @@ const INTENTION_DATA = [
   { key: "negative", label: "부정 (별로 + 전혀)", pct: 19.6 },
 ] as const;
 
-function montserratStyle(): CSSProperties {
-  return { fontFamily: "var(--font-montserrat)" };
-}
-
 function ExperienceLabel(props: {
   cx?: number;
   cy?: number;
@@ -54,7 +49,7 @@ function ExperienceLabel(props: {
   name?: string;
 }) {
   const { cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, percent = 0, name } = props;
-  if (name !== "참여 경험 없음") return null;
+  if (name !== "경험 없음") return null;
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -69,7 +64,6 @@ function ExperienceLabel(props: {
       textAnchor="middle"
       dominantBaseline="central"
       className="text-[10px] sm:text-[11px] font-semibold"
-      style={montserratStyle()}
     >
       <tspan x={x} dy="-0.6em">
         새로운 시작을 기다리는
@@ -85,19 +79,17 @@ export function LifelongEducationInsightsSection() {
   return (
     <section className="bg-slate-50/80 border-y border-slate-200/70 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
-        <header className="mb-8 sm:mb-10 max-w-3xl">
+        <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sejong-blue mb-2">
             Panel insight
           </p>
-          <h2
-            className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight"
-            style={montserratStyle()}
-          >
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight">
             평생교육 수요조사 인사이트
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-            세종 시민 <span className="font-semibold text-slate-800">N = {N}</span>명 응답을 바탕으로 한 핵심
-            요약입니다.
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#1d3557]">
+            세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
+            불구하고 <span className="font-semibold">높은 참여 의지(57.9%)</span>와{" "}
+            <span className="font-semibold">직업·디지털 역량</span> 중심의 실용적 학습 수요를 선명하게 보여줍니다.
           </p>
         </header>
 
@@ -106,7 +98,7 @@ export function LifelongEducationInsightsSection() {
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 경험</h3>
             <p className="text-xs text-slate-500 mb-4">과거 참여 여부 (비율)</p>
-            <div className="flex-1 min-h-[220px]">
+            <div className="flex-1 min-h-[220px]" style={{ fontFamily: "inherit" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -126,11 +118,12 @@ export function LifelongEducationInsightsSection() {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(v) => [`${Number(v)}%`, "비율"]}
+                    formatter={(v, name) => [`${String(name || "")}: ${Number(v)}%`, ""]}
                     contentStyle={{
                       borderRadius: 12,
                       border: "1px solid #e2e8f0",
                       fontSize: 12,
+                      fontFamily: "inherit",
                     }}
                   />
                 </PieChart>
@@ -139,15 +132,11 @@ export function LifelongEducationInsightsSection() {
             <ul className="mt-2 space-y-1.5 text-xs text-slate-600">
               <li className="flex justify-between gap-2">
                 <span>경험 있음</span>
-                <span className="font-semibold tabular-nums text-slate-900" style={montserratStyle()}>
-                  22.7%
-                </span>
+                <span className="font-semibold tabular-nums text-slate-900">22.7%</span>
               </li>
               <li className="flex justify-between gap-2">
                 <span>경험 없음</span>
-                <span className="font-semibold tabular-nums text-slate-900" style={montserratStyle()}>
-                  77.3%
-                </span>
+                <span className="font-semibold tabular-nums text-slate-900">77.3%</span>
               </li>
             </ul>
           </div>
@@ -156,7 +145,7 @@ export function LifelongEducationInsightsSection() {
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">관심 있는 학습 분야</h3>
             <p className="text-xs text-slate-500 mb-4">상위 5개 (비율)</p>
-            <div className="flex-1 min-h-[240px]">
+            <div className="flex-1 min-h-[240px]" style={{ fontFamily: "inherit" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   layout="vertical"
@@ -164,16 +153,26 @@ export function LifelongEducationInsightsSection() {
                   margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                  <XAxis type="number" domain={[0, 40]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 11 }} />
+                  <XAxis
+                    type="number"
+                    domain={[0, 40]}
+                    tickFormatter={(v) => `${v}%`}
+                    tick={{ fontSize: 11, fontFamily: "inherit" }}
+                  />
                   <YAxis
                     type="category"
                     dataKey="name"
                     width={118}
-                    tick={{ fontSize: 11, fill: "#475569" }}
+                    tick={{ fontSize: 11, fill: "#475569", fontFamily: "inherit" }}
                   />
                   <Tooltip
                     formatter={(v) => [`${Number(v)}%`, "비율"]}
-                    contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 12 }}
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 12,
+                      fontFamily: "inherit",
+                    }}
                   />
                   <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
                     {[...INTEREST_DATA].map((row, i) => (
@@ -183,10 +182,6 @@ export function LifelongEducationInsightsSection() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <p className="mt-2 text-[11px] text-slate-500 leading-relaxed">
-              <span className="font-semibold text-sejong-blue">직업능력 향상</span>과{" "}
-              <span className="font-semibold text-sejong-blue">디지털·AI·코딩</span>은 세종블루로 강조했습니다.
-            </p>
           </div>
 
           {/* Chart 3 — intention summary */}
@@ -194,13 +189,9 @@ export function LifelongEducationInsightsSection() {
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 의향</h3>
             <p className="text-xs text-slate-500 mb-5">태도 분포 (비율)</p>
 
-            <p className="text-lg sm:text-xl font-bold text-primary-800 leading-snug mb-6">
-              세종 시민{" "}
-              <span className="text-sejong-blue text-2xl sm:text-3xl align-middle" style={montserratStyle()}>
-                10명 중 약 6명
-              </span>
-              <span className="text-slate-700 font-semibold"> (57.9%)</span>은 배움에 대한{" "}
-              <span className="text-sejong-blue">강력한 의지</span>가 있습니다.
+            <p className="text-lg sm:text-xl font-bold text-primary-800 leading-snug mb-5">
+              세종 시민 <span className="text-sejong-blue">10명 중 약 6명</span>은 평생학습 참여에 적극적인 태도
+              견지
             </p>
 
             <div className="space-y-4 flex-1">
@@ -208,10 +199,7 @@ export function LifelongEducationInsightsSection() {
                 <div key={row.key}>
                   <div className="flex items-baseline justify-between gap-3 mb-1.5">
                     <span className="text-xs sm:text-sm text-slate-600">{row.label}</span>
-                    <span
-                      className="text-base sm:text-lg font-extrabold tabular-nums text-slate-900"
-                      style={montserratStyle()}
-                    >
+                    <span className="text-base sm:text-lg font-extrabold tabular-nums text-slate-900">
                       {row.pct}%
                     </span>
                   </div>
@@ -238,7 +226,6 @@ export function LifelongEducationInsightsSection() {
           <Link
             href="/signup"
             className="mt-5 inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-sejong-blue text-white text-sm sm:text-base font-bold shadow-md shadow-sejong-blue/25 hover:scale-[1.02] hover:bg-sejong-blue-dark transition"
-            style={montserratStyle()}
           >
             패널 신청하기
           </Link>

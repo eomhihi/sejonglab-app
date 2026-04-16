@@ -10,7 +10,7 @@ export interface NewsItem {
 
 // Google News RSS (KR/ko) — 사용자 지정 쿼리
 const GOOGLE_NEWS_RSS_URL =
-  "https://news.google.com/rss/search?q=%22%EB%8D%B0%EC%9D%B4%ED%84%B0%22%20AND%20%22%EB%B3%80%ED%99%94%22&hl=ko&gl=KR&ceid=KR:ko";
+  "https://news.google.com/rss/search?q=(%22%EB%8D%B0%EC%9D%B4%ED%84%B0%22%20AND%20%22%ED%98%81%EC%8B%A0%22)%20OR%20(%22%EC%84%B8%EC%A2%85%EC%8B%9C%22%20AND%20%22%ED%92%95%EC%B1%85%22)&hl=ko&gl=KR&ceid=KR:ko";
 
 // Weekly update (7 * 24 * 60 * 60)
 const REVALIDATE_SECONDS = 604800;
@@ -66,8 +66,9 @@ function titleQualityScore(title: string): number {
   const t = title || "";
   let score = 0;
   if (t.includes("데이터")) score += 2;
-  if (t.includes("변화")) score += 2;
-  if (t.includes("정책")) score += 1;
+  if (t.includes("혁신")) score += 2;
+  if (t.includes("세종")) score += 2;
+  if (t.includes("정책")) score += 2;
   return score;
 }
 
