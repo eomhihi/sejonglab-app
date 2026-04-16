@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MapPin, Mail } from "lucide-react";
+import { SejongLogoLockup } from "@/components/brand/SejongLogoLockup";
 
 type SejongFooterProps = {
   isAdmin?: boolean;
@@ -12,20 +13,9 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* 브랜드 */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex flex-col items-start gap-1.5 mb-4">
-              <span
-                className="text-white text-base font-extrabold tracking-[0.22em] uppercase font-display"
-              >
-                SEJONG LAB
-              </span>
-              <span
-                className="text-[9px] sm:text-[10px] text-slate-500 font-bold tracking-[0.98em] uppercase -mr-[0.98em] font-display"
-              >
-                Research Data
-              </span>
-            </div>
+            <SejongLogoLockup variant="footer" className="mb-4" />
             <p className="text-sm text-slate-400 leading-relaxed mb-4 k-keep">
-              데이터가 세상을 바꾼다.<br />
+              데이터가 세상을 바꾼다.<br className="hidden sm:block" />
               세종시민과 함께 만드는 스마트 시티
             </p>
             <div className="flex items-center gap-2 text-xs text-slate-500">
