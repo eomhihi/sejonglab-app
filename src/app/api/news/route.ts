@@ -8,9 +8,9 @@ export interface NewsItem {
   pubDate: string;
 }
 
-// Google News RSS (KR/ko)
+// Google News RSS (KR/ko) — 사용자 지정 쿼리
 const GOOGLE_NEWS_RSS_URL =
-  "https://news.google.com/rss/search?q=%EB%8D%B0%EC%9D%B4%ED%84%B0%ED%98%81%EC%8B%A0%20OR%20%EC%A0%95%EC%B1%85%EB%B3%80%ED%99%94&hl=ko&gl=KR&ceid=KR:ko";
+  "https://news.google.com/rss/search?q=%22%EB%8D%B0%EC%9D%B4%ED%84%B0%22%20AND%20%22%ED%98%81%EC%8B%A0%22&hl=ko&gl=KR&ceid=KR:ko";
 
 // Weekly update (7 * 24 * 60 * 60)
 const REVALIDATE_SECONDS = 604800;
@@ -42,6 +42,34 @@ function dedupeByLink(items: NewsItem[]): NewsItem[] {
     seen.add(link);
     return true;
   });
+}
+
+function normalizeTitleKey(title: string): string {
+  return (title || "")
+    .replace(/\s+/g, " ")
+    .replace(/["'“”‘’]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function dedupeByTitle(items: NewsItem[]): NewsItem[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const k = normalizeTitleKey(item.title);
+    if (!k || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+function titleQualityScore(title: string): number {
+  const t = title || "";
+  let score = 0;
+  if (t.includes("데이터")) score += 2;
+  if (t.includes("정책")) score += 2;
+  // RSS 쿼리가 "데이터" AND "혁신" 형태이므로 보조 키워드도 약하게 반영
+  if (t.includes("혁신")) score += 1;
+  return score;
 }
 
 function extractSource(url: string): string {
@@ -168,16 +196,31 @@ export async function GET() {
     const parsed = parseGoogleNewsRss(xml);
 
     const recent = parsed.filter((n) => withinLastDays(n.pubDate, RECENT_DAYS));
-    const deduped = dedupeByLink(recent);
-    const sorted = deduped.sort((a, b) => parsePubDate(b.pubDate) - parsePubDate(a.pubDate));
-    const news = sorted.slice(0, MAX_OUTPUT);
+    const dedupedLinks = dedupeByLink(recent);
+    const dedupedTitles = dedupeByTitle(dedupedLinks);
+    const sorted = dedupedTitles.sort((a, b) => {
+      const s = titleQualityScore(b.title) - titleQualityScore(a.title);
+      if (s !== 0) return s;
+      return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+    });
+    let news = sorted.slice(0, MAX_OUTPUT);
+
+    if (news.length === 0) {
+      // 7일 필터로 비어버리는 경우가 있어, 전체 후보에서 한 번 더 시도
+      const fallbackPool = dedupeByTitle(dedupeByLink(parsed)).sort((a, b) => {
+        const s = titleQualityScore(b.title) - titleQualityScore(a.title);
+        if (s !== 0) return s;
+        return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
+      });
+      news = fallbackPool.slice(0, MAX_OUTPUT);
+    }
 
     if (news.length === 0) {
       return NextResponse.json({
         news: FALLBACK_NEWS,
         updatedAt: new Date().toISOString(),
         error: false,
-        message: "최근 7일 이내 뉴스가 없어 기본 공지로 대체합니다.",
+        message: "뉴스 결과가 없어 기본 공지로 대체합니다.",
       });
     }
 

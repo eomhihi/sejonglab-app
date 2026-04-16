@@ -7,7 +7,7 @@ export function SejongHeroSection() {
     <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-white via-sky-50/30 to-mint-50/20 overflow-hidden">
       <SejongBackground />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12 sm:py-20 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-10 sm:pt-14 pb-12 sm:pb-20 w-full">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* 좌측 텍스트 */}
           <div className="text-center lg:text-left order-2 lg:order-1">

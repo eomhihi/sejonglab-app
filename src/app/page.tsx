@@ -7,8 +7,9 @@ import { BenefitsSection } from "@/components/landing/BenefitsSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { SejongFooter } from "@/components/landing/SejongFooter";
 import { NewsTicker } from "@/components/landing/NewsTicker";
-import { MainInteractiveDashboardSection } from "@/components/landing/MainInteractiveDashboardSection";
+import { LifelongEducationInsightsSection } from "@/components/landing/LifelongEducationInsightsSection";
 import { getNews } from "@/lib/get-news";
+import { TopLogoBar } from "@/components/layout/TopLogoBar";
 
 // Footer 「관리자」 링크: 이 이메일로 로그인한 경우에만 노출
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
@@ -22,10 +23,11 @@ export default async function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <TopLogoBar />
       <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
       <main className="flex-1">
         <SejongHeroSection />
-        <MainInteractiveDashboardSection />
+        <LifelongEducationInsightsSection />
         <SejongFeatureCards />
         <AirBBotFeatureSection />
         <BenefitsSection />

@@ -48,7 +48,7 @@ export function MobileGuard() {
   if (!visible) return null;
 
   return (
-    <div className="sticky top-0 z-[60] w-full border-b border-amber-200 bg-amber-50/95 backdrop-blur">
+    <div className="sticky top-14 z-[55] w-full border-b border-amber-200 bg-amber-50/95 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-amber-900 leading-snug">{MESSAGE}</p>
         <div className="flex items-center gap-2">
