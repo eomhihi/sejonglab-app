@@ -16,7 +16,8 @@ function clamp(n: number, min: number, max: number) {
 }
 
 export function SejongLogoLockup({ variant, href, className }: SejongLogoLockupProps) {
-  const topRef = useRef<HTMLElement | null>(null);
+  const topLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const topSpanRef = useRef<HTMLSpanElement | null>(null);
   const bottomRef = useRef<HTMLSpanElement | null>(null);
   const [scaleX, setScaleX] = useState(1);
 
@@ -39,7 +40,7 @@ export function SejongLogoLockup({ variant, href, className }: SejongLogoLockupP
   }, [variant, className]);
 
   useLayoutEffect(() => {
-    const topEl = topRef.current;
+    const topEl = href ? topLinkRef.current : topSpanRef.current;
     const bottomEl = bottomRef.current;
     if (!topEl || !bottomEl) return;
 
@@ -72,21 +73,19 @@ export function SejongLogoLockup({ variant, href, className }: SejongLogoLockupP
       window.removeEventListener("resize", recalc);
       ro?.disconnect();
     };
-  }, [variant]);
-
-  const TopTag = href ? Link : "span";
-  const topProps = href ? { href } : {};
+  }, [variant, href]);
 
   return (
     <div className={styles.wrap}>
-      <TopTag
-        {...topProps}
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        ref={topRef as never}
-        className={styles.top}
-      >
-        SEJONG LAB
-      </TopTag>
+      {href ? (
+        <Link href={href} ref={topLinkRef} className={styles.top}>
+          SEJONG LAB
+        </Link>
+      ) : (
+        <span ref={topSpanRef} className={styles.top}>
+          SEJONG LAB
+        </span>
+      )}
 
       <span
         ref={bottomRef}
