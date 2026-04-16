@@ -83,10 +83,10 @@ export function LifelongEducationInsightsSection() {
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
             <BarChart3 className="w-4 h-4 text-[#004B8D]" />
-            <span className="text-sm font-bold text-[#004B8D]">평생교육 인사이트</span>
+            <span className="text-sm font-bold text-[#004B8D]">Panel Insight</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
-            평생교육 수요조사 인사이트
+            평생교육 수요조사
           </h2>
           <p className="mt-4 text-[13px] sm:text-base leading-relaxed text-[#1d3557] break-keep [word-break:keep-all]">
             세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
