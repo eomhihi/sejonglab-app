@@ -88,7 +88,7 @@ export function LifelongEducationInsightsSection() {
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
             <span className="text-[#004B8D]">데이터 기반</span> 시민 참여 플랫폼
           </h2>
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#1d3557]">
+          <p className="mt-4 text-[13px] sm:text-base leading-relaxed text-[#1d3557] break-keep [word-break:keep-all]">
             세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
             불구하고
             <br />
@@ -101,7 +101,7 @@ export function LifelongEducationInsightsSection() {
           {/* Chart 1 — donut */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 경험</h3>
-            <p className="text-xs text-slate-500 mb-4">과거 참여 여부 (비율)</p>
+            <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">과거 참여 여부 (비율)</p>
             <div className="flex-1 min-h-[220px]" style={{ fontFamily: "inherit" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -148,7 +148,7 @@ export function LifelongEducationInsightsSection() {
           {/* Chart 2 — horizontal bar */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">관심 있는 학습 분야</h3>
-            <p className="text-xs text-slate-500 mb-4">상위 5개 (비율)</p>
+            <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">상위 5개 (비율)</p>
             <div className="flex-1 min-h-[240px]" style={{ fontFamily: "inherit" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
@@ -191,9 +191,9 @@ export function LifelongEducationInsightsSection() {
           {/* Chart 3 — intention summary */}
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 의향</h3>
-            <p className="text-xs text-slate-500 mb-5">태도 분포 (비율)</p>
+            <p className="text-xs text-slate-500 mb-5 break-keep [word-break:keep-all]">태도 분포 (비율)</p>
 
-            <p className="text-base sm:text-lg font-bold text-primary-800 leading-snug mb-5">
+            <p className="text-base sm:text-lg font-bold text-primary-800 leading-snug mb-5 break-keep [word-break:keep-all] text-center">
               세종 시민 <span className="text-sejong-blue">10명 중 약 6명</span>은 평생학습 참여에 적극적인 태도
               견지
             </p>
@@ -203,7 +203,7 @@ export function LifelongEducationInsightsSection() {
                 <div key={row.key}>
                   <div className="flex items-baseline justify-between gap-3 mb-1.5">
                     <span className="text-[11px] sm:text-[11px] text-slate-600">{row.label}</span>
-                    <span className="text-base sm:text-lg font-extrabold tabular-nums text-slate-900">
+                    <span className="text-[11px] sm:text-[11px] font-extrabold tabular-nums text-slate-900">
                       {row.pct}%
                     </span>
                   </div>

@@ -20,7 +20,7 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
                 SEJONG LAB
               </span>
               <span
-                className="text-[10px] sm:text-[11px] text-slate-500 tracking-[0.78em] uppercase -mr-[0.78em]"
+                className="text-[9px] sm:text-[10px] text-slate-500 tracking-[0.92em] uppercase -mr-[0.92em]"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Research Data

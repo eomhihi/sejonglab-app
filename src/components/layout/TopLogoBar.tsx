@@ -27,7 +27,7 @@ export function TopLogoBar() {
               </Link>
 
               <span
-                className="mt-0.5 w-full text-[10px] sm:text-[11px] font-semibold uppercase text-gray-500 tracking-[0.78em] [-webkit-text-size-adjust:100%] [-moz-text-size-adjust:100%] [-ms-text-size-adjust:100%] -mr-[0.78em]"
+                className="mt-0.5 w-full text-[9px] sm:text-[10px] font-semibold uppercase text-gray-500 tracking-[0.92em] [-webkit-text-size-adjust:100%] [-moz-text-size-adjust:100%] [-ms-text-size-adjust:100%] -mr-[0.92em]"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Research Data
