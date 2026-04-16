@@ -51,9 +51,10 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
       aria-label="데이터·변화 관련 뉴스"
     >
       <div className="max-w-7xl mx-auto px-4 pt-3">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight drop-shadow-sm">
-          [오늘의 데이터 정책 뉴스]
-        </h2>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full">
+          <Newspaper className="w-4 h-4 text-[#004B8D]" />
+          <span className="text-sm font-bold text-[#004B8D]">오늘의 데이터 정책 뉴스</span>
+        </div>
       </div>
 
       <div className="group/ticker relative overflow-hidden motion-reduce:overflow-x-auto py-2.5 sm:py-3">

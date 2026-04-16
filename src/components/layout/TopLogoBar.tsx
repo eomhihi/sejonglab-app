@@ -27,7 +27,7 @@ export function TopLogoBar() {
               </Link>
 
               <span
-                className="mt-0.5 w-full text-[11px] sm:text-xs font-semibold uppercase text-gray-500 tracking-[0.62em] [-webkit-text-size-adjust:100%] [-moz-text-size-adjust:100%] [-ms-text-size-adjust:100%] -mr-[0.62em]"
+                className="mt-0.5 w-full text-[10px] sm:text-[11px] font-semibold uppercase text-gray-500 tracking-[0.78em] [-webkit-text-size-adjust:100%] [-moz-text-size-adjust:100%] [-ms-text-size-adjust:100%] -mr-[0.78em]"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Research Data
@@ -35,8 +35,9 @@ export function TopLogoBar() {
             </div>
 
             <p className="min-w-0 text-xs sm:text-sm text-gray-400 leading-snug">
-              세종랩은 세종시 정책의 근거를 만드는 데이터 전문가 그룹이 시민의 목소리를 직접 듣기 위해 구축한 독립 리서치
-              플랫폼입니다.
+              세종랩은 세종시 정책의 근거를 만드는 데이터 전문가 그룹이
+              <br />
+              시민의 목소리를 직접 듣기 위해 구축한 독립 리서치 플랫폼입니다.
             </p>
           </div>
 

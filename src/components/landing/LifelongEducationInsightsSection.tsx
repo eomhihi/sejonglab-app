@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BarChart3 } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -80,15 +81,18 @@ export function LifelongEducationInsightsSection() {
     <section className="bg-slate-50/80 border-y border-slate-200/70 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sejong-blue mb-2">
-            Panel insight
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-primary-800 leading-tight">
-            평생교육 수요조사 인사이트
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
+            <BarChart3 className="w-4 h-4 text-[#004B8D]" />
+            <span className="text-sm font-bold text-[#004B8D]">핵심 서비스</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
+            <span className="text-[#004B8D]">데이터 기반</span> 시민 참여 플랫폼
           </h2>
           <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#1d3557]">
             세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
-            불구하고 <span className="font-semibold">높은 참여 의지(57.9%)</span>와{" "}
+            불구하고
+            <br />
+            <span className="font-semibold">높은 참여 의지(57.9%)</span>와{" "}
             <span className="font-semibold">직업·디지털 역량</span> 중심의 실용적 학습 수요를 선명하게 보여줍니다.
           </p>
         </header>
@@ -189,7 +193,7 @@ export function LifelongEducationInsightsSection() {
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 의향</h3>
             <p className="text-xs text-slate-500 mb-5">태도 분포 (비율)</p>
 
-            <p className="text-lg sm:text-xl font-bold text-primary-800 leading-snug mb-5">
+            <p className="text-base sm:text-lg font-bold text-primary-800 leading-snug mb-5">
               세종 시민 <span className="text-sejong-blue">10명 중 약 6명</span>은 평생학습 참여에 적극적인 태도
               견지
             </p>
@@ -198,7 +202,7 @@ export function LifelongEducationInsightsSection() {
               {INTENTION_DATA.map((row) => (
                 <div key={row.key}>
                   <div className="flex items-baseline justify-between gap-3 mb-1.5">
-                    <span className="text-xs sm:text-sm text-slate-600">{row.label}</span>
+                    <span className="text-[11px] sm:text-[11px] text-slate-600">{row.label}</span>
                     <span className="text-base sm:text-lg font-extrabold tabular-nums text-slate-900">
                       {row.pct}%
                     </span>
@@ -219,13 +223,9 @@ export function LifelongEducationInsightsSection() {
         </div>
 
         <footer className="mt-10 sm:mt-12 rounded-2xl border border-slate-200/80 bg-white px-5 py-6 sm:px-8 sm:py-8 text-center shadow-sm">
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
-            이 데이터는 세종랩 패널 여러분의 소중한 의견으로 만들어졌습니다. 지금 패널로 가입하여 세종의 미래를 직접
-            설계하세요.
-          </p>
           <Link
             href="/signup"
-            className="mt-5 inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-sejong-blue text-white text-sm sm:text-base font-bold shadow-md shadow-sejong-blue/25 hover:scale-[1.02] hover:bg-sejong-blue-dark transition"
+            className="inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-sejong-blue text-white text-sm sm:text-base font-bold shadow-md shadow-sejong-blue/25 hover:scale-[1.02] hover:bg-sejong-blue-dark transition"
           >
             패널 신청하기
           </Link>

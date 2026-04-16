@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { XMLParser } from "fast-xml-parser";
 
 export interface NewsItem {
   title: string;
@@ -8,9 +7,11 @@ export interface NewsItem {
   pubDate: string;
 }
 
-// Google News RSS (KR/ko) — 사용자 지정 쿼리
-const GOOGLE_NEWS_RSS_URL =
-  "https://news.google.com/rss/search?q=(%22%EB%8D%B0%EC%9D%B4%ED%84%B0%22%20AND%20%22%ED%98%81%EC%8B%A0%22)%20OR%20(%22%EC%84%B8%EC%A2%85%EC%8B%9C%22%20AND%20%22%ED%92%95%EC%B1%85%22)&hl=ko&gl=KR&ceid=KR:ko";
+// Naver News Search API
+const NAVER_NEWS_ENDPOINT = "https://openapi.naver.com/v1/search/news.json";
+const NAVER_QUERY = '("데이터" "혁신") | ("세종시" "정책")';
+const NAVER_DISPLAY = 20;
+const NAVER_SORT: "sim" | "date" = "sim";
 
 // Weekly update (7 * 24 * 60 * 60)
 const REVALIDATE_SECONDS = 604800;
@@ -27,6 +28,11 @@ function sanitizeTitle(raw: string): string {
     .replace(/&gt;/g, ">")
     .replace(/&#39;/g, "'")
     .trim();
+}
+
+/** 네이버 API description도 일부 HTML 강조가 들어올 수 있음 */
+function sanitizeDescription(raw: string): string {
+  return sanitizeTitle(raw);
 }
 
 function parsePubDate(pubDate: string): number {
@@ -65,8 +71,12 @@ function dedupeByTitle(items: NewsItem[]): NewsItem[] {
 function titleQualityScore(title: string): number {
   const t = title || "";
   let score = 0;
+  // 키워드 우선순위: "데이터 혁신"이 포함된 기사를 최우선
   if (t.includes("데이터")) score += 2;
-  if (t.includes("혁신")) score += 2;
+  if (t.includes("혁신")) score += 3;
+  if (t.includes("데이터") && t.includes("혁신")) score += 3;
+
+  // 지역·정책 키워드
   if (t.includes("세종")) score += 2;
   if (t.includes("정책")) score += 2;
   return score;
@@ -91,6 +101,34 @@ function extractSource(url: string): string {
   } catch {
     return "뉴스";
   }
+}
+
+function publisherQualityScore(source: string, link: string): number {
+  const s = (source || "").toLowerCase();
+  const u = (link || "").toLowerCase();
+
+  // 블로그/커뮤니티/홍보성 도메인 감점(네이버 검색 결과 섞일 수 있음)
+  if (u.includes("blog.") || u.includes("post.naver.com") || u.includes("cafe.naver.com")) return -4;
+
+  // 정론지/주요 통신사 가점(간단 룰)
+  const premium = [
+    "연합뉴스",
+    "kbs",
+    "sbs",
+    "mbc",
+    "조선",
+    "중앙",
+    "동아",
+    "한겨레",
+    "경향",
+    "한국일보",
+    "서울신문",
+    "매일경제",
+    "한국경제",
+    "전자신문",
+  ];
+  if (premium.some((p) => s.includes(p.toLowerCase()))) return 2;
+  return 0;
 }
 
 // 네이버 API 실패/결과 없음 시 노출되는 기본 5건(로컬/배포 동일하게 고정)
@@ -127,46 +165,47 @@ const FALLBACK_NEWS: NewsItem[] = [
   },
 ];
 
-type RssItem = {
+type NaverNewsItem = {
   title?: string;
+  originallink?: string;
   link?: string;
-  pubDate?: string;
-  source?: { "#text"?: string; "@_url"?: string } | string;
+  description?: string;
+  pubDate?: string; // RFC 822: "Wed, 16 Apr 2026 10:12:00 +0900"
 };
 
-function parseGoogleNewsRss(xml: string): NewsItem[] {
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-    attributeNamePrefix: "@_",
-    textNodeName: "#text",
-    parseTagValue: false,
-    trimValues: true,
-  });
+type NaverNewsResponse = {
+  lastBuildDate?: string;
+  total?: number;
+  start?: number;
+  display?: number;
+  items?: NaverNewsItem[];
+};
 
-  const parsed = parser.parse(xml) as any;
-  const itemsRaw = parsed?.rss?.channel?.item ?? [];
-  const items: RssItem[] = Array.isArray(itemsRaw) ? itemsRaw : [itemsRaw];
+function getNaverAuth() {
+  // 우선순위: .env.local의 NAVER_CLIENT_* → (기존 사용 중일 수 있는) NAVER_NEWS_CLIENT_* 폴백
+  const clientId = process.env.NAVER_CLIENT_ID || process.env.NAVER_NEWS_CLIENT_ID;
+  const clientSecret = process.env.NAVER_CLIENT_SECRET || process.env.NAVER_NEWS_CLIENT_SECRET;
+  return { clientId, clientSecret };
+}
 
-  return items
+function parseNaverNewsItems(items: NaverNewsItem[]): NewsItem[] {
+  return (items || [])
     .map((it) => {
       const title = sanitizeTitle(String(it?.title ?? ""));
-      const link = String(it?.link ?? "").trim();
-      const pubDate = String(it?.pubDate ?? "").trim();
-      const sourceText =
-        typeof it?.source === "string"
-          ? it.source
-          : typeof it?.source?.["#text"] === "string"
-            ? it.source["#text"]
-            : "";
+      const link = String(it?.originallink ?? it?.link ?? "").trim();
+      const pubDateRaw = String(it?.pubDate ?? "").trim();
+      const pubDate = pubDateRaw ? new Date(pubDateRaw).toISOString() : "";
+      const description = sanitizeDescription(String(it?.description ?? ""));
 
-      return {
-        title,
-        link,
-        pubDate: pubDate ? new Date(pubDate).toISOString() : "",
-        source: sourceText?.trim() ? sourceText.trim() : extractSource(link),
-      } satisfies NewsItem;
+      // source는 도메인에서 추출(네이버 응답에 별도 필드 없음)
+      const source = extractSource(link);
+
+      // description은 UI에 쓰지 않지만, 품질 점수에 활용할 여지를 남김(현재는 미사용)
+      void description;
+
+      return { title, link, pubDate, source } satisfies NewsItem;
     })
-    .filter((x) => x.title && x.link);
+    .filter((x) => x.title && x.link && x.pubDate);
 }
 
 function withinLastDays(isoOrRfc: string, days: number): boolean {
@@ -178,7 +217,29 @@ function withinLastDays(isoOrRfc: string, days: number): boolean {
 
 export async function GET() {
   try {
-    const res = await fetch(GOOGLE_NEWS_RSS_URL, {
+    const { clientId, clientSecret } = getNaverAuth();
+    if (!clientId || !clientSecret) {
+      return NextResponse.json(
+        {
+          news: FALLBACK_NEWS,
+          updatedAt: new Date().toISOString(),
+          error: true,
+          message: "네이버 뉴스 API 키가 설정되지 않아 기본 뉴스로 대체합니다. (.env.local: NAVER_CLIENT_ID/SECRET)",
+        },
+        { status: 200 }
+      );
+    }
+
+    const url = new URL(NAVER_NEWS_ENDPOINT);
+    url.searchParams.set("query", NAVER_QUERY);
+    url.searchParams.set("display", String(NAVER_DISPLAY));
+    url.searchParams.set("sort", NAVER_SORT);
+
+    const res = await fetch(url.toString(), {
+      headers: {
+        "X-Naver-Client-Id": clientId,
+        "X-Naver-Client-Secret": clientSecret,
+      },
       // Next.js revalidate (weekly)
       next: { revalidate: REVALIDATE_SECONDS },
     });
@@ -188,18 +249,21 @@ export async function GET() {
         news: FALLBACK_NEWS,
         updatedAt: new Date().toISOString(),
         error: true,
-        message: `Google News RSS 호출 실패 (HTTP ${res.status})`,
+        message: `네이버 뉴스 API 호출 실패 (HTTP ${res.status})`,
       });
     }
 
-    const xml = await res.text();
-    const parsed = parseGoogleNewsRss(xml);
+    const data = (await res.json()) as NaverNewsResponse;
+    const parsed = parseNaverNewsItems(Array.isArray(data?.items) ? data.items : []);
 
     const recent = parsed.filter((n) => withinLastDays(n.pubDate, RECENT_DAYS));
     const dedupedLinks = dedupeByLink(recent);
     const dedupedTitles = dedupeByTitle(dedupedLinks);
     const sorted = dedupedTitles.sort((a, b) => {
-      const s = titleQualityScore(b.title) - titleQualityScore(a.title);
+      const s =
+        titleQualityScore(b.title) +
+        publisherQualityScore(b.source, b.link) -
+        (titleQualityScore(a.title) + publisherQualityScore(a.source, a.link));
       if (s !== 0) return s;
       return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
     });
@@ -208,7 +272,10 @@ export async function GET() {
     if (news.length === 0) {
       // 7일 필터로 비어버리는 경우가 있어, 전체 후보에서 한 번 더 시도
       const fallbackPool = dedupeByTitle(dedupeByLink(parsed)).sort((a, b) => {
-        const s = titleQualityScore(b.title) - titleQualityScore(a.title);
+        const s =
+          titleQualityScore(b.title) +
+          publisherQualityScore(b.source, b.link) -
+          (titleQualityScore(a.title) + publisherQualityScore(a.source, a.link));
         if (s !== 0) return s;
         return parsePubDate(b.pubDate) - parsePubDate(a.pubDate);
       });
