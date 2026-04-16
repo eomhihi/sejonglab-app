@@ -140,7 +140,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
           className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${blue.ring} focus:border-[#004B8D]`}
         />
         <p className="mt-1.5 text-xs text-slate-500">
-          '-'를 제외한 휴대폰 번호를 입력하세요.
+          &apos;-&apos;를 제외한 휴대폰 번호를 입력하세요.
         </p>
         {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>}
       </div>
