@@ -60,6 +60,8 @@ export function AirBBotFeatureSection() {
               <p className="text-slate-700 text-sm leading-relaxed font-medium">
                 {step.description}
               </p>
+
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-sejong-blue via-brand-secondary to-brand-ash rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           ))}
         </div>
