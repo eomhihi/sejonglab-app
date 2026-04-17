@@ -1,7 +1,7 @@
 import { LayoutGrid } from "lucide-react";
 import { BriefingInteractiveDashboard } from "@/components/briefing/BriefingInteractiveDashboard";
 
-/** NewsSection과 동일한 섹션 뼈대 — 메인 랜딩 중단 대시보드 */
+/** 카드형 뉴스 블록과 유사한 2열 레이아웃 — 메인 랜딩 중단 대시보드 */
 export function MainInteractiveDashboardSection() {
   return (
     <section className="bg-sky-50 py-10 border-y border-sky-100">

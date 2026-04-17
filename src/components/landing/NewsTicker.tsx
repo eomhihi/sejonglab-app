@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useMemo } from "react";
-import { Newspaper, ExternalLink, Clock } from "lucide-react";
+import { Newspaper } from "lucide-react";
 
 interface NewsItem {
   title: string;
@@ -16,24 +16,6 @@ interface NewsTickerProps {
   message?: string;
 }
 
-function formatTimeAgo(dateString: string): string {
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffDays > 0) return `${diffDays}일 전`;
-    if (diffHours > 0) return `${diffHours}시간 전`;
-    if (diffMins > 0) return `${diffMins}분 전`;
-    return "방금 전";
-  } catch {
-    return "";
-  }
-}
-
 function articleHref(item: NewsItem): string {
   if (item.link?.trim()) return item.link.trim();
   return `https://search.naver.com/search.naver?where=news&query=${encodeURIComponent(item.title)}`;
@@ -46,7 +28,7 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
 
   return (
     <div
-      className="mt-28 sm:mt-24 border-b border-slate-200/70 bg-white/75 backdrop-blur-sm"
+      className="hidden md:block mt-28 sm:mt-24 border-b border-slate-200/70 bg-white/75 backdrop-blur-sm"
       role="region"
       aria-label="데이터·변화 관련 뉴스"
     >
@@ -101,69 +83,5 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
         <p className="sr-only">일부 뉴스는 대체 소스에서 표시될 수 있습니다.</p>
       ) : null}
     </div>
-  );
-}
-
-export function NewsSection({ initialNews, error = false, message }: NewsTickerProps) {
-  const statusText = message || "최신 뉴스를 불러오는 중입니다";
-
-  return (
-    <section className="bg-sky-50 py-10 border-y border-sky-100">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className="lg:w-64 flex-shrink-0">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-sejong-blue rounded-lg">
-                <Newspaper className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-extrabold text-primary-800">오늘의 데이터 정책 뉴스</h2>
-                <p className="text-xs text-sejong-blue font-bold">데이터가 세상을 바꾼다</p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="flex-1"
-            style={{
-              scrollbarWidth: "auto",
-              scrollbarColor: "auto",
-            }}
-          >
-            {initialNews.length === 0 ? (
-              <div className="flex items-center justify-center h-40 rounded-lg bg-white border border-sky-200 text-slate-600 font-medium">
-                {statusText}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {initialNews.slice(0, 5).map((item, index) => (
-                  <a
-                    key={`${item.link || item.title}-${index}`}
-                    href={articleHref(item)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-4 p-4 rounded-lg bg-white transition-colors group border border-sky-200 shadow-sm ${
-                      item.link?.trim() ? "hover:bg-sky-100" : "opacity-75"
-                    }`}
-                  >
-                    <span className="text-xs px-2 py-1 bg-sejong-blue text-white rounded font-bold min-w-[70px] text-center">
-                      {item.source}
-                    </span>
-                    <span className="flex-1 text-sm text-primary-800 font-medium group-hover:text-sejong-blue transition-colors">
-                      {item.title}
-                    </span>
-                    <div className="flex items-center gap-1 text-xs text-slate-500 flex-shrink-0 font-medium">
-                      <Clock className="w-3 h-3" />
-                      <span>{formatTimeAgo(item.pubDate)}</span>
-                    </div>
-                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-sejong-blue transition-colors flex-shrink-0" />
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }

@@ -25,7 +25,7 @@ export default async function LandingPage() {
     <div className="min-h-screen flex flex-col">
       <TopLogoBar />
       <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
-      <main className="flex-1">
+      <main className="flex-1 mt-28 sm:mt-24 md:mt-0">
         <SejongHeroSection />
         <LifelongEducationInsightsSection />
         <SejongFeatureCards />
