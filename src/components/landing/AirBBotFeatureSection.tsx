@@ -29,14 +29,14 @@ export function AirBBotFeatureSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 rounded-full mb-4">
-            <Cloud className="w-4 h-4 text-[#004B8D]" />
-            <span className="text-sm font-bold text-[#004B8D]">AirBBot Platform</span>
+            <Cloud className="w-4 h-4 text-sejong-blue" />
+            <span className="text-sm font-bold text-sejong-blue">AirBBot 플랫폼</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
-            에어봇(<span className="text-[#004B8D]">AirBBot</span>) 솔루션
+            에어봇(<span className="text-sejong-blue">AirBBot</span>) 솔루션
           </h2>
           <p className="text-base sm:text-lg text-[#002D56] font-medium max-w-2xl mx-auto">
-            <span className="font-bold text-[#004B8D]">클라우드 기반 설문 설계부터 리포트까지</span>
+            <span className="font-bold text-sejong-blue">클라우드 기반 설문 설계부터 리포트까지</span>
             <br />
             한 곳에서 통합 관리하는 플랫폼
           </p>
@@ -52,11 +52,11 @@ export function AirBBotFeatureSection() {
                 <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-sejong-blue to-sky-500 text-white">
                   <step.Icon className="w-5 h-5" />
                 </span>
-                <span className="text-xs font-bold text-[#004B8D] bg-sky-50 px-2 py-1 rounded">
+                <span className="text-xs font-bold text-sejong-blue bg-sky-50 px-2 py-1 rounded">
                   STEP {i + 1}
                 </span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-[#002D56] mb-2 group-hover:text-[#004B8D] transition-colors drop-shadow-sm">
+              <h3 className="text-base sm:text-lg font-bold text-[#002D56] mb-2 group-hover:text-sejong-blue transition-colors drop-shadow-sm">
                 {step.title}
               </h3>
               <p className="text-slate-700 text-sm leading-relaxed font-medium">
@@ -67,7 +67,7 @@ export function AirBBotFeatureSection() {
         </div>
 
         <div className="mt-10 sm:mt-14 rounded-2xl bg-gradient-to-r from-sky-100 to-mint-100 border border-sky-200 p-6 sm:p-10 text-center">
-          <p className="text-[#004B8D] text-sm font-bold mb-2">
+          <p className="text-sejong-blue text-sm font-bold mb-2">
             통합 관리의 장점
           </p>
           <p className="text-lg sm:text-xl lg:text-2xl font-bold max-w-2xl mx-auto leading-relaxed text-[#002D56]">

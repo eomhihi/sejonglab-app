@@ -61,7 +61,7 @@ function formatNumber(n: number) {
 }
 
 const chartColors = {
-  primary: "#004B8D",
+  primary: "#124559",
   accent: "#6366f1",
   sky: "#0ea5e9",
 };

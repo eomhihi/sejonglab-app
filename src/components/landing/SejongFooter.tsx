@@ -8,7 +8,7 @@ type SejongFooterProps = {
 
 export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
   return (
-    <footer className="bg-slate-900 text-slate-300">
+    <footer className="bg-header-footer text-slate-300">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* 브랜드 */}
@@ -75,7 +75,7 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
             © 2026 세종랩. Powered by AirBBot
           </p>

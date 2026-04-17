@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                 {interestTags.map((topic: string) => (
                   <span
                     key={topic}
-                    className="px-3 py-1 text-sm bg-[#004B8D]/10 text-[#004B8D] rounded-full font-medium"
+                    className="px-3 py-1 text-sm bg-sejong-blue/10 text-sejong-blue rounded-full font-medium"
                   >
                     {topic}
                   </span>

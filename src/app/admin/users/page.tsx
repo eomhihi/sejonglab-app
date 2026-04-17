@@ -87,7 +87,7 @@ export default async function AdminUsersPage({
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#004B8D] hover:bg-[#003666] rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-sejong-blue hover:bg-sejong-blue-dark rounded-lg transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             홈으로 돌아가기

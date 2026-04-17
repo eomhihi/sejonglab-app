@@ -36,11 +36,11 @@ export function SejongFeatureCards() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
-            <BarChart3 className="w-4 h-4 text-[#004B8D]" />
-            <span className="text-sm font-bold text-[#004B8D]">핵심 서비스</span>
+            <BarChart3 className="w-4 h-4 text-sejong-blue" />
+            <span className="text-sm font-bold text-sejong-blue">핵심 서비스</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
-            <span className="text-[#004B8D]">데이터 기반</span> 시민 참여 플랫폼
+            <span className="text-sejong-blue">데이터 기반</span> 시민 참여 플랫폼
           </h2>
           <p className="text-[#002D56] font-medium max-w-2xl mx-auto">
             세종시의 특성을 반영한 맞춤형 리서치로 더 나은 도시를 만들어갑니다
@@ -64,7 +64,7 @@ export function SejongFeatureCards() {
                 <span>{feature.landmark}</span>
               </div>
 
-              <h3 className="text-lg sm:text-xl font-bold text-[#002D56] mb-3 group-hover:text-[#004B8D] transition-colors drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl font-bold text-[#002D56] mb-3 group-hover:text-sejong-blue transition-colors drop-shadow-sm">
                 {feature.title}
               </h3>
 

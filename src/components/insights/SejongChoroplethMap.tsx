@@ -125,7 +125,7 @@ export function SejongChoroplethMap({ valuesByDong, className = "" }: Props) {
           <span className="w-4 h-2 rounded bg-[rgb(224,231,255)] border border-primary-200" /> 적음
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="w-4 h-2 rounded bg-[rgb(0,75,141)] border border-primary-400" /> 많음
+          <span className="w-4 h-2 rounded bg-[rgb(18,69,89)] border border-primary-400" /> 많음
         </span>
       </div>
     </div>

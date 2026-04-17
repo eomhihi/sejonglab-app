@@ -1,5 +1,10 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * [OLD] Tailwind 색상 원복 참고 (globals.css :root 주석과 함께)
+ * - sejong: { blue: "#004B8D", "blue-light": "#0066B3", "blue-dark": "#003666" }
+ * - primary: { 500: "#004B8D", … 기존 스케일 }
+ */
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,13 +14,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
+        background: "var(--color-background)",
         foreground: "var(--foreground)",
+        "header-footer": "var(--color-header-footer)",
+        primary: {
+          50: "#f4f7f8",
+          100: "#e9eef0",
+          200: "#d3dde2",
+          300: "#adbec7",
+          400: "#6d8e9e",
+          500: "var(--color-primary)",
+          600: "#0f3b4a",
+          700: "#0c303c",
+          800: "#09242e",
+          900: "#061920",
+          950: "#030f14",
+        },
         oxford: "#1d3557",
         sejong: {
-          blue: "#004B8D",
-          "blue-light": "#0066B3",
-          "blue-dark": "#003666",
+          blue: "var(--color-primary)",
+          "blue-light": "var(--color-secondary)",
+          "blue-dark": "#0c303c",
         },
         sky: {
           50: "#f0f9ff",
@@ -35,25 +54,12 @@ const config: Config = {
           500: "#14b8a6",
           600: "#0d9488",
         },
-        primary: {
-          50: "#e6f0f7",
-          100: "#cce1ef",
-          200: "#99c3df",
-          300: "#66a5cf",
-          400: "#3387bf",
-          500: "#004B8D",
-          600: "#003f77",
-          700: "#003361",
-          800: "#00274b",
-          900: "#001b35",
-          950: "#000f1f",
-        },
       },
       fontFamily: {
         display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       animation: {
-        "ticker": "ticker 30s linear infinite",
+        ticker: "ticker 30s linear infinite",
         "ticker-vertical": "ticker-vertical 20s linear infinite",
       },
       keyframes: {

@@ -15,8 +15,8 @@ import {
   YAxis,
 } from "recharts";
 
-/** tailwind `theme.extend.colors.sejong.blue` (#004B8D) — 차트 fill은 클래스 미지원 */
-const SEJONG_BLUE = "#004B8D";
+/** theme `sejong.blue` → `var(--color-primary)` (#124559) — 차트 fill은 클래스 미지원 */
+const SEJONG_BLUE = "#124559";
 const MUTED = "#94a3b8";
 
 const N = 696;
@@ -61,7 +61,7 @@ function ExperienceLabel(props: {
     <text
       x={x}
       y={y}
-      fill="#003666"
+      fill="#0c303c"
       textAnchor="middle"
       dominantBaseline="central"
       className="text-[10px] sm:text-[11px] font-semibold"
@@ -82,8 +82,8 @@ export function LifelongEducationInsightsSection() {
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
-            <BarChart3 className="w-4 h-4 text-[#004B8D]" />
-            <span className="text-sm font-bold text-[#004B8D]">Panel Insight</span>
+            <BarChart3 className="w-4 h-4 text-sejong-blue" />
+            <span className="text-sm font-bold text-sejong-blue">패널 인사이트</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
             평생교육 수요조사

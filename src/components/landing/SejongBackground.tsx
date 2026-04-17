@@ -53,17 +53,17 @@ export function SejongBackground() {
         {/* 그라디언트 정의 - 원래 색상 복원 */}
         <defs>
           <linearGradient id="curve-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#004B8D" />
+            <stop offset="0%" stopColor="var(--color-primary)" />
             <stop offset="50%" stopColor="#0ea5e9" />
             <stop offset="100%" stopColor="#14b8a6" />
           </linearGradient>
           <linearGradient id="curve-gradient-2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#14b8a6" />
-            <stop offset="100%" stopColor="#004B8D" />
+            <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
           <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#0ea5e9" />
-            <stop offset="50%" stopColor="#004B8D" />
+            <stop offset="50%" stopColor="var(--color-primary)" />
             <stop offset="100%" stopColor="#0ea5e9" />
           </linearGradient>
         </defs>
@@ -110,7 +110,7 @@ export function EungBridgeGraphic() {
           cx="150"
           cy="150"
           r="80"
-          stroke="#004B8D"
+          stroke="var(--color-primary)"
           strokeWidth="1"
           fill="none"
           opacity="0.2"
@@ -123,24 +123,24 @@ export function EungBridgeGraphic() {
 
         <defs>
           <linearGradient id="bridge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#004B8D" />
+            <stop offset="0%" stopColor="var(--color-primary)" />
             <stop offset="50%" stopColor="#0ea5e9" />
             <stop offset="100%" stopColor="#14b8a6" />
           </linearGradient>
           <linearGradient id="bridge-gradient-inner" x1="100%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#14b8a6" />
-            <stop offset="100%" stopColor="#004B8D" />
+            <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
           <radialGradient id="inner-gradient" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="#004B8D" />
+            <stop offset="100%" stopColor="var(--color-primary)" />
           </radialGradient>
         </defs>
       </svg>
 
       {/* 중앙 텍스트 - 짙은 네이비로 가독성 극대화 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 drop-shadow-sm">
-        <span className="text-xs sm:text-sm font-bold tracking-wider mb-1 text-[#004B8D]">
+        <span className="text-xs sm:text-sm font-bold tracking-wider mb-1 text-sejong-blue">
           AI & Data Driven
         </span>
         <span className="text-lg sm:text-xl font-extrabold text-[#002D56]">

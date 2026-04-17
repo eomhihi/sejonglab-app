@@ -31,7 +31,7 @@ export type SejongMockData = {
 };
 
 const chartColors = {
-  primary: "#004B8D",
+  primary: "#124559",
   accent: "#6366f1",
   gradientEnd: "#0ea5e9",
 };

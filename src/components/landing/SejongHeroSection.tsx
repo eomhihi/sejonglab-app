@@ -45,17 +45,17 @@ export function SejongHeroSection() {
             {/* 통계 */}
             <div className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-slate-300/50">
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">세계 최초</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-sejong-blue drop-shadow-sm">세계 최초</p>
                 <p className="text-xs sm:text-sm text-[#002D56] font-medium">스마트시티 국제인증(Lv.4)</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">최우수</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-sejong-blue drop-shadow-sm">최우수</p>
                 <p className="text-xs sm:text-sm text-[#002D56] font-medium">
                   데이터기반행정 평가 <br className="hidden sm:block" /> (3년 연속)
                 </p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-extrabold text-[#004B8D] drop-shadow-sm">1,500만+</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-sejong-blue drop-shadow-sm">1,500만+</p>
                 <p className="text-xs sm:text-sm text-[#002D56] font-medium">
                   스마트 모빌리티 어울링 <br className="hidden sm:block" /> 누적 이용
                 </p>

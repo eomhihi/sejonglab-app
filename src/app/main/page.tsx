@@ -24,7 +24,7 @@ export default async function MainPage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center text-sm font-medium text-[#004B8D] hover:underline"
+          className="inline-flex items-center text-sm font-medium text-sejong-blue hover:underline"
         >
           홈으로
         </Link>

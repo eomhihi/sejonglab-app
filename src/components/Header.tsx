@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="flex justify-between items-center p-4 bg-white border-b">
-      <Link href="/" className="text-xl font-bold text-[#004B8D]">
+      <Link href="/" className="text-xl font-bold text-sejong-blue">
         Sejong Lab
       </Link>
       <nav className="flex gap-4 items-center">
@@ -28,7 +28,7 @@ export default function Header() {
         ) : isLoggedIn ? (
           <>
             {isAdmin && (
-              <Link href="/admin" className="text-[#004B8D] font-bold border-b-2 border-[#004B8D]">
+              <Link href="/admin" className="text-sejong-blue font-bold border-b-2 border-sejong-blue">
                 「관리자」
               </Link>
             )}
@@ -47,7 +47,7 @@ export default function Header() {
             </button>
           </>
         ) : (
-          <Link href="/auth/signin" className="px-3 py-1 text-sm text-[#004B8D] border border-[#004B8D] rounded hover:bg-sky-50">
+          <Link href="/auth/signin" className="px-3 py-1 text-sm text-sejong-blue border border-sejong-blue rounded hover:bg-sky-50">
             로그인
           </Link>
         )}

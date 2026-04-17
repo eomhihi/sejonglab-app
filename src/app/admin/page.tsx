@@ -98,7 +98,7 @@ export default async function AdminPage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#004B8D] hover:bg-[#003666] rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-sejong-blue hover:bg-sejong-blue-dark rounded-lg transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             홈으로 돌아가기
@@ -152,7 +152,7 @@ export default async function AdminPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 요약 카드 */}
         <div className="grid sm:grid-cols-2 gap-4 mb-8">
-          <div className="rounded-xl bg-gradient-to-br from-[#004B8D] to-[#003666] p-6 border border-slate-600/50 shadow-lg">
+          <div className="rounded-xl bg-gradient-to-br from-sejong-blue to-sejong-blue-dark p-6 border border-slate-600/50 shadow-lg">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
                 <Users className="w-6 h-6 text-sky-300" />
@@ -165,7 +165,7 @@ export default async function AdminPage() {
               </div>
             </div>
           </div>
-          <div className="rounded-xl bg-gradient-to-br from-sky-600 to-[#004B8D] p-6 border border-slate-600/50 shadow-lg">
+          <div className="rounded-xl bg-gradient-to-br from-sky-600 to-sejong-blue p-6 border border-slate-600/50 shadow-lg">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
                 <UserPlus className="w-6 h-6 text-sky-200" />

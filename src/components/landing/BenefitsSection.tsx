@@ -6,7 +6,7 @@ export function BenefitsSection() {
       Icon: MessageSquareHeart,
       title: "의견 반영",
       description: "설문 참여를 통해 세종시 정책·서비스 개선에 직접 기여할 수 있습니다.",
-      iconBg: "bg-gradient-to-br from-[#004B8D] to-sky-400",
+      iconBg: "bg-gradient-to-br from-sejong-blue to-sky-400",
     },
     {
       Icon: Coffee,
@@ -27,9 +27,9 @@ export function BenefitsSection() {
     <section id="benefits" className="py-16 sm:py-24 bg-gradient-to-b from-white to-sky-50/50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#004B8D]/10 rounded-full mb-4">
-            <Gift className="w-4 h-4 text-[#004B8D]" />
-            <span className="text-sm font-bold text-[#004B8D]">참여 혜택</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-4">
+            <Gift className="w-4 h-4 text-sejong-blue" />
+            <span className="text-sm font-bold text-sejong-blue">참여 혜택</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#002D56] mb-4 drop-shadow-sm">
             패널 참여 <span className="text-emerald-600">혜택</span>
@@ -43,12 +43,12 @@ export function BenefitsSection() {
           {benefits.map((benefit) => (
             <div
               key={benefit.title}
-              className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 text-center hover:border-[#004B8D]/30 hover:shadow-xl hover:shadow-[#004B8D]/10 transition-all duration-300 group"
+              className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 text-center hover:border-sejong-blue/30 hover:shadow-xl hover:shadow-sejong-blue/10 transition-all duration-300 group"
             >
               <div className={`w-14 h-14 rounded-2xl ${benefit.iconBg} flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform shadow-lg`}>
                 <benefit.Icon className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-[#002D56] mb-3 group-hover:text-[#004B8D] transition-colors drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl font-bold text-[#002D56] mb-3 group-hover:text-sejong-blue transition-colors drop-shadow-sm">
                 {benefit.title}
               </h3>
               <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-medium">
