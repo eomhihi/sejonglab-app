@@ -3,8 +3,8 @@ import { Building2, Leaf, BarChart3, MapPin, Users, Sparkles } from "lucide-reac
 const features = [
   {
     icon: Building2,
-    iconBg: "bg-white border border-brand-ash/60",
-    iconColor: "text-sejong-blue",
+    iconBg: "bg-white border-2 border-brand-ash/70",
+    iconColor: "text-brand-ash",
     title: "세종시 행정동별 정밀 분석",
     description: "31개 행정동의 특성을 반영한 맞춤형 설문과 데이터 분석으로 지역별 정책 수요를 파악합니다.",
     landmark: "세종정부청사",
@@ -12,8 +12,8 @@ const features = [
   },
   {
     icon: Users,
-    iconBg: "bg-white border border-brand-ash/60",
-    iconColor: "text-sejong-blue",
+    iconBg: "bg-white border-2 border-brand-ash/70",
+    iconColor: "text-brand-ash",
     title: "시민 체감도 조사",
     description: "교통, 교육, 복지 등 생활 밀착형 정책에 대한 시민들의 실제 만족도와 개선 요구를 수집합니다.",
     landmark: "이응다리",
@@ -21,8 +21,8 @@ const features = [
   },
   {
     icon: Sparkles,
-    iconBg: "bg-white border border-brand-ash/60",
-    iconColor: "text-brand-secondary",
+    iconBg: "bg-white border-2 border-brand-ash/70",
+    iconColor: "text-brand-ash",
     title: "신사업 실증 데이터",
     description: "자율주행, 드론배송 등 스마트시티 신기술에 대한 시민 수용성과 니즈를 조사합니다.",
     landmark: "국립세종도서관",

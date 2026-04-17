@@ -48,8 +48,8 @@ export function AirBBotFeatureSection() {
               key={step.title}
               className="group relative bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-sejong-blue/5 hover:border-sejong-blue/20 transition-all duration-300 hover:-translate-y-1"
             >
-              <div className={`inline-flex items-center justify-center w-14 h-14 bg-white border border-brand-ash/60 rounded-xl mb-5`}>
-                <step.Icon className="w-7 h-7 text-sejong-blue" />
+              <div className={`inline-flex items-center justify-center w-14 h-14 bg-white border-2 border-brand-ash/70 rounded-xl mb-5`}>
+                <step.Icon className="w-7 h-7 text-brand-ash" />
               </div>
               <div className="absolute top-6 right-6 flex items-center gap-1 text-xs text-slate-500 font-medium">
                 <span>STEP {i + 1}</span>
