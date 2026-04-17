@@ -90,8 +90,8 @@ export function LifelongEducationInsightsSection() {
           </h2>
           <p className="mt-4 text-[13px] sm:text-base leading-relaxed text-[#1d3557] break-keep [word-break:keep-all]">
             세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
-            불구하고
-            <br />
+            불구하고{" "}
+            <br className="hidden sm:block" />
             <span className="font-semibold">높은 참여 의지(57.9%)</span>와{" "}
             <span className="font-semibold">직업·디지털 역량</span> 중심의 실용적 학습 수요를 선명하게 보여줍니다.
           </p>

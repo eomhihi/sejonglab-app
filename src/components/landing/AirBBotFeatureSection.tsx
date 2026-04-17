@@ -71,8 +71,8 @@ export function AirBBotFeatureSection() {
             통합 관리의 장점
           </p>
           <p className="text-lg sm:text-xl lg:text-2xl font-bold max-w-2xl mx-auto leading-relaxed text-[#002D56]">
-            설문 설계 → 배포 → 수집 → 분석 → 리포트까지
-            <br />
+            설문 설계 → 배포 → 수집 → 분석 → 리포트까지{" "}
+            <br className="hidden sm:block" />
             클라우드 하나로 안전하고 투명하게 운영됩니다.
           </p>
         </div>
