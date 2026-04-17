@@ -6,23 +6,23 @@ export function BenefitsSection() {
       Icon: MessageSquareHeart,
       title: "의견 반영",
       description: "설문 참여를 통해 세종시 정책·서비스 개선에 직접 기여할 수 있습니다.",
-      iconBg: "bg-white border-2 border-brand-ash/70",
-      iconColor: "text-brand-ash",
+      iconBg: "bg-white border-2 border-brand-secondary/70",
+      iconColor: "text-brand-secondary",
     },
     {
       Icon: Coffee,
       title: "참여 보상",
       description:
         "설문조사에 참여해 주신 분들께는 감사의 의미를 담아 커피 쿠폰 등 리워드를 제공합니다.",
-      iconBg: "bg-white border-2 border-brand-ash/70",
-      iconColor: "text-brand-ash",
+      iconBg: "bg-white border-2 border-brand-secondary/70",
+      iconColor: "text-brand-secondary",
     },
     {
       Icon: Smartphone,
       title: "편리한 진행",
       description: "온라인 설문으로 시간과 장소에 구애받지 않고 참여할 수 있습니다.",
-      iconBg: "bg-white border-2 border-brand-ash/70",
-      iconColor: "text-brand-ash",
+      iconBg: "bg-white border-2 border-brand-secondary/70",
+      iconColor: "text-brand-secondary",
     },
   ];
 
