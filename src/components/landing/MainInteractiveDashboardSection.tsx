@@ -9,7 +9,7 @@ export function MainInteractiveDashboardSection() {
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="lg:w-64 flex-shrink-0">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-sejong-blue rounded-lg">
+              <div className="p-2 bg-brand-ash rounded-lg">
                 <LayoutGrid className="w-6 h-6 text-white" aria-hidden />
               </div>
               <div>

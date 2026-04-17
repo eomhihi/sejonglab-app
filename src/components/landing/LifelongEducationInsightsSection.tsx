@@ -19,20 +19,21 @@ import {
 const SEJONG_BLUE = "#124559";
 const SECONDARY = "#598392";
 const ASH = "#aec3b0";
+const WHITE = "#ffffff";
 
 const N = 696;
 
 const EXPERIENCE_DATA = [
   { name: "경험 있음", value: 22.7, fill: SEJONG_BLUE },
-  { name: "경험 없음", value: 77.3, fill: ASH },
+  { name: "경험 없음", value: 77.3, fill: WHITE },
 ] as const;
 
 const INTEREST_DATA = [
-  { name: "직업능력 향상", pct: 33.3, fill: SEJONG_BLUE },
-  { name: "문화·예술·체육", pct: 16.4, fill: ASH },
-  { name: "인문·교양", pct: 12.9, fill: ASH },
-  { name: "디지털·AI·코딩", pct: 11.1, fill: SECONDARY },
-  { name: "건강·웰빙", pct: 7.6, fill: ASH },
+  { name: "직업능력 향상", pct: 33.3, highlight: true, fill: SEJONG_BLUE },
+  { name: "문화·예술·체육", pct: 16.4, highlight: false, fill: WHITE },
+  { name: "인문·교양", pct: 12.9, highlight: false, fill: WHITE },
+  { name: "디지털·AI·코딩", pct: 11.1, highlight: true, fill: SECONDARY },
+  { name: "건강·웰빙", pct: 7.6, highlight: false, fill: WHITE },
 ] as const;
 
 const INTENTION_DATA = [
@@ -82,7 +83,7 @@ export function LifelongEducationInsightsSection() {
     <section className="bg-brand-light/80 border-y border-brand-ash/55 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 rounded-full mb-4 border border-brand-ash/45 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-4 border border-brand-ash/60">
             <BarChart3 className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">패널 인사이트</span>
           </div>
@@ -119,7 +120,7 @@ export function LifelongEducationInsightsSection() {
                     label={ExperienceLabel}
                   >
                     {[...EXPERIENCE_DATA].map((entry, i) => (
-                      <Cell key={i} fill={entry.fill} stroke="#fff" strokeWidth={2} />
+                      <Cell key={i} fill={entry.fill} stroke={ASH} strokeWidth={2} />
                     ))}
                   </Pie>
                   <Tooltip
@@ -181,7 +182,7 @@ export function LifelongEducationInsightsSection() {
                   />
                   <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
                     {[...INTEREST_DATA].map((row, i) => (
-                      <Cell key={i} fill={row.fill} />
+                      <Cell key={i} fill={row.fill} stroke={row.highlight ? "transparent" : ASH} strokeWidth={1} />
                     ))}
                   </Bar>
                 </BarChart>

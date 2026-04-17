@@ -11,7 +11,7 @@ export function SejongHeroSection() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* 좌측 텍스트 */}
           <div className="text-center lg:text-left order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-6 border border-brand-ash/60">
               <span className="w-2 h-2 bg-brand-secondary rounded-full animate-pulse" />
               <span className="text-sm font-bold text-sejong-blue drop-shadow-sm k-keep">
                 세종시 스마트 시티 & 데이터 리서치
