@@ -6,8 +6,13 @@ import { Building2, GraduationCap, Gauge } from "lucide-react";
 
 const DONUT_DATA = [
   { name: "필요", value: 72, fill: "rgb(var(--briefing-chart-accent-rgb) / 1)" },
-  { name: "기타", value: 28, fill: "rgb(var(--briefing-chart-track-rgb) / 1)" },
+  { name: "기타", value: 28, fill: "rgb(var(--briefing-chart-donut-muted-rgb) / 1)" },
 ];
+
+const GAUGE_SEGMENT_FILLS = [
+  "rgb(var(--briefing-chart-gauge-rgb) / 1)",
+  "rgb(var(--briefing-chart-gauge-alt-rgb) / 1)",
+] as const;
 
 const USAGE_SEGMENTS = [1, 1, 1, 0.8, 0];
 
@@ -64,7 +69,7 @@ export function BriefingInteractiveDashboard({ embedded = false }: BriefingInter
 
       {!embedded && (
         <div className="mb-2">
-          <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-sejong-blue">Key metrics</p>
+          <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-brand-secondary">Key metrics</p>
           <h3 className="mt-2 text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
             인터랙티브 데이터 대시보드
           </h3>
@@ -81,8 +86,10 @@ export function BriefingInteractiveDashboard({ embedded = false }: BriefingInter
               role="tab"
               aria-selected={isActive}
               onClick={() => setActive(id)}
-              className={`flex flex-col items-center justify-center gap-2 px-4 py-5 sm:py-6 text-center transition-colors duration-300 rounded-sm border-0 shadow-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sejong-blue focus-visible:ring-offset-white ${
-                isActive ? "bg-sejong-blue text-white" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+              className={`flex flex-col items-center justify-center gap-2 px-4 py-5 sm:py-6 text-center transition-colors duration-300 rounded-sm shadow-none outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sejong-blue focus-visible:ring-offset-white ${
+                isActive
+                  ? "bg-sejong-blue text-white border border-sejong-blue"
+                  : "bg-brand-light text-sejong-blue border border-brand-ash/55 hover:bg-brand-ash/25 hover:border-brand-secondary/45"
               }`}
             >
               <span className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-semibold leading-tight">
@@ -140,7 +147,7 @@ function InnovationPanel() {
         </div>
       </div>
       <div className="space-y-4 max-w-md">
-        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-sejong-blue">Insight</p>
+        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary">Insight</p>
         <p className="text-base sm:text-lg font-medium leading-relaxed text-slate-700">{INSIGHTS.innovation}</p>
       </div>
     </div>
@@ -157,22 +164,22 @@ function UsagePanel() {
           </span>
           <span className="text-2xl font-medium tabular-nums text-slate-500">/ 5</span>
         </div>
-        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-sejong-blue">Self-assessed 활용 수준</p>
+        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary">Self-assessed 활용 수준</p>
         <div className="flex gap-2 sm:gap-3 h-36 sm:h-40 items-stretch" aria-hidden>
           {USAGE_SEGMENTS.map((ratio, i) => (
-            <div key={i} className="flex-1 flex flex-col justify-end min-w-0 bg-slate-100 rounded-sm overflow-hidden">
+            <div key={i} className="flex-1 flex flex-col justify-end min-w-0 bg-brand-light rounded-sm overflow-hidden border border-brand-ash/35">
               <div
                 className="w-full transition-all duration-500 ease-out rounded-sm"
                 style={{
                   height: `${ratio * 100}%`,
-                  backgroundColor: ratio > 0 ? "rgb(var(--briefing-chart-gauge-rgb) / 1)" : "transparent",
+                  backgroundColor: ratio > 0 ? GAUGE_SEGMENT_FILLS[i % GAUGE_SEGMENT_FILLS.length] : "transparent",
                   minHeight: ratio > 0 ? 4 : 0,
                 }}
               />
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-[10px] sm:text-xs font-medium tabular-nums tracking-wide uppercase text-slate-500">
+        <div className="flex justify-between text-[10px] sm:text-xs font-medium tabular-nums tracking-wide uppercase text-brand-secondary/90">
           <span>1</span>
           <span>2</span>
           <span>3</span>
@@ -181,7 +188,7 @@ function UsagePanel() {
         </div>
       </div>
       <div className="space-y-4 max-w-md lg:pb-4">
-        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-sejong-blue">Insight</p>
+        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary">Insight</p>
         <p className="text-base sm:text-lg font-medium leading-relaxed text-slate-700">{INSIGHTS.usage}</p>
       </div>
     </div>
@@ -193,7 +200,7 @@ function EducationPanel() {
     <div className="space-y-10">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
         <div>
-          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-sejong-blue mb-2">교육·재교육 참여 의향</p>
+          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary mb-2">교육·재교육 참여 의향</p>
           <div className="flex items-baseline gap-2">
             <span className="text-[4rem] sm:text-[4.5rem] font-semibold tabular-nums leading-none tracking-tight text-slate-900">
               68<span className="text-[2.25rem] sm:text-[2.75rem] font-semibold align-top">%</span>
@@ -225,7 +232,7 @@ function EducationPanel() {
       </div>
 
       <div className="max-w-3xl pt-2">
-        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-sejong-blue mb-3">Insight</p>
+        <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary mb-3">Insight</p>
         <p className="text-base sm:text-lg font-medium leading-relaxed text-slate-700">{INSIGHTS.education}</p>
       </div>
     </div>

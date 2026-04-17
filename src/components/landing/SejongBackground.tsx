@@ -2,7 +2,7 @@ export function SejongBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* 원래 그라디언트 배경 복원 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-sky-50/30 to-mint-50/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-sky-50/30 to-brand-light/25" />
       
       <svg
         className="absolute w-full h-full"
@@ -55,10 +55,10 @@ export function SejongBackground() {
           <linearGradient id="curve-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="var(--color-primary)" />
             <stop offset="50%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="#14b8a6" />
+            <stop offset="100%" stopColor="var(--color-secondary)" />
           </linearGradient>
           <linearGradient id="curve-gradient-2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#14b8a6" />
+            <stop offset="0%" stopColor="var(--color-secondary)" />
             <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
           <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -73,7 +73,7 @@ export function SejongBackground() {
       <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-sky-50/50 via-transparent to-transparent" />
       
       {/* 하단 민트 그라디언트 */}
-      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-mint-50/30 via-transparent to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-brand-light/35 via-transparent to-transparent" />
     </div>
   );
 }
@@ -125,10 +125,10 @@ export function EungBridgeGraphic() {
           <linearGradient id="bridge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="var(--color-primary)" />
             <stop offset="50%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="#14b8a6" />
+            <stop offset="100%" stopColor="var(--color-secondary)" />
           </linearGradient>
           <linearGradient id="bridge-gradient-inner" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#14b8a6" />
+            <stop offset="0%" stopColor="var(--color-secondary)" />
             <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
           <radialGradient id="inner-gradient" cx="50%" cy="50%" r="50%">

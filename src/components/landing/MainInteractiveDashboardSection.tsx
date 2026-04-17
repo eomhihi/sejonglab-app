@@ -4,7 +4,7 @@ import { BriefingInteractiveDashboard } from "@/components/briefing/BriefingInte
 /** 카드형 뉴스 블록과 유사한 2열 레이아웃 — 메인 랜딩 중단 대시보드 */
 export function MainInteractiveDashboardSection() {
   return (
-    <section className="bg-sky-50 py-10 border-y border-sky-100">
+    <section className="bg-brand-light/90 py-10 border-y border-brand-ash/45">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="lg:w-64 flex-shrink-0">
@@ -20,7 +20,7 @@ export function MainInteractiveDashboardSection() {
           </div>
 
           <div className="flex-1">
-            <div className="rounded-lg bg-white border border-sky-200 shadow-sm p-4 sm:p-6 lg:p-8">
+            <div className="rounded-lg bg-white border border-brand-ash/50 shadow-sm p-4 sm:p-6 lg:p-8">
               <BriefingInteractiveDashboard embedded />
             </div>
           </div>

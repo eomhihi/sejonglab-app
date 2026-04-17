@@ -9,15 +9,13 @@ type SejongLogoLockupProps = {
   variant: SejongLogoLockupVariant;
   href?: string;
   className?: string;
-  /** 상단 바가 어두운 배경일 때 로고·서브텍스트 대비 */
-  lightOnDark?: boolean;
 };
 
 function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
 }
 
-export function SejongLogoLockup({ variant, href, className, lightOnDark = false }: SejongLogoLockupProps) {
+export function SejongLogoLockup({ variant, href, className }: SejongLogoLockupProps) {
   const topLinkRef = useRef<HTMLAnchorElement | null>(null);
   const topSpanRef = useRef<HTMLSpanElement | null>(null);
   const bottomRef = useRef<HTMLSpanElement | null>(null);
@@ -35,14 +33,11 @@ export function SejongLogoLockup({ variant, href, className, lightOnDark = false
 
     return {
       wrap: `flex flex-col items-start shrink-0 w-max ${className ?? ""}`.trim(),
-      top: lightOnDark
-        ? "inline-flex items-center text-[15px] sm:text-base font-extrabold tracking-[0.22em] uppercase text-white font-display"
-        : "inline-flex items-center text-[15px] sm:text-base font-extrabold tracking-[0.22em] uppercase text-black font-display",
-      bottom: lightOnDark
-        ? "mt-0.5 inline-block text-[5.4px] sm:text-[6px] font-bold text-slate-400 tracking-[0.18em] font-display"
-        : "mt-0.5 inline-block text-[5.4px] sm:text-[6px] font-bold text-gray-500 tracking-[0.18em] font-display",
+      top: "inline-flex items-center text-[15px] sm:text-base font-extrabold tracking-[0.22em] uppercase text-header-footer font-display",
+      bottom:
+        "mt-0.5 inline-block text-[5.4px] sm:text-[6px] font-bold text-gray-500 tracking-[0.18em] font-display",
     };
-  }, [variant, className, lightOnDark]);
+  }, [variant, className]);
 
   useLayoutEffect(() => {
     const topEl = href ? topLinkRef.current : topSpanRef.current;
@@ -102,4 +97,3 @@ export function SejongLogoLockup({ variant, href, className, lightOnDark = false
     </div>
   );
 }
-

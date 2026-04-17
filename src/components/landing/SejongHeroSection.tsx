@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 export function SejongHeroSection() {
   return (
-    <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-white via-sky-50/30 to-mint-50/20 overflow-hidden">
+    <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-white via-sky-50/30 to-brand-light/35 overflow-hidden">
       <SejongBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 pt-10 sm:pt-14 pb-12 sm:pb-20 w-full">
@@ -12,7 +12,7 @@ export function SejongHeroSection() {
           {/* 좌측 텍스트 */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-6">
-              <span className="w-2 h-2 bg-mint-500 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-brand-secondary rounded-full animate-pulse" />
               <span className="text-sm font-bold text-sejong-blue drop-shadow-sm k-keep">
                 세종시 스마트 시티 & 데이터 리서치
               </span>

@@ -17,6 +17,12 @@ const config: Config = {
         background: "var(--color-background)",
         foreground: "var(--foreground)",
         "header-footer": "var(--color-header-footer)",
+        brand: {
+          light: "var(--color-light)",
+          secondary: "var(--color-secondary)",
+          ash: "var(--color-accent)",
+          ink: "var(--color-header-footer)",
+        },
         primary: {
           50: "#f4f7f8",
           100: "#e9eef0",

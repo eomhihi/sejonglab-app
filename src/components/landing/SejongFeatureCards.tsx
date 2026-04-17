@@ -21,8 +21,8 @@ const features = [
   },
   {
     icon: Sparkles,
-    iconBg: "bg-mint-500/10",
-    iconColor: "text-mint-500",
+    iconBg: "bg-brand-secondary/10",
+    iconColor: "text-brand-secondary",
     title: "신사업 실증 데이터",
     description: "자율주행, 드론배송 등 스마트시티 신기술에 대한 시민 수용성과 니즈를 조사합니다.",
     landmark: "국립세종도서관",
@@ -35,7 +35,7 @@ export function SejongFeatureCards() {
     <section id="services" className="py-16 sm:py-24 bg-gradient-to-b from-white to-sky-50/30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-4 border border-brand-ash/40">
             <BarChart3 className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">핵심 서비스</span>
           </div>
@@ -76,14 +76,14 @@ export function SejongFeatureCards() {
               <ul className="space-y-2">
                 {feature.features.map((item, idx) => (
                   <li key={idx} className="flex items-center gap-2 text-sm text-slate-700 font-medium">
-                    <Leaf className="w-4 h-4 text-mint-500 flex-shrink-0" />
+                    <Leaf className="w-4 h-4 text-brand-secondary flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
 
               {/* 하단 그라디언트 바 */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-sejong-blue via-sky-500 to-mint-500 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-sejong-blue via-brand-secondary to-brand-ash rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           ))}
         </div>

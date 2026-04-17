@@ -3,10 +3,10 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export function CTASection() {
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-br from-sky-100 via-mint-50 to-sky-100 relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-gradient-to-br from-sky-100 via-brand-light to-sky-100 relative overflow-hidden">
       {/* 배경 장식 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-mint-200/30 rounded-full blur-3xl" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-secondary/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-sky-200/30 rounded-full blur-3xl" />
       </div>
 

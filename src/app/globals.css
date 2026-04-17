@@ -9,19 +9,23 @@
   --color-primary: #124559; /* 메인 컬러: 다크 틸 */
   --color-secondary: #598392; /* 보조 컬러: 에어포스 블루 */
   --color-accent: #aec3b0; /* 강조 컬러: 애쉬 그레이 */
-  --color-light: #eff6e0; /* 연한 배경: 베이지 */
+  --color-light: #eff6e0; /* 연한 배경: 베이지 — 섹션 배경·옅은 패널 */
+  /* --color-secondary: 에어포스 블루 — 호버·보조 강조·서브 버튼 */
+  /* --color-accent: 애쉬 그레이 — 구분선·차트 보조 눈금·비강조 */
 
   /* 회색, 블랙 워딩(텍스트)은 기존 시스템(Tailwind slate 등)을 그대로 유지 */
   --background: var(--color-background);
   --foreground: #0f172a;
 
-  /* 브리핑 차트 등 — 새 primary RGB (#124559) */
+  /* 브리핑·인사이트 차트 — primary(#124559) + secondary(#598392) + accent(#aec3b0) */
   --briefing-chart-accent-rgb: 18 69 89;
   --briefing-chart-track-rgb: 241 245 249;
   --briefing-chart-gauge-rgb: 18 69 89;
+  --briefing-chart-gauge-alt-rgb: 89 131 146; /* 보조 막대 교차용 */
   --briefing-chart-stack-strong-rgb: 18 69 89;
-  --briefing-chart-stack-mid-rgb: 147 197 253;
+  --briefing-chart-stack-mid-rgb: 89 131 146; /* 보류·보조 면 */
   --briefing-chart-stack-muted-rgb: 241 245 249;
+  --briefing-chart-donut-muted-rgb: 174 195 176; /* 도넛·비중 큰 조각(애쉬) */
 
   /* [OLD] Backup — 이전 색상으로 원복 시 아래 주석 해제 후 위 :root 신규 변수 블록을 되돌림 */
   /*
@@ -36,6 +40,7 @@
   --briefing-chart-stack-strong-rgb: 0 75 141;
   --briefing-chart-stack-mid-rgb: 147 197 253;
   --briefing-chart-stack-muted-rgb: 241 245 249;
+  (신규 추가 변수 원복 시 삭제: --briefing-chart-gauge-alt-rgb, --briefing-chart-donut-muted-rgb)
   */
 }
 

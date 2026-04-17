@@ -15,23 +15,24 @@ import {
   YAxis,
 } from "recharts";
 
-/** theme `sejong.blue` → `var(--color-primary)` (#124559) — 차트 fill은 클래스 미지원 */
+/** theme: primary #124559, secondary #598392, accent(ash) #aec3b0 — Recharts fill */
 const SEJONG_BLUE = "#124559";
-const MUTED = "#94a3b8";
+const SECONDARY = "#598392";
+const ASH = "#aec3b0";
 
 const N = 696;
 
 const EXPERIENCE_DATA = [
   { name: "경험 있음", value: 22.7, fill: SEJONG_BLUE },
-  { name: "경험 없음", value: 77.3, fill: "#e2e8f0" },
+  { name: "경험 없음", value: 77.3, fill: ASH },
 ] as const;
 
 const INTEREST_DATA = [
-  { name: "직업능력 향상", pct: 33.3, highlight: true },
-  { name: "문화·예술·체육", pct: 16.4, highlight: false },
-  { name: "인문·교양", pct: 12.9, highlight: false },
-  { name: "디지털·AI·코딩", pct: 11.1, highlight: true },
-  { name: "건강·웰빙", pct: 7.6, highlight: false },
+  { name: "직업능력 향상", pct: 33.3, fill: SEJONG_BLUE },
+  { name: "문화·예술·체육", pct: 16.4, fill: ASH },
+  { name: "인문·교양", pct: 12.9, fill: ASH },
+  { name: "디지털·AI·코딩", pct: 11.1, fill: SECONDARY },
+  { name: "건강·웰빙", pct: 7.6, fill: ASH },
 ] as const;
 
 const INTENTION_DATA = [
@@ -78,10 +79,10 @@ function ExperienceLabel(props: {
 
 export function LifelongEducationInsightsSection() {
   return (
-    <section className="bg-slate-50/80 border-y border-slate-200/70 py-12 sm:py-16">
+    <section className="bg-brand-light/80 border-y border-brand-ash/55 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-mint-100 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 rounded-full mb-4 border border-brand-ash/45 shadow-sm">
             <BarChart3 className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">패널 인사이트</span>
           </div>
@@ -99,7 +100,7 @@ export function LifelongEducationInsightsSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Chart 1 — donut */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="rounded-2xl border border-brand-ash/45 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 경험</h3>
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">과거 참여 여부 (비율)</p>
             <div className="flex-1 min-h-[220px]" style={{ fontFamily: "inherit" }}>
@@ -146,7 +147,7 @@ export function LifelongEducationInsightsSection() {
           </div>
 
           {/* Chart 2 — horizontal bar */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="rounded-2xl border border-brand-ash/45 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">관심 있는 학습 분야</h3>
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">상위 5개 (비율)</p>
             <div className="flex-1 min-h-[240px]" style={{ fontFamily: "inherit" }}>
@@ -156,7 +157,7 @@ export function LifelongEducationInsightsSection() {
                   data={[...INTEREST_DATA]}
                   margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={ASH} strokeOpacity={0.55} />
                   <XAxis
                     type="number"
                     domain={[0, 40]}
@@ -180,7 +181,7 @@ export function LifelongEducationInsightsSection() {
                   />
                   <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
                     {[...INTEREST_DATA].map((row, i) => (
-                      <Cell key={i} fill={row.highlight ? SEJONG_BLUE : MUTED} />
+                      <Cell key={i} fill={row.fill} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -189,7 +190,7 @@ export function LifelongEducationInsightsSection() {
           </div>
 
           {/* Chart 3 — intention summary */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="rounded-2xl border border-brand-ash/45 bg-white p-5 sm:p-6 shadow-sm flex flex-col min-h-[320px]">
             <h3 className="text-sm font-bold text-slate-800 mb-1">평생교육 참여 의향</h3>
             <p className="text-xs text-slate-500 mb-5 break-keep [word-break:keep-all]">태도 분포 (비율)</p>
 
@@ -207,12 +208,13 @@ export function LifelongEducationInsightsSection() {
                       {row.pct}%
                     </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-200 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-brand-ash/35 overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
                         width: `${row.pct}%`,
-                        backgroundColor: row.key === "positive" ? SEJONG_BLUE : "#cbd5e1",
+                        backgroundColor:
+                          row.key === "positive" ? SEJONG_BLUE : row.key === "neutral" ? SECONDARY : ASH,
                       }}
                     />
                   </div>
@@ -222,7 +224,7 @@ export function LifelongEducationInsightsSection() {
           </div>
         </div>
 
-        <footer className="mt-10 sm:mt-12 rounded-2xl border border-slate-200/80 bg-white px-5 py-6 sm:px-8 sm:py-8 text-center shadow-sm">
+        <footer className="mt-10 sm:mt-12 rounded-2xl border border-brand-ash/45 bg-white px-5 py-6 sm:px-8 sm:py-8 text-center shadow-sm">
           <Link
             href="/signup"
             className="inline-flex items-center justify-center h-12 sm:h-14 px-8 rounded-xl bg-sejong-blue text-white text-sm sm:text-base font-bold shadow-md shadow-sejong-blue/25 hover:scale-[1.02] hover:bg-sejong-blue-dark transition"

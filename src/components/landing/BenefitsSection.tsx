@@ -24,7 +24,7 @@ export function BenefitsSection() {
   ];
 
   return (
-    <section id="benefits" className="py-16 sm:py-24 bg-gradient-to-b from-white to-sky-50/50">
+    <section id="benefits" className="py-16 sm:py-24 bg-gradient-to-b from-white to-brand-light/55">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sejong-blue/10 rounded-full mb-4">

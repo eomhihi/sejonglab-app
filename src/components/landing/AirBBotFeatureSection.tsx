@@ -25,7 +25,7 @@ export function AirBBotFeatureSection() {
   ];
 
   return (
-    <section id="airbot" className="py-16 sm:py-24 bg-gradient-to-b from-sky-50/30 to-white">
+    <section id="airbot" className="py-16 sm:py-24 bg-gradient-to-b from-brand-light/45 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 rounded-full mb-4">
@@ -66,7 +66,7 @@ export function AirBBotFeatureSection() {
           ))}
         </div>
 
-        <div className="mt-10 sm:mt-14 rounded-2xl bg-gradient-to-r from-sky-100 to-mint-100 border border-sky-200 p-6 sm:p-10 text-center">
+        <div className="mt-10 sm:mt-14 rounded-2xl bg-gradient-to-r from-sky-100 to-brand-light border border-brand-ash/50 p-6 sm:p-10 text-center">
           <p className="text-sejong-blue text-sm font-bold mb-2">
             통합 관리의 장점
           </p>
