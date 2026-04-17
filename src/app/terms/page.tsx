@@ -22,7 +22,7 @@ export default function TermsPage() {
 
           <section className="space-y-3">
             <h2 className="text-base sm:text-lg font-bold text-header-footer">제1조 (목적 및 효력)</h2>
-            <p>본 약관은 세종랩(이하 '회사')이 제공하는 온라인 패널 서비스의 이용 조건 및 절차를 규정합니다.</p>
+            <p>본 약관은 세종랩(이하 &apos;회사&apos;)이 제공하는 온라인 패널 서비스의 이용 조건 및 절차를 규정합니다.</p>
             <div className="rounded-xl border border-brand-ash/60 bg-brand-light px-4 py-3">
               <p>
                 회사는 약관을 변경할 경우 <span className="font-semibold text-sejong-blue">최소 7일 전</span>(패널에게 불리한 경우{" "}
@@ -57,8 +57,8 @@ export default function TermsPage() {
             <p>회사는 관련 법령을 준수하며 지속적이고 안정적인 서비스를 제공합니다.</p>
             <div className="rounded-xl border border-brand-ash/60 bg-brand-light px-4 py-3">
               <p>
-                <span className="font-semibold text-header-footer">개인정보 보호</span>: 패널의 개인정보는 별도의 '개인정보 처리방침'에
-                따라 안전하게 관리하며, 설문 데이터는 통계 분석 목적으로만 익명화하여 활용합니다.
+                <span className="font-semibold text-header-footer">개인정보 보호</span>: 패널의 개인정보는 별도의 &apos;개인정보
+                처리방침&apos;에 따라 안전하게 관리하며, 설문 데이터는 통계 분석 목적으로만 익명화하여 활용합니다.
               </p>
             </div>
           </section>
