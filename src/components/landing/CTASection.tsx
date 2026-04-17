@@ -11,7 +11,7 @@ export function CTASection() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-6 border border-brand-ash/60">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-6 border border-brand-ash/60">
           <Sparkles className="w-4 h-4 text-sejong-blue" />
           <span className="text-sm font-bold text-sejong-blue k-keep">함께 만드는 스마트 세종</span>
         </div>

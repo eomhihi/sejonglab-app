@@ -3,7 +3,7 @@ import { Building2, Leaf, BarChart3, MapPin, Users, Sparkles } from "lucide-reac
 const features = [
   {
     icon: Building2,
-    iconBg: "bg-brand-ash",
+    iconBg: "bg-white border border-brand-ash/60",
     iconColor: "text-sejong-blue",
     title: "세종시 행정동별 정밀 분석",
     description: "31개 행정동의 특성을 반영한 맞춤형 설문과 데이터 분석으로 지역별 정책 수요를 파악합니다.",
@@ -12,7 +12,7 @@ const features = [
   },
   {
     icon: Users,
-    iconBg: "bg-brand-ash",
+    iconBg: "bg-white border border-brand-ash/60",
     iconColor: "text-sejong-blue",
     title: "시민 체감도 조사",
     description: "교통, 교육, 복지 등 생활 밀착형 정책에 대한 시민들의 실제 만족도와 개선 요구를 수집합니다.",
@@ -21,7 +21,7 @@ const features = [
   },
   {
     icon: Sparkles,
-    iconBg: "bg-brand-ash",
+    iconBg: "bg-white border border-brand-ash/60",
     iconColor: "text-brand-secondary",
     title: "신사업 실증 데이터",
     description: "자율주행, 드론배송 등 스마트시티 신기술에 대한 시민 수용성과 니즈를 조사합니다.",
@@ -35,7 +35,7 @@ export function SejongFeatureCards() {
     <section id="services" className="py-16 sm:py-24 bg-gradient-to-b from-white to-brand-light/55">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-4 border border-brand-ash/60">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-4 border border-brand-ash/60">
             <BarChart3 className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">핵심 서비스</span>
           </div>

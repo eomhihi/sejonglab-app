@@ -28,7 +28,7 @@ export function AirBBotFeatureSection() {
     <section id="airbot" className="py-16 sm:py-24 bg-gradient-to-b from-brand-light/45 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-4 border border-brand-ash/60">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-4 border border-brand-ash/60">
             <Cloud className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">AirBBot 플랫폼</span>
           </div>
@@ -48,7 +48,7 @@ export function AirBBotFeatureSection() {
               key={step.title}
               className="group relative bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-sejong-blue/5 hover:border-sejong-blue/20 transition-all duration-300 hover:-translate-y-1"
             >
-              <div className={`inline-flex items-center justify-center w-14 h-14 bg-brand-ash rounded-xl mb-5`}>
+              <div className={`inline-flex items-center justify-center w-14 h-14 bg-white border border-brand-ash/60 rounded-xl mb-5`}>
                 <step.Icon className="w-7 h-7 text-sejong-blue" />
               </div>
               <div className="absolute top-6 right-6 flex items-center gap-1 text-xs text-slate-500 font-medium">

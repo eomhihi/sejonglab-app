@@ -83,7 +83,7 @@ export function LifelongEducationInsightsSection() {
     <section className="bg-brand-light/80 border-y border-brand-ash/55 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4">
         <header className="mb-10 sm:mb-12 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-4 border border-brand-ash/60">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-4 border border-brand-ash/60">
             <BarChart3 className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">패널 인사이트</span>
           </div>
@@ -214,8 +214,9 @@ export function LifelongEducationInsightsSection() {
                       className="h-full rounded-full transition-all"
                       style={{
                         width: `${row.pct}%`,
-                        backgroundColor:
-                          row.key === "positive" ? SEJONG_BLUE : row.key === "neutral" ? SECONDARY : ASH,
+                        backgroundColor: row.key === "positive" ? SEJONG_BLUE : WHITE,
+                        border: row.key === "positive" ? "none" : `1px solid ${ASH}`,
+                        boxSizing: "border-box",
                       }}
                     />
                   </div>

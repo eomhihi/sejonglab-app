@@ -6,7 +6,7 @@ export function BenefitsSection() {
       Icon: MessageSquareHeart,
       title: "의견 반영",
       description: "설문 참여를 통해 세종시 정책·서비스 개선에 직접 기여할 수 있습니다.",
-      iconBg: "bg-brand-ash",
+      iconBg: "bg-white border border-brand-ash/60",
       iconColor: "text-sejong-blue",
     },
     {
@@ -14,14 +14,14 @@ export function BenefitsSection() {
       title: "참여 보상",
       description:
         "설문조사에 참여해 주신 분들께는 감사의 의미를 담아 커피 쿠폰 등 리워드를 제공합니다.",
-      iconBg: "bg-brand-ash",
+      iconBg: "bg-white border border-brand-ash/60",
       iconColor: "text-brand-secondary",
     },
     {
       Icon: Smartphone,
       title: "편리한 진행",
       description: "온라인 설문으로 시간과 장소에 구애받지 않고 참여할 수 있습니다.",
-      iconBg: "bg-brand-ash",
+      iconBg: "bg-white border border-brand-ash/60",
       iconColor: "text-sejong-blue",
     },
   ];
@@ -30,7 +30,7 @@ export function BenefitsSection() {
     <section id="benefits" className="py-16 sm:py-24 bg-gradient-to-b from-white to-brand-light/55">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-ash rounded-full mb-4 border border-brand-ash/60">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light rounded-full mb-4 border border-brand-ash/60">
             <Gift className="w-4 h-4 text-sejong-blue" />
             <span className="text-sm font-bold text-sejong-blue">참여 혜택</span>
           </div>
