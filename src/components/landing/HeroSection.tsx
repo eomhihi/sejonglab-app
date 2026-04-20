@@ -28,12 +28,12 @@ export function HeroSection() {
           >
             패널 참여 신청하기
           </Link>
-          <a
-            href="#features"
+          <Link
+            href="/#services"
             className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border-2 border-slate-300 text-slate-700 font-semibold px-8 py-4 hover:border-primary-400 hover:text-primary-700 transition"
           >
             어떻게 진행되나요?
-          </a>
+          </Link>
         </div>
       </div>
     </section>

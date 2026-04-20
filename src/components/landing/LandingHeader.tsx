@@ -8,12 +8,12 @@ export function LandingHeader() {
           <span className="text-xl font-bold text-primary-700">세종 패널</span>
         </Link>
         <nav className="flex items-center gap-6">
-          <a href="#features" className="text-sm text-slate-600 hover:text-primary-600 transition">
+          <Link href="/#services" className="text-sm text-slate-600 hover:text-primary-600 transition">
             에어봇 소개
-          </a>
-          <a href="#benefits" className="text-sm text-slate-600 hover:text-primary-600 transition">
+          </Link>
+          <Link href="/#benefits" className="text-sm text-slate-600 hover:text-primary-600 transition">
             참여 혜택
-          </a>
+          </Link>
           <Link
             href="/auth/signin"
             className="inline-flex items-center justify-center rounded-lg bg-primary-600 text-white text-sm font-medium px-4 py-2.5 hover:bg-primary-700 transition"

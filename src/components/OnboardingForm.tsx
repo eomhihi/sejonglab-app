@@ -142,7 +142,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         <p className="mt-1.5 text-xs text-slate-500">
           &apos;-&apos;를 제외한 휴대폰 번호를 입력하세요.
         </p>
-        {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>}
+        {errors.phone && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.phone.message}</p>
+        )}
       </div>
 
       {userName && (
@@ -168,7 +170,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
             </label>
           ))}
         </div>
-        {errors.gender && <p className="mt-2 text-sm text-red-600">{errors.gender.message}</p>}
+        {errors.gender && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.gender.message}</p>
+        )}
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
@@ -186,7 +190,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
             </option>
           ))}
         </select>
-        {errors.ageGroup && <p className="mt-2 text-sm text-red-600">{errors.ageGroup.message}</p>}
+        {errors.ageGroup && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.ageGroup.message}</p>
+        )}
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
@@ -204,7 +210,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
             </option>
           ))}
         </select>
-        {errors.region && <p className="mt-2 text-sm text-red-600">{errors.region.message}</p>}
+        {errors.region && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.region.message}</p>
+        )}
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
@@ -222,7 +230,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
             </option>
           ))}
         </select>
-        {errors.occupation && <p className="mt-2 text-sm text-red-600">{errors.occupation.message}</p>}
+        {errors.occupation && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.occupation.message}</p>
+        )}
       </div>
 
       {/* 관심 분야: 카테고리(섹션 제목) + 키워드 다중 선택 */}
@@ -270,7 +280,9 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
         </div>
 
         {errors.interests && (
-          <p className="mt-4 text-center text-sm font-medium text-red-600">{errors.interests.message}</p>
+          <p className="mt-4 text-center font-sans text-sm font-medium text-red-600">
+            {errors.interests.message}
+          </p>
         )}
         {selectedInterests.length > 0 && (
           <p className="mt-4 rounded-xl bg-sejong-blue/10 py-2.5 text-center text-sm font-semibold text-sejong-blue-dark">

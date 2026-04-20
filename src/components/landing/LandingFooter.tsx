@@ -11,12 +11,12 @@ export function LandingFooter() {
             <span className="text-sm">에어봇(AirBBot) 기반</span>
           </div>
           <nav className="flex items-center gap-6 text-sm">
-            <a href="#features" className="hover:text-white transition">
+            <Link href="/#services" className="hover:text-white transition">
               에어봇 소개
-            </a>
-            <a href="#benefits" className="hover:text-white transition">
+            </Link>
+            <Link href="/#benefits" className="hover:text-white transition">
               참여 혜택
-            </a>
+            </Link>
             <Link href="/auth/signin" className="hover:text-white transition">
               패널 신청
             </Link>

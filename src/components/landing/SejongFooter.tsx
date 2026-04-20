@@ -29,17 +29,17 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             <h4 className="font-semibold text-white mb-4">바로가기</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="#services" className="text-slate-300 hover:text-white transition-colors">
+                <Link href="/#services" className="text-slate-300 hover:text-white transition-colors">
                   핵심서비스
                 </Link>
               </li>
               <li>
-                <Link href="#airbot" className="text-slate-300 hover:text-white transition-colors">
+                <Link href="/#airbot" className="text-slate-300 hover:text-white transition-colors">
                   에어봇 솔루션
                 </Link>
               </li>
               <li>
-                <Link href="#benefits" className="text-slate-300 hover:text-white transition-colors">
+                <Link href="/#benefits" className="text-slate-300 hover:text-white transition-colors">
                   참여 혜택
                 </Link>
               </li>
@@ -69,7 +69,7 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-ash" />
-                <span className="text-slate-200">info@sjr.co.kr</span>
+                <span className="text-slate-200">khj@sjr.co.kr</span>
               </li>
             </ul>
           </div>
