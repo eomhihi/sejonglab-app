@@ -29,7 +29,7 @@ export function TopLogoBar() {
             <p className="min-w-0 text-xs sm:text-sm text-gray-500 leading-snug k-keep">
               세종랩은 세종시 정책의 근거를 만드는 데이터 전문가 그룹이{" "}
               <br className="hidden sm:block" />
-              시민의 목소리를 직접 듣기 위해 구축한 독립 리서치 플랫폼입니다.
+              시민의 목소리를 직접 듣기 위해 구축한 전문 리서치 플랫폼입니다.
             </p>
           </div>
 
