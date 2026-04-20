@@ -25,7 +25,8 @@ export const metadata: Metadata = {
     siteName: "세종랩",
     images: [
       {
-        url: "/og-image.png",
+        // social preview cache-busting (Kakao/Slack 등)
+        url: "/og-image.png?v=20260420",
         width: 1200,
         height: 630,
         alt: "세종랩 로고",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "세종랩 | Sejong Lab",
     description: "세종의 미래를 데이터로 설계합니다",
-    images: ["/og-image.png"],
+    images: ["/og-image.png?v=20260420"],
   },
 };
 
