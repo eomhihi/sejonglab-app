@@ -124,7 +124,7 @@ export function LifelongEducationInsightsSection() {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(v, name) => [`${String(name || "")}: ${Number(v)}%`, ""]}
+                    formatter={(v, name) => [`${String(name || "")} ${Number(v)}%`, ""]}
                     contentStyle={{
                       borderRadius: 12,
                       border: "1px solid #e2e8f0",
@@ -141,7 +141,7 @@ export function LifelongEducationInsightsSection() {
                 <span className="font-semibold tabular-nums text-slate-900">22.7%</span>
               </li>
               <li className="flex justify-between gap-2">
-                <span>경험 없음</span>
+                <span className="text-slate-500">경험 없음</span>
                 <span className="font-semibold tabular-nums text-slate-900">77.3%</span>
               </li>
             </ul>
