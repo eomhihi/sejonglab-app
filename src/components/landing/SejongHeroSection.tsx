@@ -1,8 +1,14 @@
+"use client";
+
 import { EungBridgeGraphic, SejongBackground } from "./SejongBackground";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export function SejongHeroSection() {
+  const { status } = useSession();
+  const authed = status === "authenticated";
+
   return (
     <section className="relative min-h-[85vh] flex items-center bg-gradient-to-br from-white via-sky-50/30 to-brand-light/35 overflow-hidden">
       <SejongBackground />
@@ -34,10 +40,10 @@ export function SejongHeroSection() {
 
             <div className="flex justify-center lg:justify-start">
               <Link
-                href="/signup"
+                href={authed ? "/mypage" : "/signup"}
                 className="btn btn-primary btn-lg font-extrabold shadow-lg hover:-translate-y-0.5 font-display"
               >
-                패널 신청하기
+                {authed ? "마이페이지" : "패널 신청하기"}
                 <ArrowRight className="w-6 h-6" />
               </Link>
             </div>

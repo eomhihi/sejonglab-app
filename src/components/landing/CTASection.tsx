@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export function CTASection() {
+  const { status } = useSession();
+  const authed = status === "authenticated";
+
   return (
     <section className="py-16 sm:py-24 bg-brand-light relative overflow-hidden">
       {/* 배경 장식 */}
@@ -25,13 +31,23 @@ export function CTASection() {
           세종의 미래를 함께 설계해 주세요.
         </p>
 
-        <Link
-          href="/auth/signin"
-          className="btn btn-primary h-12 sm:h-14 px-6 sm:px-8 font-bold shadow-lg hover:-translate-y-0.5 font-display"
-        >
-          지금 패널 신청하기
-          <ArrowRight className="w-5 h-5" />
-        </Link>
+        {authed ? (
+          <Link
+            href="/mypage"
+            className="btn btn-primary h-12 sm:h-14 px-6 sm:px-8 font-bold shadow-lg hover:-translate-y-0.5 font-display"
+          >
+            마이페이지로
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        ) : (
+          <Link
+            href="/auth/signin"
+            className="btn btn-primary h-12 sm:h-14 px-6 sm:px-8 font-bold shadow-lg hover:-translate-y-0.5 font-display"
+          >
+            지금 패널 신청하기
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        )}
 
       </div>
     </section>

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { OnboardingForm } from "@/components/OnboardingForm";
 import { SejongHeader } from "@/components/landing/SejongHeader";
+import { checkOnboardingStatus } from "@/lib/check-onboarding";
 
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
@@ -26,6 +27,12 @@ export default async function OnboardingPage() {
   // 관리자 계정은 온보딩을 건너뛰고 바로 /admin으로 이동
   if (isAdmin) {
     redirect("/admin");
+  }
+
+  // 이미 온보딩 완료된 회원은 접근 차단 → 대시보드로
+  const { onboardingCompleted } = await checkOnboardingStatus(session.user?.email);
+  if (onboardingCompleted) {
+    redirect("/dashboard?notice=already_member");
   }
 
   return (

@@ -44,9 +44,15 @@ export function TopLogoBar() {
               </Link>
             )}
 
-            <Link href="/signup" className={panelCtaClass}>
-              패널 신청
-            </Link>
+            {authed ? (
+              <Link href="/mypage" className={panelCtaClass}>
+                마이페이지
+              </Link>
+            ) : (
+              <Link href="/signup" className={panelCtaClass}>
+                패널 신청
+              </Link>
+            )}
           </div>
         </div>
       </div>
