@@ -32,7 +32,7 @@ export default async function OnboardingPage() {
   // 이미 온보딩 완료된 회원은 접근 차단 → 대시보드로
   const { onboardingCompleted } = await checkOnboardingStatus(session.user?.email);
   if (onboardingCompleted) {
-    redirect("/dashboard?notice=already_member");
+    redirect("/mypage?notice=already_member");
   }
 
   return (
