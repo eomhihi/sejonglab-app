@@ -75,11 +75,11 @@ export function DashboardClient() {
           <div className="rounded-xl border border-slate-200 bg-white p-6">
             <h2 className="font-semibold text-slate-900 mb-4">설문 참여 정보</h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              추가 정보(성별/연령대/관심 분야 등) 수정은 준비 중입니다. 필요 시 운영팀에 문의해 주세요.
+              성별/연령대/관심 분야 등 추가 정보를 수정할 수 있습니다.
             </p>
             <div className="mt-4 flex flex-col sm:flex-row gap-3">
               <Link
-                href="/auth/onboarding"
+                href="/auth/onboarding?edit=1"
                 className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-sejong-blue text-white text-sm font-semibold hover:brightness-110 transition"
               >
                 추가 정보 입력/수정
@@ -102,7 +102,7 @@ export function DashboardClient() {
               if (!ok) return;
               alert("회원 탈퇴 기능은 준비 중입니다. 필요 시 관리자에게 요청해 주세요.");
             }}
-            className="inline-flex items-center justify-center h-11 px-4 rounded-lg bg-gray-200 text-slate-700 text-sm font-semibold hover:bg-gray-300 transition"
+            className="inline-flex items-center justify-center h-11 px-4 rounded-lg bg-gray-200 text-white/60 text-sm font-semibold hover:text-white/70 hover:bg-gray-300 transition"
           >
             회원 탈퇴
           </button>

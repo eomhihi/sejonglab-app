@@ -22,12 +22,20 @@ export default async function MainPage() {
         <p className="text-slate-600 mb-6">
           {session.user?.name ?? session.user?.email}님, 환영합니다.
         </p>
-        <Link
-          href="/"
-          className="inline-flex items-center text-sm font-medium text-sejong-blue hover:underline"
-        >
-          홈으로
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 transition"
+          >
+            홈으로
+          </Link>
+          <Link
+            href="/mypage"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-sejong-blue text-white text-sm font-semibold hover:brightness-110 transition"
+          >
+            마이페이지
+          </Link>
+        </div>
       </div>
     </div>
   );

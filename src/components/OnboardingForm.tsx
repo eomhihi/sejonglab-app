@@ -28,9 +28,17 @@ type OnboardingFormProps = {
   userName?: string;
   userId?: string;
   userEmail?: string;
+  initialValues?: Partial<OnboardingFormData>;
+  mode?: "create" | "edit";
 };
 
-export function OnboardingForm({ userName, userId: serverUserId, userEmail: serverUserEmail }: OnboardingFormProps) {
+export function OnboardingForm({
+  userName,
+  userId: serverUserId,
+  userEmail: serverUserEmail,
+  initialValues,
+  mode = "create",
+}: OnboardingFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
@@ -44,9 +52,13 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
   } = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
-      phone: "",
-      interests: [],
-      participationActivities: [],
+      phone: initialValues?.phone ?? "",
+      gender: initialValues?.gender,
+      ageGroup: initialValues?.ageGroup,
+      region: initialValues?.region,
+      occupation: initialValues?.occupation,
+      interests: initialValues?.interests ?? [],
+      participationActivities: initialValues?.participationActivities ?? [],
     },
   });
 
@@ -119,7 +131,7 @@ export function OnboardingForm({ userName, userId: serverUserId, userEmail: serv
       {/* 상단 브랜딩 띠 */}
       <div className="rounded-2xl bg-gradient-to-r from-sejong-blue-dark via-sejong-blue to-sky-600 px-5 py-4 text-white shadow-md">
         <p className="text-sm font-medium opacity-90">세종시민 패널</p>
-        <p className="text-lg font-bold">추가 정보 입력</p>
+        <p className="text-lg font-bold">{mode === "edit" ? "추가 정보 수정" : "추가 정보 입력"}</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100">

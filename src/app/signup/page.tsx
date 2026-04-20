@@ -9,7 +9,7 @@ export const metadata = {
 export default async function SignupPage() {
   const session = await getServerSession(authOptions);
   if (session) {
-    redirect("/mypage?notice=already_member");
+    redirect("/main?notice=already_member");
   }
 
   // 기존 인증 흐름 유지: 실제 가입/로그인은 NextAuth sign-in 페이지로 통일
