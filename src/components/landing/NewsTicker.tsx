@@ -64,7 +64,7 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
                       href={articleHref(item)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="max-w-[min(100vw-2rem,42rem)] shrink-0 truncate text-sm font-semibold text-primary-800 transition-colors hover:text-sejong-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-sejong-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:max-w-[min(72vw,36rem)]"
+                      className="max-w-md shrink-0 truncate text-sm font-semibold text-primary-800 transition-colors hover:text-sejong-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-sejong-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:max-w-lg"
                       title={item.title}
                     >
                       <span className="mr-2 inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-oxford">

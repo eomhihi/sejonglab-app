@@ -22,7 +22,7 @@ export default async function LandingPage() {
   const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
       <TopLogoBar />
       <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
       <main className="flex-1 mt-28 sm:mt-24 md:mt-0">

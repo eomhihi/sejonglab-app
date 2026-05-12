@@ -131,7 +131,7 @@ export function MembersTable({ initialMembers }: Props) {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full max-w-full overflow-x-auto overscroll-x-contain touch-pan-x">
       <table className="w-full min-w-[1100px]">
         <thead>
           <tr className="bg-slate-700/50 border-b border-slate-600">

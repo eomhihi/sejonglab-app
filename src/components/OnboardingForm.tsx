@@ -317,7 +317,7 @@ export function OnboardingForm({
                 key={opt.id}
                 type="button"
                 onClick={() => toggleParticipation(opt.label)}
-                className={`flex-1 min-w-[200px] rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition ${
+                className={`w-full min-w-0 sm:flex-1 sm:min-w-[200px] rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition ${
                   on
                     ? "border-sejong-blue bg-sejong-blue/10 text-sejong-blue-dark"
                     : "border-slate-200 text-slate-700 hover:border-sejong-blue/35"

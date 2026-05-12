@@ -52,7 +52,7 @@ export function BriefingInteractiveDashboard({ embedded = false }: BriefingInter
   const [active, setActive] = useState<TabId>("innovation");
 
   return (
-    <div className="w-full bg-white text-slate-900">
+    <div className="w-full max-w-full overflow-x-hidden bg-white text-slate-900">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -116,7 +116,7 @@ export function BriefingInteractiveDashboard({ embedded = false }: BriefingInter
 function InnovationPanel() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      <div className="relative mx-auto h-[260px] w-full max-w-[300px] sm:h-[280px]">
+      <div className="relative mx-auto h-[300px] min-h-[300px] w-full max-w-full sm:max-w-[300px] overflow-hidden">
         <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
           <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
             <Pie
@@ -165,7 +165,26 @@ function UsagePanel() {
           <span className="text-2xl font-medium tabular-nums text-slate-500">/ 5</span>
         </div>
         <p className="text-xs font-semibold tracking-[0.18em] uppercase text-brand-secondary">Self-assessed 활용 수준</p>
-        <div className="flex gap-2 sm:gap-3 h-36 sm:h-40 items-stretch" aria-hidden>
+        <div className="sm:hidden w-full max-w-full space-y-2" aria-hidden>
+          {USAGE_SEGMENTS.map((ratio, i) => (
+            <div key={i} className="flex items-stretch gap-3">
+              <span className="w-5 shrink-0 text-center text-xs font-bold tabular-nums text-brand-secondary pt-1">
+                {i + 1}
+              </span>
+              <div className="flex-1 min-w-0 h-10 flex flex-col justify-end bg-brand-light rounded-sm overflow-hidden border border-brand-ash/35">
+                <div
+                  className="w-full transition-all duration-500 ease-out rounded-sm"
+                  style={{
+                    height: `${ratio * 100}%`,
+                    backgroundColor: ratio > 0 ? GAUGE_SEGMENT_FILLS[i % GAUGE_SEGMENT_FILLS.length] : "transparent",
+                    minHeight: ratio > 0 ? 4 : 0,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden sm:flex gap-2 sm:gap-3 h-36 sm:h-40 items-stretch w-full min-w-0 max-w-full" aria-hidden>
           {USAGE_SEGMENTS.map((ratio, i) => (
             <div key={i} className="flex-1 flex flex-col justify-end min-w-0 bg-brand-light rounded-sm overflow-hidden border border-brand-ash/35">
               <div
@@ -179,7 +198,7 @@ function UsagePanel() {
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-[10px] sm:text-xs font-medium tabular-nums tracking-wide uppercase text-brand-secondary/90">
+        <div className="hidden sm:flex justify-between text-[10px] sm:text-xs font-medium tabular-nums tracking-wide uppercase text-brand-secondary/90">
           <span>1</span>
           <span>2</span>
           <span>3</span>

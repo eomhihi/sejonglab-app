@@ -137,7 +137,7 @@ export function SejongInsightsDashboard() {
   const { summary, dongParticipation } = data;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-sky-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-gradient-to-b from-slate-50 via-white to-sky-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
       <div className="border-b border-primary-100/80 dark:border-primary-900/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-sm font-medium text-violet-600 dark:text-violet-400 tracking-wide">
@@ -208,7 +208,7 @@ export function SejongInsightsDashboard() {
               응답 수 기준 히트맵 스타일 그리드 + 상세 막대 그래프
             </p>
             <HeatmapGrid data={dongParticipation} />
-            <div className="mt-8 h-[320px] w-full min-h-[280px]">
+            <div className="mt-8 h-[320px] w-full min-h-[300px] min-w-0 max-w-full overflow-hidden">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart
                   data={barData}
@@ -249,7 +249,7 @@ export function SejongInsightsDashboard() {
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-5">
               패널 온보딩·관심사 기준 상위 키워드 (막대 차트)
             </p>
-            <div className="h-[420px] w-full min-h-[360px]">
+            <div className="h-[420px] w-full min-h-[300px] min-w-0 max-w-full overflow-hidden">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={keywordChartData} margin={{ top: 8, right: 12, left: 4, bottom: 64 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-slate-200 dark:stroke-slate-700" />

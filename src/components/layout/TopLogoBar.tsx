@@ -22,8 +22,8 @@ export function TopLogoBar() {
       className={`fixed top-0 left-0 right-0 z-[80] ${TOP_LOGO_BAR_HEIGHT_CLASS} flex items-center bg-white border-b border-slate-200/80`}
     >
       <div className="max-w-7xl mx-auto w-full px-4">
-        <div className="flex flex-row items-center justify-between gap-3 sm:gap-6">
-          <div className="flex flex-row items-center gap-4 sm:gap-7 min-w-0 flex-wrap">
+        <div className="flex flex-row items-center justify-between gap-3 sm:gap-6 w-full min-w-0">
+          <div className="flex flex-row items-center gap-4 sm:gap-7 min-w-0 flex-1 flex-wrap">
             <SejongLogoLockup variant="topbar" href="/" />
 
             <p className="min-w-0 text-xs sm:text-sm text-gray-500 leading-snug k-keep">

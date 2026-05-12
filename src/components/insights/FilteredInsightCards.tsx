@@ -175,25 +175,25 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
             성별·연령·거주지로 세그먼트하면 차트와 지도가 함께 갱신됩니다.
           </p>
         </div>
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+        <div className="flex flex-wrap items-end gap-3 w-full max-w-full">
+          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 w-full min-w-0 sm:w-auto sm:min-w-[8rem]">
             성별
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 min-w-[120px]"
+              className="w-full max-w-full rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 sm:min-w-[120px]"
             >
               <option value="전체">전체</option>
               <option value="남성">남성</option>
               <option value="여성">여성</option>
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 w-full min-w-0 sm:w-auto sm:min-w-[8rem]">
             연령대
             <select
               value={ageGroup}
               onChange={(e) => setAgeGroup(e.target.value)}
-              className="rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 min-w-[120px]"
+              className="w-full max-w-full rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 sm:min-w-[120px]"
             >
               <option value="전체">전체</option>
               <option value="20대">20대</option>
@@ -202,12 +202,12 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
               <option value="50대 이상">50대 이상</option>
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 w-full min-w-0 sm:w-auto sm:min-w-[8rem]">
             거주지
             <select
               value={region}
               onChange={(e) => setRegion(e.target.value)}
-              className="rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 min-w-[120px]"
+              className="w-full max-w-full rounded-lg border border-primary-200 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 sm:min-w-[120px]"
             >
               {regionOptions.map((r) => (
                 <option key={r} value={r}>
@@ -272,7 +272,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
           </div>
           <div
             key={`bar-dong-${gender}-${ageGroup}-${region}`}
-            className="h-[280px] w-full min-h-[240px]"
+            className="h-[300px] w-full min-h-[300px] min-w-0 max-w-full overflow-hidden"
           >
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={barByDong} margin={{ top: 8, right: 12, left: 4, bottom: 8 }}>
@@ -306,6 +306,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
           </h3>
           <SejongChoroplethMap
             key={`map-${gender}-${ageGroup}-${region}`}
+            className="max-w-full overflow-hidden"
             valuesByDong={valuesByDong}
           />
         </div>
@@ -326,7 +327,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
         </div>
         <div
           key={`bar-kw-${gender}-${ageGroup}-${region}`}
-          className="h-[320px] w-full min-h-[280px]"
+          className="h-[320px] w-full min-h-[300px] min-w-0 max-w-full overflow-hidden"
         >
           <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
             <BarChart
@@ -336,7 +337,7 @@ export function FilteredInsightCards({ dongParticipation, interestKeywords }: Pr
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700" />
               <XAxis type="number" tick={{ fontSize: 11 }} />
-              <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 10 }} />
+              <YAxis type="category" dataKey="name" width={90} tick={{ fontSize: 10 }} />
               <Tooltip
                 contentStyle={{ borderRadius: "12px" }}
                 formatter={(v) => [formatNumber(v == null ? 0 : Number(v)), "가중합"]}
