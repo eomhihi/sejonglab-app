@@ -28,6 +28,51 @@ const EXPERIENCE_DATA = [
   { name: "경험 없음", value: 77.3, fill: WHITE },
 ] as const;
 
+const EXPERIENCE_PCT: Record<(typeof EXPERIENCE_DATA)[number]["name"], string> = {
+  "경험 있음": "22.7%",
+  "경험 없음": "77.3%",
+};
+
+type ExperienceTooltipPayload = {
+  name?: string;
+  value?: number;
+  payload?: { name?: string; value?: number };
+};
+
+function ExperienceDonutTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: ExperienceTooltipPayload[];
+}) {
+  if (!active || !payload?.length) return null;
+
+  const item = payload[0];
+  const name = (item?.name ?? item?.payload?.name ?? "") as keyof typeof EXPERIENCE_PCT;
+  const pct = EXPERIENCE_PCT[name] ?? (typeof item?.value === "number" ? `${item.value}%` : "");
+
+  return (
+    <div
+      className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm"
+      style={{ fontSize: 12, fontFamily: "inherit" }}
+    >
+      <p className="flex items-center gap-2 font-semibold text-slate-900">
+        <span
+          className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm border border-brand-ash/80"
+          style={{
+            backgroundColor: name === "경험 있음" ? SEJONG_BLUE : WHITE,
+          }}
+          aria-hidden
+        />
+        <span>
+          {name}: {pct}
+        </span>
+      </p>
+    </div>
+  );
+}
+
 const INTEREST_DATA = [
   { name: "직업능력 향상", pct: 33.3, highlight: true, fill: SEJONG_BLUE },
   { name: "문화·예술·체육", pct: 16.4, highlight: false, fill: WHITE },
@@ -127,13 +172,9 @@ export function LifelongEducationInsightsSection() {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(v, name) => [`${String(name || "")} ${Number(v)}%`, ""]}
-                    contentStyle={{
-                      borderRadius: 12,
-                      border: "1px solid #e2e8f0",
-                      fontSize: 12,
-                      fontFamily: "inherit",
-                    }}
+                    content={<ExperienceDonutTooltip />}
+                    wrapperStyle={{ zIndex: 20, outline: "none" }}
+                    cursor={{ fill: "rgba(18, 69, 89, 0.06)" }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -144,7 +185,7 @@ export function LifelongEducationInsightsSection() {
                 <span className="font-semibold tabular-nums text-slate-900">22.7%</span>
               </li>
               <li className="flex justify-between gap-2">
-                <span className="text-slate-500">경험 없음</span>
+                <span>경험 없음</span>
                 <span className="font-semibold tabular-nums text-slate-900">77.3%</span>
               </li>
             </ul>
