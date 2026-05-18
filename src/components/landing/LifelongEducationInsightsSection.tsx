@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { BarChart3 } from "lucide-react";
 import {
@@ -20,6 +21,45 @@ const SEJONG_BLUE = "#124559";
 const SECONDARY = "#598392";
 const ASH = "#aec3b0";
 const WHITE = "#ffffff";
+
+/** Recharts 차트 공통 타이포 (관심 학습 분야 차트 기준) */
+const INSIGHT_CHART_FONT = {
+  family: "inherit",
+  axisTickSize: 11,
+  axisTickFill: "#475569",
+  tooltipSize: 12,
+  valueFill: "#0f172a",
+} as const;
+
+const INSIGHT_CHART_AXIS_TICK = {
+  fontSize: INSIGHT_CHART_FONT.axisTickSize,
+  fontFamily: INSIGHT_CHART_FONT.family,
+  fill: INSIGHT_CHART_FONT.axisTickFill,
+} as const;
+
+const INSIGHT_CHART_TOOLTIP_CONTENT_STYLE: CSSProperties = {
+  borderRadius: 12,
+  border: "1px solid #e2e8f0",
+  fontSize: INSIGHT_CHART_FONT.tooltipSize,
+  fontFamily: INSIGHT_CHART_FONT.family,
+};
+
+const INSIGHT_CHART_CONTAINER_STYLE: CSSProperties = {
+  fontFamily: INSIGHT_CHART_FONT.family,
+};
+
+const INSIGHT_CHART_LEGEND_STYLE: CSSProperties = {
+  fontSize: INSIGHT_CHART_FONT.axisTickSize,
+  fontFamily: INSIGHT_CHART_FONT.family,
+  color: INSIGHT_CHART_FONT.axisTickFill,
+  fontWeight: 400,
+};
+
+const INSIGHT_CHART_LEGEND_VALUE_STYLE: CSSProperties = {
+  ...INSIGHT_CHART_LEGEND_STYLE,
+  color: INSIGHT_CHART_FONT.valueFill,
+  fontVariantNumeric: "tabular-nums",
+};
 
 const N = 696;
 
@@ -54,10 +94,18 @@ function ExperienceDonutTooltip({
 
   return (
     <div
-      className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm"
-      style={{ fontSize: 12, fontFamily: "inherit" }}
+      className="rounded-xl bg-white px-3 py-2 shadow-sm"
+      style={INSIGHT_CHART_TOOLTIP_CONTENT_STYLE}
     >
-      <p className="flex items-center gap-2 font-semibold text-slate-900">
+      <p
+        className="flex items-center gap-2 m-0"
+        style={{
+          fontSize: INSIGHT_CHART_FONT.tooltipSize,
+          fontFamily: INSIGHT_CHART_FONT.family,
+          fontWeight: 400,
+          color: INSIGHT_CHART_FONT.valueFill,
+        }}
+      >
         <span
           className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm border border-brand-ash/80"
           style={{
@@ -108,10 +156,14 @@ function ExperienceLabel(props: {
     <text
       x={x}
       y={y}
-      fill="#0c303c"
       textAnchor="middle"
       dominantBaseline="central"
-      className="text-[10px] sm:text-[11px] font-semibold"
+      style={{
+        fontSize: INSIGHT_CHART_AXIS_TICK.fontSize,
+        fontFamily: INSIGHT_CHART_AXIS_TICK.fontFamily,
+        fontWeight: 400,
+        fill: INSIGHT_CHART_AXIS_TICK.fill,
+      }}
     >
       <tspan x={x} dy="-0.6em">
         새로운 시작을 기다리는
@@ -151,7 +203,7 @@ export function LifelongEducationInsightsSection() {
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">과거 참여 여부 (비율)</p>
             <div
               className="flex-1 min-h-[300px] w-full min-w-0 max-w-full overflow-hidden"
-              style={{ fontFamily: "inherit" }}
+              style={INSIGHT_CHART_CONTAINER_STYLE}
             >
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
@@ -179,14 +231,14 @@ export function LifelongEducationInsightsSection() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <ul className="mt-2 space-y-1.5 text-xs text-slate-600">
+            <ul className="mt-2 space-y-1.5" style={INSIGHT_CHART_LEGEND_STYLE}>
               <li className="flex justify-between gap-2">
                 <span>경험 있음</span>
-                <span className="font-semibold tabular-nums text-slate-900">22.7%</span>
+                <span style={INSIGHT_CHART_LEGEND_VALUE_STYLE}>22.7%</span>
               </li>
               <li className="flex justify-between gap-2">
                 <span>경험 없음</span>
-                <span className="font-semibold tabular-nums text-slate-900">77.3%</span>
+                <span style={INSIGHT_CHART_LEGEND_VALUE_STYLE}>77.3%</span>
               </li>
             </ul>
           </div>
@@ -197,7 +249,7 @@ export function LifelongEducationInsightsSection() {
             <p className="text-xs text-slate-500 mb-4 break-keep [word-break:keep-all]">상위 5개 (비율)</p>
             <div
               className="flex-1 min-h-[300px] w-full min-w-0 max-w-full overflow-hidden"
-              style={{ fontFamily: "inherit" }}
+              style={INSIGHT_CHART_CONTAINER_STYLE}
             >
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart
@@ -210,22 +262,12 @@ export function LifelongEducationInsightsSection() {
                     type="number"
                     domain={[0, 40]}
                     tickFormatter={(v) => `${v}%`}
-                    tick={{ fontSize: 11, fontFamily: "inherit" }}
+                    tick={INSIGHT_CHART_AXIS_TICK}
                   />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    width={118}
-                    tick={{ fontSize: 11, fill: "#475569", fontFamily: "inherit" }}
-                  />
+                  <YAxis type="category" dataKey="name" width={118} tick={INSIGHT_CHART_AXIS_TICK} />
                   <Tooltip
                     formatter={(v) => [`${Number(v)}%`, "비율"]}
-                    contentStyle={{
-                      borderRadius: 12,
-                      border: "1px solid #e2e8f0",
-                      fontSize: 12,
-                      fontFamily: "inherit",
-                    }}
+                    contentStyle={INSIGHT_CHART_TOOLTIP_CONTENT_STYLE}
                   />
                   <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
                     {[...INTEREST_DATA].map((row, i) => (
