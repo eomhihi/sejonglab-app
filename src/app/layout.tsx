@@ -15,21 +15,21 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+/** 카카오·SNS 링크 미리보기 — 이미지 아래 이 한 줄만 노출 */
+const OG_SHARE_LINE = "세종랩 세종의 미래를 데이터로 설계합니다 sejonglab.com";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://sejonglab.com"),
-  title: "세종랩",
-  description: "세종의 미래를 데이터로 설계합니다",
+  title: OG_SHARE_LINE,
   openGraph: {
-    title: "세종랩",
-    description: "세종의 미래를 데이터로 설계합니다",
+    title: OG_SHARE_LINE,
     url: "https://sejonglab.com",
-    siteName: "세종랩",
     images: [
       {
-        url: "/images/og-share.png?v=20260521",
+        url: "/images/og-share.png?v=20260523",
         width: 1200,
         height: 630,
-        alt: "세종랩 QR코드 및 소개",
+        alt: "",
       },
     ],
     locale: "ko_KR",
@@ -37,9 +37,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "세종랩",
-    description: "세종의 미래를 데이터로 설계합니다",
-    images: ["/images/og-share.png?v=20260521"],
+    title: OG_SHARE_LINE,
+    images: ["/images/og-share.png?v=20260523"],
+  },
+  /** 제목 외 description·site_name 등 중복 문구 방지 */
+  other: {
+    "og:description": "",
+    description: "",
   },
 };
 
