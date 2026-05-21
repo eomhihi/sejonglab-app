@@ -1,13 +1,33 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { SEJONG_LAB_SITE_URL } from "@/lib/sejonglab-url";
 
-/** 동심원 코어 내 QR — 스캔 인식률 우선 (로고·이미지 없음) */
-const QR_SIZE = 58;
 const POLICY_COLOR = "#002D56";
+/** viewBox 300, r=80 대시 링 바운딩 박스 inset */
+const DASHED_RING_INSET = "23.333%";
 
 export function EungBridgeGraphic() {
+  const qrSlotRef = useRef<HTMLDivElement>(null);
+  const [qrSize, setQrSize] = useState(0);
+
+  useEffect(() => {
+    const el = qrSlotRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const { width, height } = el.getBoundingClientRect();
+      const side = Math.floor(Math.min(width, height));
+      if (side > 0) setQrSize(side);
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div className="relative w-64 h-64 sm:w-80 sm:h-80 mx-auto">
       <svg
@@ -48,10 +68,6 @@ export function EungBridgeGraphic() {
           strokeDasharray="8 4"
         />
 
-        {/* 중앙 라이트 그레이 코어 */}
-        <circle cx="150" cy="150" r="60" fill="#f1f5f9" opacity="0.98" />
-        <circle cx="150" cy="150" r="60" fill="url(#inner-gradient)" opacity="0.06" />
-
         <defs>
           <linearGradient id="bridge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="var(--color-primary)" />
@@ -62,38 +78,42 @@ export function EungBridgeGraphic() {
             <stop offset="0%" stopColor="var(--color-secondary)" />
             <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
-          <radialGradient id="inner-gradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="var(--color-primary)" />
-          </radialGradient>
         </defs>
       </svg>
 
-      {/* 중앙 코어: 텍스트 + 실시간 QR (수직 스택) */}
+      {/* 대시 링 내부: 텍스트 + 확장 QR (중앙 코어 배경 없음 → 히어로 곡선 배경 비침) */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 sm:px-6 drop-shadow-sm pointer-events-auto"
+        className="absolute flex flex-col items-center justify-center text-center pointer-events-auto gap-1.5 sm:gap-2"
+        style={{ inset: DASHED_RING_INSET }}
         aria-label={`세종랩 QR 코드: ${SEJONG_LAB_SITE_URL}`}
       >
-        <span className="text-[10px] sm:text-xs font-bold tracking-wider text-sejong-blue shrink-0 leading-tight">
+        <span className="text-[10px] sm:text-xs font-bold tracking-wider text-sejong-blue shrink-0 leading-tight drop-shadow-sm">
           AI &amp; Data Driven
         </span>
 
         <div
-          className="my-2 sm:my-2.5 shrink-0 rounded-[4px] bg-white p-1 shadow-sm ring-1 ring-slate-200/60"
+          ref={qrSlotRef}
+          className="flex-1 w-full min-h-0 min-w-0 flex items-center justify-center"
           title={SEJONG_LAB_SITE_URL}
         >
-          <QRCodeSVG
-            value={SEJONG_LAB_SITE_URL}
-            size={QR_SIZE}
-            level="H"
-            marginSize={2}
-            bgColor="#ffffff"
-            fgColor={POLICY_COLOR}
-            title={`세종랩 사이트 (${SEJONG_LAB_SITE_URL})`}
-          />
+          {qrSize > 0 && (
+            <QRCodeSVG
+              value={SEJONG_LAB_SITE_URL}
+              size={qrSize}
+              level="H"
+              marginSize={0}
+              bgColor="transparent"
+              fgColor={POLICY_COLOR}
+              title={`세종랩 사이트 (${SEJONG_LAB_SITE_URL})`}
+              className="block shrink-0"
+            />
+          )}
         </div>
 
-        <span className="text-base sm:text-xl font-extrabold shrink-0 leading-tight" style={{ color: POLICY_COLOR }}>
+        <span
+          className="text-base sm:text-xl font-extrabold shrink-0 leading-tight drop-shadow-sm"
+          style={{ color: POLICY_COLOR }}
+        >
           Policy
         </span>
       </div>
