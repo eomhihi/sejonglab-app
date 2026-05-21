@@ -1,8 +1,9 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
+import { SEJONG_LAB_SITE_URL } from "@/lib/sejonglab-url";
 
-export const SEJONG_LAB_SITE_URL = "https://sejonglab.com";
+export { SEJONG_LAB_SITE_URL };
 
 const QR_SIZE = 200;
 

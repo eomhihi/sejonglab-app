@@ -1,6 +1,7 @@
 "use client";
 
-import { EungBridgeGraphic, SejongBackground } from "./SejongBackground";
+import { SejongBackground } from "./SejongBackground";
+import { EungBridgeGraphic } from "./EungBridgeGraphic";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useSession } from "next-auth/react";
