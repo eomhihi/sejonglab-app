@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate:qr": "node scripts/generate-sejonglab-qr.mjs",
+    "generate:og": "node scripts/generate-og-share.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "postcss": "^8.4.0",
     "prisma": "^5.22.0",
     "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
     "typescript": "^5.0.0"
   }
 }

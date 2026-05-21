@@ -17,20 +17,19 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sejonglab.com"),
-  title: "세종랩 | Sejong Lab",
+  title: "세종랩",
   description: "세종의 미래를 데이터로 설계합니다",
   openGraph: {
-    title: "세종랩 | Sejong Lab",
+    title: "세종랩",
     description: "세종의 미래를 데이터로 설계합니다",
     url: "https://sejonglab.com",
     siteName: "세종랩",
     images: [
       {
-        // social preview cache-busting (Kakao/Slack 등)
-        url: "/og-image.png?v=20260420",
+        url: "/images/og-share.png?v=20260521",
         width: 1200,
         height: 630,
-        alt: "세종랩 로고",
+        alt: "세종랩 QR코드 및 소개",
       },
     ],
     locale: "ko_KR",
@@ -38,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "세종랩 | Sejong Lab",
+    title: "세종랩",
     description: "세종의 미래를 데이터로 설계합니다",
-    images: ["/og-image.png?v=20260420"],
+    images: ["/images/og-share.png?v=20260521"],
   },
 };
 
