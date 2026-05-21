@@ -113,8 +113,13 @@ export function OnboardingForm({
         body: JSON.stringify({ ...data, userId, email }),
       });
       if (res.ok) {
-        router.push("/main");
-        router.refresh();
+        if (mode === "create") {
+          router.push("/signup/complete");
+          router.refresh();
+        } else {
+          router.push("/main");
+          router.refresh();
+        }
       } else {
         const err = await res.json();
         alert(err.message || "저장에 실패했습니다.");
