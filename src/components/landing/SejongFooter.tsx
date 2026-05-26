@@ -76,8 +76,8 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-400">
-            © 2026 세종랩 All Rights Reserved.
+          <p className="text-xs text-neutral-500">
+            © 2026 Sejong Lab. All Rights Reserved. Powered by 세종리서치데이터연구소
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-400">
             {isAdmin && (
