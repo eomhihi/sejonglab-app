@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export const SEJONG_LAB_KAKAO_CHANNEL_URL = "https://pf.kakao.com/_xdwtpG";
+export const SEJONG_LAB_KAKAO_CHANNEL_URL = "https://pf.kakao.com/_EnqxjX";
 
 const BANNER_WIDTH = 774;
 const BANNER_HEIGHT = 414;
@@ -17,7 +17,7 @@ export function KakaoChannelBanner() {
       >
         <Image
           src="/images/kakao-ch-banner.png"
-          alt="세종랩 카카오톡 채널 친구 추가 — Airbbot 채널 추가하고 맞춤형 설문 받아보세요"
+          alt="세종랩(Sejong Lab) 카카오톡 채널 — 채널 추가하고 맞춤형 설문 받아보세요"
           width={BANNER_WIDTH}
           height={BANNER_HEIGHT}
           className="w-full h-auto"
