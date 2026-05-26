@@ -10,8 +10,6 @@
   --color-secondary: #598392; /* 보조 컬러: 에어포스 블루 */
   --color-accent: #aec3b0; /* 강조 컬러: 애쉬 그레이 */
   --color-light: #d9d9d9; /* 연한 배경 — 섹션 배경·옅은 패널 */
-  /* 오늘의 데이터 정책 뉴스 — 라벨 pill과 동일 (slate-100) */
-  --color-news-wrap: #f1f5f9;
   /* --color-secondary: 에어포스 블루 — 호버·보조 강조·서브 버튼 */
   /* --color-accent: 애쉬 그레이 — 구분선·차트 보조 눈금·비강조 */
 
