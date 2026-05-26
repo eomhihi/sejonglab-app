@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { SejongHeader } from "@/components/landing/SejongHeader";
 import { KakaoChannelBanner } from "@/components/KakaoChannelBanner";
-import { SejongLabQrCode } from "@/components/SejongLabQrCode";
 import Link from "next/link";
 
 export const metadata = {
@@ -34,14 +33,6 @@ export default async function SignupCompletePage() {
                 "세종랩 패널에 오신 것을 환영합니다."
               )}
             </p>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100 flex flex-col items-center">
-            <p className="text-sm font-semibold text-slate-800 mb-1 text-center">세종랩 사이트 바로가기</p>
-            <p className="text-xs text-slate-500 mb-5 text-center">
-              아래 QR 코드를 스캔하면 세종랩 홈페이지로 이동합니다.
-            </p>
-            <SejongLabQrCode />
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100">
