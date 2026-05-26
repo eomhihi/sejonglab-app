@@ -19,6 +19,7 @@ const config: Config = {
         "header-footer": "var(--color-header-footer)",
         brand: {
           light: "var(--color-light)",
+          "news-wrap": "var(--color-news-wrap)",
           secondary: "var(--color-secondary)",
           ash: "var(--color-accent)",
           ink: "var(--color-header-footer)",

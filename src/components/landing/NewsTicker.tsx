@@ -28,7 +28,7 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
 
   return (
     <div
-      className="hidden md:block mt-28 sm:mt-24 border-b border-slate-200/70 bg-white/75 backdrop-blur-sm"
+      className="hidden md:block mt-28 sm:mt-24 border-b border-slate-200/70 bg-brand-news-wrap"
       role="region"
       aria-label="데이터·변화 관련 뉴스"
     >
@@ -64,10 +64,10 @@ export function NewsTicker({ initialNews, error = false, message }: NewsTickerPr
                       href={articleHref(item)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="max-w-md shrink-0 truncate text-sm font-semibold text-primary-800 transition-colors hover:text-sejong-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-sejong-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:max-w-lg"
+                      className="max-w-md shrink-0 truncate text-sm font-semibold text-primary-800 transition-colors hover:text-sejong-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-sejong-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-news-wrap)] sm:max-w-lg"
                       title={item.title}
                     >
-                      <span className="mr-2 inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-oxford">
+                      <span className="mr-2 inline-flex items-center rounded-md bg-brand-news-wrap px-2 py-0.5 text-[11px] font-semibold text-oxford">
                         {item.source || "뉴스"}
                       </span>
                       {item.title}
