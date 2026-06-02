@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { ONBOARDING_INTEREST_KEYWORDS, OCCUPATION_VALUES } from "./onboarding-options";
+import {
+  ONBOARDING_INTEREST_KEYWORDS,
+  OCCUPATION_VALUES,
+  SIGNUP_PATH_VALUES,
+  SIGNUP_PATH_ETC,
+} from "./onboarding-options";
 
 /** 빈 값·null을 undefined로 통일해 required_error가 일관되게 동작하도록 함 */
 function emptyToUndefined(val: unknown): unknown {
@@ -15,6 +20,11 @@ const genderEnum = z.enum(["male", "female"], {
 const occupationEnum = z.enum(OCCUPATION_VALUES, {
   required_error: "직업을 선택해 주세요.",
   invalid_type_error: "직업을 선택해 주세요.",
+});
+
+const signupPathEnum = z.enum(SIGNUP_PATH_VALUES, {
+  required_error: "가입 경로를 선택해 주세요.",
+  invalid_type_error: "가입 경로를 선택해 주세요.",
 });
 
 // 휴대폰 번호: 010-XXXX-XXXX 등 (필수 입력)
@@ -54,10 +64,25 @@ export const onboardingSchema = z.object({
       .min(1, "거주지역을 선택해 주세요."),
   ),
   occupation: z.preprocess(emptyToUndefined, occupationEnum),
+  // TODO: 향후 관심 정보 수집 시 재활성화 예정 — 관심 키워드를 다시 필수로 받으려면 아래 .min(1) 버전으로 교체
+  // interests: z
+  //   .array(z.enum(ONBOARDING_INTEREST_KEYWORDS, { message: "관심 키워드를 선택해 주세요." }))
+  //   .min(1, "항목을 하나 이상 선택해 주세요."),
   interests: z
     .array(z.enum(ONBOARDING_INTEREST_KEYWORDS, { message: "관심 키워드를 선택해 주세요." }))
-    .min(1, "항목을 하나 이상 선택해 주세요."),
+    .default([]),
   participationActivities: z.array(z.string()).default([]),
+  signupPath: z.preprocess(emptyToUndefined, signupPathEnum),
+  signupPathEtc: z.preprocess(emptyToUndefined, z.string().optional()),
+}).superRefine((data, ctx) => {
+  // '기타 (직접 입력)' 선택 시 직접 입력값 필수
+  if (data.signupPath === SIGNUP_PATH_ETC && !data.signupPathEtc?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["signupPathEtc"],
+      message: "가입 경로를 직접 입력해 주세요.",
+    });
+  }
 });
 
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;

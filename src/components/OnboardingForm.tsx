@@ -13,7 +13,18 @@ import {
   OCCUPATION_OPTIONS,
   ONBOARDING_INTEREST_SECTIONS,
   PARTICIPATION_ACTIVITY_OPTIONS,
+  SIGNUP_PATH_OPTIONS,
+  SIGNUP_PATH_ETC,
 } from "@/lib/onboarding-options";
+import { PolicyModal } from "@/components/legal/PolicyModal";
+import { TERMS_OF_SERVICE_FULL, PRIVACY_POLICY_FULL } from "@/../constants/policy";
+
+type PolicyKind = "terms" | "privacy";
+
+const POLICY_MODAL = {
+  terms: { title: "서비스 이용약관", content: TERMS_OF_SERVICE_FULL },
+  privacy: { title: "개인정보 처리방침", content: PRIVACY_POLICY_FULL },
+} as const;
 
 const blue = {
   ring: "focus:ring-sejong-blue",
@@ -41,7 +52,17 @@ export function OnboardingForm({
 }: OnboardingFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [agreed, setAgreed] = useState(mode === "edit");
+  const [openPolicy, setOpenPolicy] = useState<PolicyKind | null>(null);
   const { data: session } = useSession();
+
+  const requireAgreement = mode === "create";
+
+  const openModal = (kind: PolicyKind) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpenPolicy(kind);
+  };
 
   const {
     register,
@@ -59,11 +80,14 @@ export function OnboardingForm({
       occupation: initialValues?.occupation,
       interests: initialValues?.interests ?? [],
       participationActivities: initialValues?.participationActivities ?? [],
+      signupPath: initialValues?.signupPath,
+      signupPathEtc: initialValues?.signupPathEtc ?? "",
     },
   });
 
   const selectedInterests = watch("interests") ?? [];
   const selectedParticipation = watch("participationActivities") ?? [];
+  const selectedSignupPath = watch("signupPath");
 
   const toggleKeyword = (keyword: string) => {
     const current = selectedInterests;
@@ -96,6 +120,10 @@ export function OnboardingForm({
   };
 
   const onSubmit = async (data: OnboardingFormData) => {
+    if (requireAgreement && !agreed) {
+      alert("이용약관 및 개인정보 처리방침에 동의해주세요.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       const userId = serverUserId ?? (session?.user as { id?: string } | undefined)?.id;
@@ -252,8 +280,42 @@ export function OnboardingForm({
         )}
       </div>
 
-      {/* 관심 분야: 카테고리(섹션 제목) + 키워드 다중 선택 */}
-      <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50 to-white p-5 sm:p-7 shadow-sm ring-1 ring-slate-100">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
+        <label className="block text-sm font-semibold text-slate-800 mb-2">
+          가입 경로 <span className="text-red-500">*</span>
+        </label>
+        <select
+          {...register("signupPath")}
+          className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-sejong-blue`}
+        >
+          <option value="">세종랩을 알게 된 경로를 선택해 주세요</option>
+          {SIGNUP_PATH_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+        {errors.signupPath && (
+          <p className="mt-2 font-sans text-sm text-red-600">{errors.signupPath.message}</p>
+        )}
+
+        {selectedSignupPath === SIGNUP_PATH_ETC && (
+          <div className="mt-3">
+            <input
+              type="text"
+              placeholder="가입 경로를 직접 입력해 주세요"
+              {...register("signupPathEtc")}
+              className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${blue.ring} focus:border-sejong-blue`}
+            />
+            {errors.signupPathEtc && (
+              <p className="mt-2 font-sans text-sm text-red-600">{errors.signupPathEtc.message}</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* TODO: 향후 관심 정보 수집 시 재활성화 예정 — [추가 관심 정보] 관심 정책 키워드 섹션 (현재 hidden 처리, 코드 보존) */}
+      <div className="hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50 to-white p-5 sm:p-7 shadow-sm ring-1 ring-slate-100">
         <div className="mb-6 text-center">
           <p className="text-lg font-bold text-sejong-blue-dark">관심 정책 키워드</p>
           <p className="mt-1 text-sm text-slate-600">
@@ -308,8 +370,8 @@ export function OnboardingForm({
         )}
       </div>
 
-      {/* 참여 가능 활동 */}
-      <div className="bg-white rounded-2xl border border-sejong-blue/15 shadow-md p-5 sm:p-6">
+      {/* TODO: 향후 관심 정보 수집 시 재활성화 예정 — [추가 관심 정보] 참여 가능 활동 섹션 (현재 hidden 처리, 코드 보존) */}
+      <div className="hidden bg-white rounded-2xl border border-sejong-blue/15 shadow-md p-5 sm:p-6">
         <label className="block text-base font-bold text-sejong-blue-dark mb-1">참여 가능 활동</label>
         <p className="text-sm text-slate-600 mb-4">
           참여하고 싶은 활동을 <strong>중복 선택</strong>할 수 있습니다. (선택 사항)
@@ -336,13 +398,64 @@ export function OnboardingForm({
         </div>
       </div>
 
+      {requireAgreement && (
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100">
+          <label className="flex items-start gap-2.5 text-sm text-slate-700 select-none">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+            />
+            <span className="leading-relaxed">
+              세종랩{" "}
+              <button
+                type="button"
+                onClick={openModal("terms")}
+                className="underline text-blue-600 cursor-pointer hover:text-blue-700"
+              >
+                이용약관
+              </button>{" "}
+              및{" "}
+              <button
+                type="button"
+                onClick={openModal("privacy")}
+                className="underline text-blue-600 cursor-pointer hover:text-blue-700"
+              >
+                개인정보 처리방침
+              </button>
+              에 모두 동의합니다. <span className="text-slate-500">(필수)</span>
+            </span>
+          </label>
+        </div>
+      )}
+
+      {mode === "create" && (
+        <div className="bg-blue-50/50 text-blue-950 rounded-lg p-3.5 text-sm border border-blue-100/70">
+          🎁 세종랩 패널 가입을 환영합니다! 가입 완료 시 매월 추첨을 통해 소정의 리워드(모바일 기프티콘 등)를 혜택으로
+          제공해 드립니다.
+        </div>
+      )}
+
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="w-full rounded-2xl bg-sejong-blue text-white font-bold py-4 shadow-lg hover:bg-sejong-blue-dark disabled:opacity-50 disabled:cursor-not-allowed transition border border-sejong-blue-dark/30"
+        disabled={isSubmitting || (requireAgreement && !agreed)}
+        className={`w-full rounded-2xl text-white font-bold py-4 shadow-lg transition border ${
+          requireAgreement && !agreed
+            ? "bg-gray-300 border-gray-300 cursor-not-allowed"
+            : "bg-sejong-blue border-sejong-blue-dark/30 hover:bg-sejong-blue-dark disabled:opacity-50 disabled:cursor-not-allowed"
+        }`}
       >
-        {isSubmitting ? "저장 중..." : "정보 저장하고 시작하기"}
+        {isSubmitting ? "저장 중..." : mode === "edit" ? "정보 저장하기" : "세종랩 가입 완료"}
       </button>
+
+      <PolicyModal
+        open={openPolicy !== null}
+        title={openPolicy ? POLICY_MODAL[openPolicy].title : ""}
+        content={openPolicy ? POLICY_MODAL[openPolicy].content : ""}
+        onClose={() => setOpenPolicy(null)}
+        bodyMaxHeightClass="max-h-[50vh]"
+      />
     </form>
   );
 }

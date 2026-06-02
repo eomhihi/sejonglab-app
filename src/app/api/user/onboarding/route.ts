@@ -26,10 +26,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "인증되지 않았습니다." }, { status: 401 });
     }
 
-    const { phone, gender, ageGroup, region, occupation, interests, participationActivities } =
-      validation.data;
+    const {
+      phone,
+      gender,
+      ageGroup,
+      region,
+      occupation,
+      interests,
+      participationActivities,
+      signupPath,
+      signupPathEtc,
+    } = validation.data;
     const areaOrRegion = region ?? (body.area as string | undefined) ?? null;
     const activities = participationActivities ?? [];
+    const signupPathEtcValue = signupPath === "기타 (직접 입력)" ? signupPathEtc?.trim() || null : null;
 
     if (!process.env.DATABASE_URL) {
       console.log("온보딩 데이터 (DB 미연결):", {
@@ -40,6 +50,8 @@ export async function POST(request: Request) {
         occupation,
         interests,
         activities,
+        signupPath,
+        signupPathEtc: signupPathEtcValue,
       });
       return NextResponse.json({ success: true, message: "저장 완료 (테스트 모드)" });
     }
@@ -57,6 +69,8 @@ export async function POST(request: Request) {
         interests,
         participationActivities: activities,
         interestTopics: interests,
+        signupPath: signupPath ?? null,
+        signupPathEtc: signupPathEtcValue,
         onboardingCompleted: true,
       },
     });
