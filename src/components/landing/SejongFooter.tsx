@@ -34,11 +34,6 @@ export function SejongFooter({ isAdmin = false }: SejongFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/#airbot" className="text-slate-300 hover:text-white transition-colors">
-                  에어봇 솔루션
-                </Link>
-              </li>
-              <li>
                 <Link href="/#benefits" className="text-slate-300 hover:text-white transition-colors">
                   참여 혜택
                 </Link>
