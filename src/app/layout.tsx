@@ -58,8 +58,15 @@ export default async function RootLayout({
 
   return (
     <html lang="ko">
+      <head>
+        {/* Pretendard: 한/영 혼용 가독성 최적 본문 서체 (가변 폰트, 동적 서브셋) */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body
-        className={`antialiased min-h-screen overflow-x-hidden bg-background text-foreground ${montserrat.variable}`}
+        className={`antialiased min-h-screen overflow-x-hidden bg-background text-foreground break-keep tracking-tight ${montserrat.variable}`}
       >
         <MobileGuard />
         <SessionProvider session={session}>

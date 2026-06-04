@@ -42,11 +42,11 @@ export function PolicyModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg rounded-2xl bg-white shadow-xl flex flex-col overflow-hidden"
+        className="w-full max-w-lg rounded-2xl bg-white shadow-xl flex flex-col overflow-hidden break-keep tracking-tight"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200">
-          <h2 className="text-base font-bold text-neutral-900">{title}</h2>
+          <h2 className="text-lg font-bold text-neutral-900">{title}</h2>
           <button
             type="button"
             onClick={onClose}
@@ -58,7 +58,7 @@ export function PolicyModal({
         </div>
 
         <div className={`${bodyMaxHeightClass} overflow-y-auto px-5 py-4`}>
-          <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-700">{content}</p>
+          <p className="whitespace-pre-line text-base leading-relaxed text-neutral-700">{content}</p>
         </div>
 
         <div className="px-5 py-4 border-t border-neutral-200">

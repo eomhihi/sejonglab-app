@@ -168,7 +168,7 @@ export function OnboardingForm({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100">
-        <label className="block text-sm font-semibold text-slate-800 mb-2">
+        <label className="block text-base font-semibold text-slate-800 mb-2">
           휴대폰 번호 <span className="text-red-500">*</span>
         </label>
         <input
@@ -201,7 +201,7 @@ export function OnboardingForm({
       )}
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-800 mb-3">
+        <label className="block text-base font-semibold text-slate-800 mb-3">
           성별 <span className="text-red-500">*</span>
         </label>
         <div className="flex gap-3">
@@ -221,7 +221,7 @@ export function OnboardingForm({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-800 mb-2">
+        <label className="block text-base font-semibold text-slate-800 mb-2">
           연령대 <span className="text-red-500">*</span>
         </label>
         <select
@@ -241,7 +241,7 @@ export function OnboardingForm({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-800 mb-2">
+        <label className="block text-base font-semibold text-slate-800 mb-2">
           거주지역 (세종시 행정동) <span className="text-red-500">*</span>
         </label>
         <select
@@ -261,7 +261,7 @@ export function OnboardingForm({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-800 mb-2">
+        <label className="block text-base font-semibold text-slate-800 mb-2">
           직업 <span className="text-red-500">*</span>
         </label>
         <select
@@ -281,7 +281,7 @@ export function OnboardingForm({
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
-        <label className="block text-sm font-semibold text-slate-800 mb-2">
+        <label className="block text-base font-semibold text-slate-800 mb-2">
           가입 경로 <span className="text-red-500">*</span>
         </label>
         <select

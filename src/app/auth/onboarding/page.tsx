@@ -67,11 +67,11 @@ export default async function OnboardingPage({
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <SejongHeader />
       <div className="max-w-2xl mx-auto py-8 px-4">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#003666] mb-2">
+        <div className="text-center mb-6 break-keep">
+          <h1 className="text-xl md:text-2xl font-bold text-[#003666] mb-2 tracking-tight">
             {pageTitle}
           </h1>
-          <p className="text-slate-600 text-sm sm:text-base">
+          <p className="text-base text-slate-600 leading-relaxed">
             {pageDesc}
           </p>
         </div>

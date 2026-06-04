@@ -62,6 +62,20 @@ const config: Config = {
         },
       },
       fontFamily: {
+        sans: [
+          "Pretendard Variable",
+          "Pretendard",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Noto Sans KR",
+          "Apple SD Gothic Neo",
+          "Malgun Gothic",
+          "Arial",
+          "sans-serif",
+        ],
         display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       animation: {
