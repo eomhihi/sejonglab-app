@@ -25,12 +25,10 @@ export function SejongHeroSection() {
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-6 drop-shadow-sm">
-              <span className="text-sejong-blue font-display">세종의 미래</span>
-              <span className="text-slate-900">를</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-6 drop-shadow-sm tracking-tight break-keep text-slate-800">
+              <span className="text-sejong-blue">세종의 미래</span>를
               <br />
-              <span className="text-sejong-blue font-display">데이터로 설계</span>
-              <span className="text-slate-900">합니다</span>
+              <span className="text-sejong-blue">데이터로 설계</span>합니다
             </h1>
 
             <p className="text-base sm:text-lg text-primary-800 font-medium mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm k-keep">

@@ -6,7 +6,6 @@ import { BarChart3 } from "lucide-react";
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Cell,
   Pie,
   PieChart,
@@ -22,9 +21,13 @@ const SECONDARY = "#598392";
 const ASH = "#aec3b0";
 const WHITE = "#ffffff";
 
+/** 숫자/라벨이 브라우저 기본 서체로 깨지지 않도록 Pretendard 스택을 명시적으로 고정 */
+const PRETENDARD_STACK =
+  '"Pretendard Variable", Pretendard, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif';
+
 /** Recharts 차트 공통 타이포 (관심 학습 분야 차트 기준) */
 const INSIGHT_CHART_FONT = {
-  family: "inherit",
+  family: PRETENDARD_STACK,
   axisTickSize: 11,
   axisTickFill: "#475569",
   tooltipSize: 12,
@@ -42,23 +45,13 @@ const INSIGHT_CHART_TOOLTIP_CONTENT_STYLE: CSSProperties = {
   border: "1px solid #e2e8f0",
   fontSize: INSIGHT_CHART_FONT.tooltipSize,
   fontFamily: INSIGHT_CHART_FONT.family,
+  fontVariantNumeric: "tabular-nums",
 };
+
+const INSIGHT_CHART_TOOLTIP_CURSOR = { fill: "rgba(18, 69, 89, 0.06)" } as const;
 
 const INSIGHT_CHART_CONTAINER_STYLE: CSSProperties = {
   fontFamily: INSIGHT_CHART_FONT.family,
-};
-
-const INSIGHT_CHART_LEGEND_STYLE: CSSProperties = {
-  fontSize: INSIGHT_CHART_FONT.axisTickSize,
-  fontFamily: INSIGHT_CHART_FONT.family,
-  color: INSIGHT_CHART_FONT.axisTickFill,
-  fontWeight: 400,
-};
-
-const INSIGHT_CHART_LEGEND_VALUE_STYLE: CSSProperties = {
-  ...INSIGHT_CHART_LEGEND_STYLE,
-  color: INSIGHT_CHART_FONT.valueFill,
-  fontVariantNumeric: "tabular-nums",
 };
 
 const N = 696;
@@ -104,6 +97,7 @@ function ExperienceDonutTooltip({
           fontFamily: INSIGHT_CHART_FONT.family,
           fontWeight: 400,
           color: INSIGHT_CHART_FONT.valueFill,
+          fontVariantNumeric: "tabular-nums",
         }}
       >
         <span
@@ -130,9 +124,9 @@ const INTEREST_DATA = [
 ] as const;
 
 const INTENTION_DATA = [
-  { key: "positive", label: "긍정 (매우 + 어느 정도)", pct: 57.9 },
-  { key: "neutral", label: "보통", pct: 22.6 },
-  { key: "negative", label: "부정 (별로 + 전혀)", pct: 19.6 },
+  { key: "positive", label: "긍정 (매우 + 어느 정도)", short: "긍정", pct: 57.9 },
+  { key: "neutral", label: "보통", short: "보통", pct: 22.6 },
+  { key: "negative", label: "부정 (별로 + 전혀)", short: "부정", pct: 19.6 },
 ] as const;
 
 function ExperienceLabel(props: {
@@ -188,10 +182,10 @@ export function LifelongEducationInsightsSection() {
             평생교육 수요조사
           </h2>
           <p className="mt-4 text-[13px] sm:text-base leading-relaxed text-[#1d3557] break-keep [word-break:keep-all]">
-            세종 시민 <span className="font-semibold tabular-nums">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
+            세종 시민 <span className="font-semibold tabular-nums tracking-[-0.03em]">{N}</span>명의 목소리는, 낮은 참여 경험(22.7%)에도
             불구하고{" "}
             <br className="hidden sm:block" />
-            <span className="font-semibold">높은 참여 의지(57.9%)</span>와{" "}
+            <span className="font-semibold tabular-nums tracking-[-0.03em]">높은 참여 의지(57.9%)</span>와{" "}
             <span className="font-semibold">직업·디지털 역량</span> 중심의 실용적 학습 수요를 선명하게 보여줍니다.
           </p>
         </header>
@@ -226,21 +220,11 @@ export function LifelongEducationInsightsSection() {
                   <Tooltip
                     content={<ExperienceDonutTooltip />}
                     wrapperStyle={{ zIndex: 20, outline: "none" }}
-                    cursor={{ fill: "rgba(18, 69, 89, 0.06)" }}
+                    cursor={INSIGHT_CHART_TOOLTIP_CURSOR}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <ul className="mt-2 space-y-1.5" style={INSIGHT_CHART_LEGEND_STYLE}>
-              <li className="flex justify-between gap-2">
-                <span>경험 있음</span>
-                <span style={INSIGHT_CHART_LEGEND_VALUE_STYLE}>22.7%</span>
-              </li>
-              <li className="flex justify-between gap-2">
-                <span>경험 없음</span>
-                <span style={INSIGHT_CHART_LEGEND_VALUE_STYLE}>77.3%</span>
-              </li>
-            </ul>
           </div>
 
           {/* Chart 2 — horizontal bar */}
@@ -257,17 +241,13 @@ export function LifelongEducationInsightsSection() {
                   data={[...INTEREST_DATA]}
                   margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={ASH} strokeOpacity={0.55} />
-                  <XAxis
-                    type="number"
-                    domain={[0, 40]}
-                    tickFormatter={(v) => `${v}%`}
-                    tick={INSIGHT_CHART_AXIS_TICK}
-                  />
-                  <YAxis type="category" dataKey="name" width={118} tick={INSIGHT_CHART_AXIS_TICK} />
+                  {/* 가로축(격자선·축선·축 값) 제거 — 스케일만 유지하기 위해 XAxis는 hide */}
+                  <XAxis type="number" domain={[0, 40]} hide />
+                  <YAxis type="category" dataKey="name" width={118} tick={INSIGHT_CHART_AXIS_TICK} axisLine={false} tickLine={false} />
                   <Tooltip
                     formatter={(v) => [`${Number(v)}%`, "비율"]}
                     contentStyle={INSIGHT_CHART_TOOLTIP_CONTENT_STYLE}
+                    cursor={INSIGHT_CHART_TOOLTIP_CURSOR}
                   />
                   <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
                     {[...INTEREST_DATA].map((row, i) => (
@@ -289,28 +269,47 @@ export function LifelongEducationInsightsSection() {
               견지
             </p>
 
-            <div className="space-y-4 flex-1">
-              {INTENTION_DATA.map((row) => (
-                <div key={row.key}>
-                  <div className="flex items-baseline justify-between gap-3 mb-1.5">
-                    <span className="text-[11px] sm:text-[11px] text-slate-600">{row.label}</span>
-                    <span className="text-[11px] sm:text-[11px] font-extrabold tabular-nums text-slate-900">
-                      {row.pct}%
-                    </span>
-                  </div>
-                  <div className="h-2.5 rounded-full bg-brand-ash/35 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${row.pct}%`,
-                        backgroundColor: row.key === "positive" ? SEJONG_BLUE : WHITE,
-                        border: row.key === "positive" ? "none" : `1px solid ${ASH}`,
-                        boxSizing: "border-box",
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+            <div
+              className="flex-1 min-h-[180px] w-full min-w-0 max-w-full overflow-hidden"
+              style={INSIGHT_CHART_CONTAINER_STYLE}
+            >
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                <BarChart
+                  layout="vertical"
+                  data={[...INTENTION_DATA]}
+                  margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
+                >
+                  {/* 1·2번 차트와 동일하게 축선·축 값 숨김, 데이터는 Tooltip(hover/touch)으로만 노출 */}
+                  <XAxis type="number" domain={[0, 100]} hide />
+                  <YAxis
+                    type="category"
+                    dataKey="short"
+                    width={44}
+                    tick={INSIGHT_CHART_AXIS_TICK}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(v, _name, item) => [
+                      `${Number(v)}%`,
+                      (item?.payload as { label?: string })?.label ?? "비율",
+                    ]}
+                    labelFormatter={() => ""}
+                    contentStyle={INSIGHT_CHART_TOOLTIP_CONTENT_STYLE}
+                    cursor={INSIGHT_CHART_TOOLTIP_CURSOR}
+                  />
+                  <Bar dataKey="pct" radius={[0, 6, 6, 0]} barSize={18}>
+                    {[...INTENTION_DATA].map((row, i) => (
+                      <Cell
+                        key={i}
+                        fill={row.key === "positive" ? SEJONG_BLUE : WHITE}
+                        stroke={row.key === "positive" ? "transparent" : ASH}
+                        strokeWidth={1}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

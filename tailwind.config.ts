@@ -76,7 +76,17 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
-        display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui", "sans-serif"],
+        // 로고/영문 디스플레이는 Montserrat, 한글 글리프는 자동으로 Pretendard로 폴백
+        display: [
+          "var(--font-montserrat)",
+          "Pretendard Variable",
+          "Pretendard",
+          "ui-sans-serif",
+          "system-ui",
+          "Noto Sans KR",
+          "Apple SD Gothic Neo",
+          "sans-serif",
+        ],
       },
       animation: {
         ticker: "ticker 30s linear infinite",
