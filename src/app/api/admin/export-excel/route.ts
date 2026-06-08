@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { SIGNUP_PATH_ETC } from "@/lib/onboarding-options";
 
 const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
@@ -38,6 +39,8 @@ function usersToExcelRows(
     interestTopics: string[];
     interests: string[];
     participationActivities: string[];
+    signupPath: string | null;
+    signupPathEtc: string | null;
     createdAt: Date;
     accounts: { provider: string }[];
   }>
@@ -55,10 +58,17 @@ function usersToExcelRows(
       u.participationActivities.length > 0
         ? u.participationActivities.join(", ")
         : "-";
+    const 가입경로 =
+      u.signupPath === SIGNUP_PATH_ETC
+        ? u.signupPathEtc?.trim()
+          ? `기타: ${u.signupPathEtc.trim()}`
+          : "기타"
+        : u.signupPath ?? "-";
     return {
       이름: u.name ?? "-",
       이메일: u.email ?? "-",
-      가입경로: provider,
+      "가입수단(소셜)": provider,
+      "가입경로(유입)": 가입경로,
       전화번호: u.phone ?? "-",
       성별: formatGender(u.gender),
       연령대: u.ageGroup ?? "-",
@@ -99,6 +109,8 @@ export async function GET() {
         interestTopics: true,
         interests: true,
         participationActivities: true,
+        signupPath: true,
+        signupPathEtc: true,
         createdAt: true,
         accounts: { select: { provider: true } },
       },

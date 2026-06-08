@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { SIGNUP_PATH_ETC } from "@/lib/onboarding-options";
 
 type Member = {
   id: string;
@@ -14,6 +15,8 @@ type Member = {
   interestTopics: string[];
   interests: string[];
   participationActivities: string[];
+  signupPath: string | null;
+  signupPathEtc: string | null;
   createdAt: string; // serialized
 };
 
@@ -22,6 +25,12 @@ function formatGender(g: string | null): string {
   if (g === "male") return "남성";
   if (g === "female") return "여성";
   return g;
+}
+
+function formatSignupPath(path: string | null, etc: string | null): string {
+  if (!path) return "-";
+  if (path === SIGNUP_PATH_ETC) return etc?.trim() ? `기타: ${etc.trim()}` : "기타";
+  return path;
 }
 
 function formatDate(iso: string): string {
@@ -154,7 +163,7 @@ export function MembersTable({ initialMembers }: Props) {
               가입일
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-              관심·참여
+              가입 경로
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
               거주지
@@ -176,7 +185,6 @@ export function MembersTable({ initialMembers }: Props) {
             </tr>
           ) : (
             members.map((user) => {
-              const tags = user.interests?.length > 0 ? user.interests : user.interestTopics ?? [];
               const isEditing = editingId === user.id;
               const disabled = pendingId === user.id;
               return (
@@ -243,34 +251,14 @@ export function MembersTable({ initialMembers }: Props) {
                   <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">
                     {formatDate(user.createdAt)}
                   </td>
-                  <td className="px-4 py-3 max-w-[280px]">
-                    {tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1 mb-1">
-                        {tags.map((topic) => (
-                          <span
-                            key={topic}
-                            className="px-2 py-0.5 text-xs bg-sky-500/20 text-sky-200 rounded"
-                          >
-                            {topic}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                    {user.participationActivities && user.participationActivities.length > 0 ? (
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {user.participationActivities.map((a) => (
-                          <span
-                            key={a}
-                            className="px-2 py-0.5 text-[10px] bg-emerald-500/15 text-emerald-200 rounded"
-                          >
-                            {a}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                    {tags.length === 0 && !user.participationActivities?.length ? (
+                  <td className="px-4 py-3 text-sm text-slate-300 max-w-[220px]">
+                    {user.signupPath ? (
+                      <span className="inline-block px-2 py-0.5 text-xs bg-sky-500/20 text-sky-200 rounded break-keep">
+                        {formatSignupPath(user.signupPath, user.signupPathEtc)}
+                      </span>
+                    ) : (
                       <span className="text-slate-500">-</span>
-                    ) : null}
+                    )}
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-300">
                     {isEditing ? (

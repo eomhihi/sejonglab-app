@@ -42,6 +42,8 @@ async function getMembers() {
         interestTopics: true,
         interests: true,
         participationActivities: true,
+        signupPath: true,
+        signupPathEtc: true,
         createdAt: true,
       },
     });
