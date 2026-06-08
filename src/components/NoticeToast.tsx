@@ -5,24 +5,30 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 const NOTICE_MESSAGES: Record<string, string> = {
   already_member: "이미 가입된 회원입니다.",
+  auto_logout: "안전을 위해 일정 시간 동안 활동이 없어 자동 로그아웃되었습니다.",
 };
+
+/** notice 키별 노출 시간(ms). 미지정 시 기본값 사용 */
+const NOTICE_DURATION_MS: Record<string, number> = {
+  auto_logout: 5000,
+};
+const DEFAULT_NOTICE_DURATION_MS = 2500;
 
 export function NoticeToast() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
 
-  const message = useMemo(() => {
-    const key = searchParams.get("notice") ?? "";
-    return NOTICE_MESSAGES[key] ?? "";
-  }, [searchParams]);
+  const noticeKey = searchParams.get("notice") ?? "";
+  const message = useMemo(() => NOTICE_MESSAGES[noticeKey] ?? "", [noticeKey]);
 
   useEffect(() => {
     if (!message) return;
     setOpen(true);
-    const t = window.setTimeout(() => setOpen(false), 2500);
+    const duration = NOTICE_DURATION_MS[noticeKey] ?? DEFAULT_NOTICE_DURATION_MS;
+    const t = window.setTimeout(() => setOpen(false), duration);
     return () => window.clearTimeout(t);
-  }, [message, pathname]);
+  }, [message, noticeKey, pathname]);
 
   if (!open || !message) return null;
 

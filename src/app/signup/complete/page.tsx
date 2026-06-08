@@ -44,7 +44,7 @@ export default async function SignupCompletePage() {
           </div>
 
           <Link
-            href="/main"
+            href="/"
             className="flex w-full items-center justify-center rounded-2xl bg-sejong-blue text-white font-bold py-4 shadow-lg hover:bg-sejong-blue-dark transition border border-sejong-blue-dark/30"
           >
             메인으로 이동하기

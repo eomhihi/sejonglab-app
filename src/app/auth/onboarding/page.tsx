@@ -40,9 +40,10 @@ export default async function OnboardingPage({
     : "세종시민 패널 참여를 위해 아래 정보를 입력해 주세요.";
 
   // 온보딩 완료 회원은 기본적으로 접근 차단하되, edit=1이면 수정 허용(마이페이지에서 진입)
+  // 기가입자 로그인 완료 흐름: 패널 인사이트 대시보드 홈("/")으로 진입
   const { onboardingCompleted, userData } = await checkOnboardingStatus(session.user?.email);
   if (onboardingCompleted && !allowEdit) {
-    redirect("/mypage?notice=already_member");
+    redirect("/");
   }
 
   const initialValues =

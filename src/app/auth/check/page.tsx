@@ -29,7 +29,8 @@ export default function AuthCheckPage() {
       .then((data) => {
         setChecked(true);
         if (data?.onboardingCompleted) {
-          router.push('/dashboard');
+          // 기가입자: 패널 인사이트 대시보드 홈으로 진입
+          router.push('/');
         } else {
           router.push('/auth/onboarding');
         }

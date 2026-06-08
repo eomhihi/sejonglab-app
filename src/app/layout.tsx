@@ -6,6 +6,7 @@ import { SessionProvider } from "@/components/SessionProvider";
 import { MobileGuard } from "@/components/layout/MobileGuard";
 import { NavigationScroll } from "@/components/NavigationScroll";
 import { NoticeToast } from "@/components/NoticeToast";
+import { IdleLogoutGuard } from "@/components/IdleLogoutGuard";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -70,6 +71,7 @@ export default async function RootLayout({
       >
         <MobileGuard />
         <SessionProvider session={session}>
+          <IdleLogoutGuard />
           <NoticeToast />
           <NavigationScroll />
           {children}
