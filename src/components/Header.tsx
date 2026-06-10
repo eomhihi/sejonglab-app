@@ -3,13 +3,13 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { isAdminEmail } from "@/lib/admin";
 
 export default function Header() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
-  const isAdmin =
-    isLoggedIn && session?.user?.email?.toLowerCase().trim() === "eomhihi007@gmail.com";
+  const isAdmin = isLoggedIn && isAdminEmail(session?.user?.email);
 
   async function handleSignOut() {
     await signOut({ callbackUrl: "/", redirect: false });

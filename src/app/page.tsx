@@ -9,16 +9,14 @@ import { NewsTicker } from "@/components/landing/NewsTicker";
 import { LifelongEducationInsightsSection } from "@/components/landing/LifelongEducationInsightsSection";
 import { getNews } from "@/lib/get-news";
 import { TopLogoBar } from "@/components/layout/TopLogoBar";
-
-// Footer 「관리자」 링크: 이 이메일로 로그인한 경우에만 노출
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
+import { isAdminEmail } from "@/lib/admin";
 
 /** 뉴스는 서버에서 주 1회 갱신(revalidate=604800) */
 export const revalidate = 604800;
 
 export default async function LandingPage() {
   const [newsResult, session] = await Promise.all([getNews(), getServerSession(authOptions)]);
-  const isAdmin = session?.user?.email === ADMIN_EMAIL;
+  const isAdmin = isAdminEmail(session?.user?.email);
 
   return (
     <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">

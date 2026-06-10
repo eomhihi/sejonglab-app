@@ -2,20 +2,22 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
+// 관리자 계정 목록 (src/lib/admin.ts 와 동일하게 유지)
+const ADMIN_EMAILS = ["eomhihi007@gmail.com", "mobiro1@naver.com"];
 
 async function main() {
-  const adminEmailLower = ADMIN_EMAIL.toLowerCase().trim();
+  const adminEmailsLower = ADMIN_EMAILS.map((e) => e.toLowerCase().trim());
 
-  const admin = await prisma.user.findFirst({
-    where: { email: { equals: adminEmailLower, mode: "insensitive" } },
+  const admins = await prisma.user.findMany({
+    where: { email: { in: adminEmailsLower, mode: "insensitive" } },
     select: { id: true, email: true },
   });
 
   let nonAdminIds;
-  if (admin) {
+  if (admins.length > 0) {
+    const adminIds = admins.map((a) => a.id);
     const nonAdminUsers = await prisma.user.findMany({
-      where: { id: { not: admin.id } },
+      where: { id: { notIn: adminIds } },
       select: { id: true },
     });
     nonAdminIds = nonAdminUsers.map((u) => u.id);
@@ -40,7 +42,7 @@ async function main() {
     sessions: sessionRes.count,
     accounts: accountRes.count,
     users: userRes.count,
-    keptAdmin: admin ? admin.email : "(없음)",
+    keptAdmins: admins.length > 0 ? admins.map((a) => a.email) : "(없음)",
   });
 }
 

@@ -13,12 +13,10 @@ import {
 } from "lucide-react";
 import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
 import { MembersTable } from "@/components/admin/MembersTable";
+import { isAdminEmail, isFullAdminEmail } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-// 이 이메일만 /admin 접근 및 헤더 「관리자」 링크 노출 (유일한 관리자 계정)
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
 export const metadata = {
   title: "관리자 | 세종랩",
@@ -85,7 +83,7 @@ export default async function AdminPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/signin");
 
-  const isAdmin = session.user?.email === ADMIN_EMAIL;
+  const isAdmin = isAdminEmail(session.user?.email);
 
   if (!isAdmin) {
     return (
@@ -110,7 +108,10 @@ export default async function AdminPage() {
     );
   }
 
-  const [members, stats] = await Promise.all([getMembers(), getStats()]);
+  // 전체 권한 계정만 회원 데이터를 조회. 통계 전용 계정은 가입자 수만 확인 가능.
+  const isFullAdmin = isFullAdminEmail(session.user?.email);
+  const stats = await getStats();
+  const members = isFullAdmin ? await getMembers() : [];
   const membersForClient = members.map((m) => ({
     ...m,
     createdAt: m.createdAt.toISOString(),
@@ -182,22 +183,33 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* 회원 목록 테이블 */}
-        <div className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden shadow-xl">
-          <div className="px-6 py-4 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
-              <p className="text-sm text-slate-400 mt-0.5">
-                DB 실시간 연동 · {members.length}명
-              </p>
+        {/* 회원 목록 테이블 — 전체 권한 관리자만 노출 */}
+        {isFullAdmin ? (
+          <div className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden shadow-xl">
+            <div className="px-6 py-4 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
+                <p className="text-sm text-slate-400 mt-0.5">
+                  DB 실시간 연동 · {members.length}명
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <ExcelDownloadButton />
+              </div>
             </div>
-            <div className="flex-shrink-0">
-              <ExcelDownloadButton />
-            </div>
-          </div>
 
-          <MembersTable initialMembers={membersForClient} />
-        </div>
+            <MembersTable initialMembers={membersForClient} />
+          </div>
+        ) : (
+          <div className="rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-8 shadow-xl text-center">
+            <p className="text-sm text-slate-300">
+              이 계정은 <span className="font-semibold text-sky-300">가입자 수 통계 열람</span> 권한만 부여되어 있습니다.
+            </p>
+            <p className="text-xs text-slate-500 mt-1.5">
+              회원 상세 목록·수정·엑셀 다운로드는 전체 권한 관리자만 이용할 수 있습니다.
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );

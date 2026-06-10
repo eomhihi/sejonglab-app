@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-
-const ADMIN_EMAIL = 'eomhihi007@gmail.com';
+import { isAdminEmail } from '@/lib/admin';
 
 export default function AuthCheckPage() {
   const { data: session, status } = useSession();
@@ -17,7 +16,7 @@ export default function AuthCheckPage() {
     const email = (session.user.email ?? '').toLowerCase().trim();
 
     // 관리자 계정은 즉시 대시보드로 이동
-    if (email === ADMIN_EMAIL) {
+    if (isAdminEmail(email)) {
       router.push('/admin');
       setChecked(true);
       return;

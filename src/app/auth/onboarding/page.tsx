@@ -4,8 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { OnboardingForm } from "@/components/OnboardingForm";
 import { SejongHeader } from "@/components/landing/SejongHeader";
 import { checkOnboardingStatus } from "@/lib/check-onboarding";
-
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
+import { isAdminEmail } from "@/lib/admin";
 
 /** 배포·CDN이 온보딩 HTML을 오래 캐시하지 않도록 */
 export const dynamic = "force-dynamic";
@@ -26,7 +25,7 @@ export default async function OnboardingPage({
     redirect("/auth/signin?callbackUrl=" + encodeURIComponent("/auth/onboarding"));
   }
 
-  const isAdmin = session.user?.email === ADMIN_EMAIL;
+  const isAdmin = isAdminEmail(session.user?.email);
 
   // 관리자 계정은 온보딩을 건너뛰고 바로 /admin으로 이동
   if (isAdmin) {

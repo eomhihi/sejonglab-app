@@ -4,12 +4,10 @@ import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ArrowLeft, ShieldX, Users, ArrowUpDown, Search } from "lucide-react";
+import { isFullAdminEmail } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-// 기존 /admin 페이지와 동일한 관리자 이메일 사용
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
 type SearchParams = {
   search?: string;
@@ -73,7 +71,7 @@ export default async function AdminUsersPage({
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/signin");
 
-  const isAdmin = session.user?.email === ADMIN_EMAIL;
+  const isAdmin = isFullAdminEmail(session.user?.email);
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">

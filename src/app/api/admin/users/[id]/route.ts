@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isFullAdminEmail } from "@/lib/admin";
 
 export const runtime = "nodejs";
-
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
 
 function forbidden() {
   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -28,7 +27,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) return forbidden();
+  if (!isFullAdminEmail(session?.user?.email)) return forbidden();
   if (!process.env.DATABASE_URL) {
     return NextResponse.json({ error: "DATABASE_URL not configured" }, { status: 500 });
   }
@@ -112,7 +111,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) return forbidden();
+  if (!isFullAdminEmail(session?.user?.email)) return forbidden();
   if (!process.env.DATABASE_URL) {
     return NextResponse.json({ error: "DATABASE_URL not configured" }, { status: 500 });
   }

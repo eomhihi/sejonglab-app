@@ -5,16 +5,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Menu, X, LogOut } from "lucide-react";
-
-// 관리자 접근: 이 이메일만 /admin 및 헤더 「관리자」 링크 노출
-const ADMIN_EMAIL = "eomhihi007@gmail.com";
+import { isAdminEmail } from "@/lib/admin";
 
 export function SejongHeader() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
-  const isAdmin = isLoggedIn && session?.user?.email === ADMIN_EMAIL;
+  const isAdmin = isLoggedIn && isAdminEmail(session?.user?.email);
 
   const handleLogout = async () => {
     localStorage.clear();
