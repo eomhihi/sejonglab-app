@@ -83,9 +83,9 @@ async function getDashboardData(total: number, onboardingCompleted: number): Pro
 
     // 연령대는 정의된 순서대로 정렬
     const ageRaw = toEntries(ageG, (r: { ageGroup: string | null }) => r.ageGroup, AGE_LABEL);
-    const ageOrder = AGE_GROUP_OPTIONS.map((o) => o.label);
+    const ageOrder: string[] = AGE_GROUP_OPTIONS.map((o) => o.label);
     const ageGroup = [...ageRaw].sort(
-      (a, b) => ageOrder.indexOf(a.label as string) - ageOrder.indexOf(b.label as string)
+      (a, b) => ageOrder.indexOf(a.label) - ageOrder.indexOf(b.label)
     );
 
     const region = toEntries(regionG, (r: { region: string | null }) => r.region).slice(0, 8);
