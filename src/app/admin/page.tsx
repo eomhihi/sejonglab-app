@@ -1,4 +1,3 @@
-// 엑셀 다운로드 기능 사용 시 터미널에서: npm install xlsx
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -10,10 +9,12 @@ import {
   ShieldX,
   LayoutDashboard,
   ArrowLeft,
+  Table2,
+  CheckCircle2,
 } from "lucide-react";
-import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
-import { MembersTable } from "@/components/admin/MembersTable";
 import { isAdminEmail, isFullAdminEmail } from "@/lib/admin";
+import { AdminDashboard, type AdminDashboardData } from "@/components/admin/AdminDashboard";
+import { GENDER_OPTIONS, AGE_GROUP_OPTIONS } from "@/lib/onboarding-options";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,60 +24,111 @@ export const metadata = {
   description: "세종랩 관리자 대시보드",
 };
 
-async function getMembers() {
-  if (!process.env.DATABASE_URL) return [];
-  try {
-    const users = await prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        gender: true,
-        ageGroup: true,
-        region: true,
-        occupation: true,
-        interestTopics: true,
-        interests: true,
-        participationActivities: true,
-        signupPath: true,
-        signupPathEtc: true,
-        createdAt: true,
-      },
-    });
-    return users;
-  } catch {
-    return [];
-  }
-}
+const GENDER_LABEL: Record<string, string> = Object.fromEntries(
+  GENDER_OPTIONS.map((o) => [o.value, o.label])
+);
+const AGE_LABEL: Record<string, string> = Object.fromEntries(
+  AGE_GROUP_OPTIONS.map((o) => [o.value, o.label])
+);
 
 async function getStats() {
-  if (!process.env.DATABASE_URL)
-    return { total: 0, todayNew: 0 };
+  if (!process.env.DATABASE_URL) return { total: 0, todayNew: 0, weekNew: 0, onboardingCompleted: 0 };
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const [total, todayNew] = await Promise.all([
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const [total, todayNew, weekNew, onboardingCompleted] = await Promise.all([
       prisma.user.count(),
-      prisma.user.count({
-        where: { createdAt: { gte: today } },
-      }),
+      prisma.user.count({ where: { createdAt: { gte: today } } }),
+      prisma.user.count({ where: { createdAt: { gte: weekAgo } } }),
+      prisma.user.count({ where: { onboardingCompleted: true } }),
     ]);
-    return { total, todayNew };
+    return { total, todayNew, weekNew, onboardingCompleted };
   } catch {
-    return { total: 0, todayNew: 0 };
+    return { total: 0, todayNew: 0, weekNew: 0, onboardingCompleted: 0 };
   }
 }
 
-function formatDate(d: Date): string {
-  return new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(d);
+/** 대시보드 집계 (개인정보 미포함 — 분포/추이만) */
+async function getDashboardData(total: number, onboardingCompleted: number): Promise<AdminDashboardData | null> {
+  if (!process.env.DATABASE_URL) return null;
+  try {
+    const [genderG, ageG, regionG, occG, pathG, providerG, createdRows] = await Promise.all([
+      prisma.user.groupBy({ by: ["gender"], _count: { _all: true } }),
+      prisma.user.groupBy({ by: ["ageGroup"], _count: { _all: true } }),
+      prisma.user.groupBy({ by: ["region"], _count: { _all: true } }),
+      prisma.user.groupBy({ by: ["occupation"], _count: { _all: true } }),
+      prisma.user.groupBy({ by: ["signupPath"], _count: { _all: true } }),
+      prisma.account.groupBy({ by: ["provider"], _count: { _all: true } }),
+      prisma.user.findMany({ select: { createdAt: true } }),
+    ]);
+
+    const toEntries = (
+      rows: { _count: { _all: number } }[],
+      pick: (r: never) => string | null,
+      labelMap?: Record<string, string>
+    ) =>
+      rows
+        .map((r) => {
+          const raw = pick(r as never);
+          const key = raw ?? "미입력";
+          return { label: labelMap?.[key] ?? key, value: r._count._all };
+        })
+        .filter((e) => e.value > 0)
+        .sort((a, b) => b.value - a.value);
+
+    const gender = toEntries(genderG, (r: { gender: string | null }) => r.gender, GENDER_LABEL);
+
+    // 연령대는 정의된 순서대로 정렬
+    const ageRaw = toEntries(ageG, (r: { ageGroup: string | null }) => r.ageGroup, AGE_LABEL);
+    const ageOrder = AGE_GROUP_OPTIONS.map((o) => o.label);
+    const ageGroup = [...ageRaw].sort(
+      (a, b) => ageOrder.indexOf(a.label) - ageOrder.indexOf(b.label)
+    );
+
+    const region = toEntries(regionG, (r: { region: string | null }) => r.region).slice(0, 8);
+    const occupation = toEntries(occG, (r: { occupation: string | null }) => r.occupation).slice(0, 8);
+    const signupPath = toEntries(pathG, (r: { signupPath: string | null }) => r.signupPath);
+    const provider = toEntries(providerG, (r: { provider: string | null }) => r.provider);
+
+    // 최근 14일 일자별 신규 가입 집계
+    const days = 14;
+    const buckets: { date: string; count: number }[] = [];
+    const keyToIdx = new Map<string, number>();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+      const label = `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+      keyToIdx.set(key, buckets.length);
+      buckets.push({ date: label, count: 0 });
+    }
+    for (const row of createdRows) {
+      const d = new Date(row.createdAt);
+      d.setHours(0, 0, 0, 0);
+      const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+      const idx = keyToIdx.get(key);
+      if (idx !== undefined) buckets[idx].count += 1;
+    }
+
+    return {
+      total,
+      onboardingCompleted,
+      daily: buckets,
+      gender,
+      ageGroup,
+      region,
+      occupation,
+      signupPath,
+      provider,
+    };
+  } catch (e) {
+    console.error("[admin dashboard] 집계 오류:", e);
+    return null;
+  }
 }
 
 export default async function AdminPage() {
@@ -108,14 +160,15 @@ export default async function AdminPage() {
     );
   }
 
-  // 전체 권한 계정만 회원 데이터를 조회. 통계 전용 계정은 가입자 수만 확인 가능.
   const isFullAdmin = isFullAdminEmail(session.user?.email);
   const stats = await getStats();
-  const members = isFullAdmin ? await getMembers() : [];
-  const membersForClient = members.map((m) => ({
-    ...m,
-    createdAt: m.createdAt.toISOString(),
-  }));
+  // 분포/추이 차트는 전체 권한 관리자에게만 노출 (통계 전용 계정은 가입자 수 카드만)
+  const dashboardData = isFullAdmin
+    ? await getDashboardData(stats.total, stats.onboardingCompleted)
+    : null;
+
+  const completionRate =
+    stats.total > 0 ? Math.round((stats.onboardingCompleted / stats.total) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
@@ -154,7 +207,7 @@ export default async function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 요약 카드 */}
-        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="rounded-xl bg-gradient-to-br from-sejong-blue to-sejong-blue-dark p-6 border border-slate-600/50 shadow-lg">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
@@ -162,7 +215,7 @@ export default async function AdminPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-sky-200/90">총 가입자 수</p>
-                <p className="text-2xl sm:text-3xl font-extrabold text-white">
+                <p className="text-2xl sm:text-3xl font-extrabold text-white tabular-nums">
                   {stats.total.toLocaleString()}명
                 </p>
               </div>
@@ -175,38 +228,66 @@ export default async function AdminPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-sky-200/90">오늘 신규 가입</p>
-                <p className="text-2xl sm:text-3xl font-extrabold text-white">
+                <p className="text-2xl sm:text-3xl font-extrabold text-white tabular-nums">
                   {stats.todayNew.toLocaleString()}명
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* 회원 목록 테이블 — 전체 권한 관리자만 노출 */}
-        {isFullAdmin ? (
-          <div className="rounded-xl bg-slate-800/50 border border-slate-700 overflow-hidden shadow-xl">
-            <div className="px-6 py-4 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="rounded-xl bg-slate-800/60 p-6 border border-slate-700 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center">
+                <UserPlus className="w-6 h-6 text-emerald-300" />
+              </div>
               <div>
-                <h2 className="text-lg font-bold text-white">가입 회원 목록</h2>
-                <p className="text-sm text-slate-400 mt-0.5">
-                  DB 실시간 연동 · {members.length}명
+                <p className="text-sm font-medium text-slate-300">최근 7일 신규</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-white tabular-nums">
+                  {stats.weekNew.toLocaleString()}명
                 </p>
               </div>
-              <div className="flex-shrink-0">
-                <ExcelDownloadButton />
+            </div>
+          </div>
+          <div className="rounded-xl bg-slate-800/60 p-6 border border-slate-700 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6 text-violet-300" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-300">온보딩 완료율</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-white tabular-nums">{completionRate}%</p>
               </div>
             </div>
-
-            <MembersTable initialMembers={membersForClient} />
           </div>
+        </div>
+
+        {isFullAdmin ? (
+          <>
+            {/* 전체 데이터 테이블 + 엑셀 다운로드 페이지로 이동 */}
+            <div className="mb-6 flex justify-end">
+              <Link
+                href="/admin/users"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm bg-slate-700 hover:bg-slate-600 text-white shadow-md transition-colors border border-slate-600"
+              >
+                <Table2 className="w-4 h-4" />
+                회원 목록 · 엑셀 다운로드
+              </Link>
+            </div>
+
+            {dashboardData ? (
+              <AdminDashboard data={dashboardData} />
+            ) : (
+              <div className="rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-8 shadow-xl text-center text-sm text-slate-400">
+                집계 데이터를 불러오지 못했습니다. (DB 연결을 확인해 주세요)
+              </div>
+            )}
+          </>
         ) : (
           <div className="rounded-xl bg-slate-800/50 border border-slate-700 px-6 py-8 shadow-xl text-center">
             <p className="text-sm text-slate-300">
               이 계정은 <span className="font-semibold text-sky-300">가입자 수 통계 열람</span> 권한만 부여되어 있습니다.
             </p>
             <p className="text-xs text-slate-500 mt-1.5">
-              회원 상세 목록·수정·엑셀 다운로드는 전체 권한 관리자만 이용할 수 있습니다.
+              상세 분석 대시보드·회원 목록·엑셀 다운로드는 전체 권한 관리자만 이용할 수 있습니다.
             </p>
           </div>
         )}
