@@ -12,9 +12,13 @@ import {
   Table2,
   CheckCircle2,
 } from "lucide-react";
-import { isAdminEmail, isFullAdminEmail } from "@/lib/admin";
+import { isAdminEmail, isDashboardAdminEmail, isFullAdminEmail } from "@/lib/admin";
 import { AdminDashboard, type AdminDashboardData } from "@/components/admin/AdminDashboard";
-import { GENDER_OPTIONS, AGE_GROUP_OPTIONS } from "@/lib/onboarding-options";
+import {
+  GENDER_OPTIONS,
+  AGE_GROUP_OPTIONS,
+  SIGNUP_PATH_OPTIONS,
+} from "@/lib/onboarding-options";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -76,22 +80,43 @@ async function getDashboardData(total: number, onboardingCompleted: number): Pro
           const key = raw ?? "미입력";
           return { label: labelMap?.[key] ?? key, value: r._count._all };
         })
-        .filter((e) => e.value > 0)
-        .sort((a, b) => b.value - a.value);
+        .filter((e) => e.value > 0);
 
-    const gender = toEntries(genderG, (r: { gender: string | null }) => r.gender, GENDER_LABEL);
+    // 차트는 '문항 보기 순'으로 정렬. 보기에 없는 값(미입력 등)은 뒤로, 동순위는 인원 많은 순.
+    const orderByOptions = (
+      entries: { label: string; value: number }[],
+      order: readonly string[]
+    ) => {
+      const idx = (label: string) => {
+        const i = order.indexOf(label);
+        return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+      };
+      return [...entries].sort((a, b) => idx(a.label) - idx(b.label) || b.value - a.value);
+    };
 
-    // 연령대는 정의된 순서대로 정렬
-    const ageRaw = toEntries(ageG, (r: { ageGroup: string | null }) => r.ageGroup, AGE_LABEL);
-    const ageOrder: string[] = AGE_GROUP_OPTIONS.map((o) => o.label);
-    const ageGroup = [...ageRaw].sort(
-      (a, b) => ageOrder.indexOf(a.label) - ageOrder.indexOf(b.label)
+    const gender = orderByOptions(
+      toEntries(genderG, (r: { gender: string | null }) => r.gender, GENDER_LABEL),
+      GENDER_OPTIONS.map((o) => o.label)
     );
-
-    const region = toEntries(regionG, (r: { region: string | null }) => r.region).slice(0, 8);
-    const occupation = toEntries(occG, (r: { occupation: string | null }) => r.occupation).slice(0, 8);
-    const signupPath = toEntries(pathG, (r: { signupPath: string | null }) => r.signupPath);
-    const provider = toEntries(providerG, (r: { provider: string | null }) => r.provider);
+    const ageGroup = orderByOptions(
+      toEntries(ageG, (r: { ageGroup: string | null }) => r.ageGroup, AGE_LABEL),
+      AGE_GROUP_OPTIONS.map((o) => o.label)
+    );
+    // 거주지역·직업은 가로막대 — 인원 많은 순 상위 10개만 노출
+    const region = [...toEntries(regionG, (r: { region: string | null }) => r.region)]
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10);
+    const occupation = [...toEntries(occG, (r: { occupation: string | null }) => r.occupation)]
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10);
+    const signupPath = orderByOptions(
+      toEntries(pathG, (r: { signupPath: string | null }) => r.signupPath),
+      SIGNUP_PATH_OPTIONS
+    );
+    const provider = orderByOptions(
+      toEntries(providerG, (r: { provider: string | null }) => r.provider),
+      ["google", "kakao", "naver"]
+    );
 
     // 최근 14일 일자별 신규 가입 집계
     const days = 14;
@@ -161,9 +186,10 @@ export default async function AdminPage() {
   }
 
   const isFullAdmin = isFullAdminEmail(session.user?.email);
+  const canViewDashboard = isDashboardAdminEmail(session.user?.email);
   const stats = await getStats();
-  // 분포/추이 차트는 전체 권한 관리자에게만 노출 (통계 전용 계정은 가입자 수 카드만)
-  const dashboardData = isFullAdmin
+  // 분포/추이 차트는 대시보드 권한 이상에게만 노출 (통계 전용 계정은 가입자 수 카드만)
+  const dashboardData = canViewDashboard
     ? await getDashboardData(stats.total, stats.onboardingCompleted)
     : null;
 
@@ -260,18 +286,20 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {isFullAdmin ? (
+        {canViewDashboard ? (
           <>
-            {/* 전체 데이터 테이블 + 엑셀 다운로드 페이지로 이동 */}
-            <div className="mb-6 flex justify-end">
-              <Link
-                href="/admin/users"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm bg-slate-700 hover:bg-slate-600 text-white shadow-md transition-colors border border-slate-600"
-              >
-                <Table2 className="w-4 h-4" />
-                회원 목록 · 엑셀 다운로드
-              </Link>
-            </div>
+            {/* 전체 데이터 테이블 + 엑셀 다운로드 페이지로 이동 (전체 권한 관리자만) */}
+            {isFullAdmin && (
+              <div className="mb-6 flex justify-end">
+                <Link
+                  href="/admin/users"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm bg-slate-700 hover:bg-slate-600 text-white shadow-md transition-colors border border-slate-600"
+                >
+                  <Table2 className="w-4 h-4" />
+                  회원 목록 · 엑셀 다운로드
+                </Link>
+              </div>
+            )}
 
             {dashboardData ? (
               <AdminDashboard data={dashboardData} />
@@ -287,7 +315,7 @@ export default async function AdminPage() {
               이 계정은 <span className="font-semibold text-sky-300">가입자 수 통계 열람</span> 권한만 부여되어 있습니다.
             </p>
             <p className="text-xs text-slate-500 mt-1.5">
-              상세 분석 대시보드·회원 목록·엑셀 다운로드는 전체 권한 관리자만 이용할 수 있습니다.
+              상세 분석 대시보드·회원 목록·엑셀 다운로드는 권한이 있는 관리자만 이용할 수 있습니다.
             </p>
           </div>
         )}
