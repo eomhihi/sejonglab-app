@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-  ONBOARDING_INTEREST_KEYWORDS,
   OCCUPATION_VALUES,
   SIGNUP_PATH_VALUES,
   SIGNUP_PATH_ETC,
@@ -64,13 +63,12 @@ export const onboardingSchema = z.object({
       .min(1, "거주지역을 선택해 주세요."),
   ),
   occupation: z.preprocess(emptyToUndefined, occupationEnum),
-  // TODO: 향후 관심 정보 수집 시 재활성화 예정 — 관심 키워드를 다시 필수로 받으려면 아래 .min(1) 버전으로 교체
+  // TODO: 향후 관심 정보 수집 시 재활성화 예정 — 관심 키워드를 다시 필수로 받으려면 아래 enum/.min(1) 버전으로 교체
   // interests: z
   //   .array(z.enum(ONBOARDING_INTEREST_KEYWORDS, { message: "관심 키워드를 선택해 주세요." }))
   //   .min(1, "항목을 하나 이상 선택해 주세요."),
-  interests: z
-    .array(z.enum(ONBOARDING_INTEREST_KEYWORDS, { message: "관심 키워드를 선택해 주세요." }))
-    .default([]),
+  // 현재 숨김·선택 항목이라 enum 제약을 두지 않음(기존에 저장된 옛 키워드 값도 그대로 통과·보존).
+  interests: z.array(z.string()).default([]),
   participationActivities: z.array(z.string()).default([]),
   signupPath: z.preprocess(emptyToUndefined, signupPathEnum),
   signupPathEtc: z.preprocess(emptyToUndefined, z.string().optional()),
