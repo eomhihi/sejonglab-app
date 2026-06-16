@@ -22,6 +22,18 @@ import { TERMS_OF_SERVICE_FULL, PRIVACY_POLICY_FULL } from "@/../constants/polic
 
 type PolicyKind = "terms" | "privacy";
 
+const FIELD_LABELS: Record<string, string> = {
+  phone: "휴대폰 번호",
+  gender: "성별",
+  ageGroup: "연령대",
+  region: "거주지역",
+  occupation: "직업",
+  signupPath: "가입 경로",
+  signupPathEtc: "가입 경로 직접 입력",
+  interests: "관심 키워드",
+  participationActivities: "참여 가능 활동",
+};
+
 const POLICY_MODAL = {
   terms: { title: "서비스 이용약관", content: TERMS_OF_SERVICE_FULL },
   privacy: { title: "개인정보 처리방침", content: PRIVACY_POLICY_FULL },
@@ -103,6 +115,14 @@ export function OnboardingForm({
   const selectedInterests = watch("interests") ?? [];
   const selectedParticipation = watch("participationActivities") ?? [];
   const selectedSignupPath = watch("signupPath");
+  const selectedRegion = watch("region");
+
+  // 거주지역 옵션이 24개 읍면동으로 개편되면서, 예전에 저장된 지역값이
+  // 목록에 없으면 셀렉트가 빈 값이 되어 검증에 막힘 → 기존 값을 옵션에 보존
+  const regionOptions =
+    selectedRegion && !REGION_OPTIONS.includes(selectedRegion)
+      ? [selectedRegion, ...REGION_OPTIONS]
+      : REGION_OPTIONS;
 
   const toggleKeyword = (keyword: string) => {
     const current = selectedInterests;
@@ -175,6 +195,20 @@ export function OnboardingForm({
     }
   };
 
+  const onInvalid = (formErrors: typeof errors) => {
+    const keys = Object.keys(formErrors);
+    if (keys.length === 0) return;
+    const names = keys.map((k) => FIELD_LABELS[k] ?? k);
+    alert(`아래 항목을 확인해 주세요:\n- ${names.join("\n- ")}`);
+
+    const firstKey = keys[0];
+    const el = document.querySelector<HTMLElement>(`[name="${firstKey}"]`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.focus({ preventScroll: true });
+    }
+  };
+
   if (savedSummary) {
     const rows: { label: string; value: string }[] = [
       { label: "연락처", value: savedSummary.phone || "-" },
@@ -234,7 +268,7 @@ export function OnboardingForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-7">
       {/* 상단 브랜딩 띠 */}
       <div className="rounded-2xl bg-gradient-to-r from-sejong-blue-dark via-sejong-blue to-sky-600 px-5 py-4 text-white shadow-md">
         <p className="text-sm font-medium opacity-90">세종시민 패널</p>
@@ -323,7 +357,7 @@ export function OnboardingForm({
           className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-sejong-blue`}
         >
           <option value="">거주지역을 선택해 주세요</option>
-          {REGION_OPTIONS.map((region) => (
+          {regionOptions.map((region) => (
             <option key={region} value={region}>
               {region}
             </option>
