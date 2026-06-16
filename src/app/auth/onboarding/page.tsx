@@ -49,6 +49,7 @@ export default async function OnboardingPage({
   const initialValues =
     allowEdit && userData
       ? {
+          phone: userData.phone ?? "",
           gender:
             userData.gender === "male" || userData.gender === "female"
               ? (userData.gender as "male" | "female")
@@ -61,6 +62,8 @@ export default async function OnboardingPage({
               ? userData.interests
               : userData.interestTopics ?? [],
           participationActivities: userData.participationActivities ?? [],
+          signupPath: userData.signupPath ?? undefined,
+          signupPathEtc: userData.signupPathEtc ?? "",
         }
       : undefined;
 

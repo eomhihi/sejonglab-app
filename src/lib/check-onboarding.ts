@@ -1,5 +1,6 @@
 type UserOnboardingData = {
   onboardingCompleted: boolean;
+  phone: string | null;
   gender: string | null;
   ageGroup: string | null;
   region: string | null;
@@ -7,6 +8,8 @@ type UserOnboardingData = {
   interestTopics: string[];
   interests: string[];
   participationActivities: string[];
+  signupPath: string | null;
+  signupPathEtc: string | null;
 };
 
 export async function checkOnboardingStatus(
@@ -26,6 +29,7 @@ export async function checkOnboardingStatus(
       where: { email },
       select: {
         onboardingCompleted: true,
+        phone: true,
         gender: true,
         ageGroup: true,
         region: true,
@@ -33,6 +37,8 @@ export async function checkOnboardingStatus(
         interestTopics: true,
         interests: true,
         participationActivities: true,
+        signupPath: true,
+        signupPathEtc: true,
       },
     });
 
@@ -43,6 +49,7 @@ export async function checkOnboardingStatus(
     // 과거 데이터/수동 수정 등으로 null이 들어올 수 있어 렌더링 안전하게 정규화
     const normalized: UserOnboardingData = {
       onboardingCompleted: !!user.onboardingCompleted,
+      phone: user.phone ?? null,
       gender: user.gender ?? null,
       ageGroup: user.ageGroup ?? null,
       region: user.region ?? null,
@@ -52,6 +59,8 @@ export async function checkOnboardingStatus(
       participationActivities: Array.isArray(user.participationActivities)
         ? user.participationActivities
         : [],
+      signupPath: user.signupPath ?? null,
+      signupPathEtc: user.signupPathEtc ?? null,
     };
 
     return {
