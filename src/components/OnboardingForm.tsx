@@ -119,10 +119,10 @@ export function OnboardingForm({
 
   // 거주지역 옵션이 24개 읍면동으로 개편되면서, 예전에 저장된 지역값이
   // 목록에 없으면 셀렉트가 빈 값이 되어 검증에 막힘 → 기존 값을 옵션에 보존
-  const regionOptions =
-    selectedRegion && !REGION_OPTIONS.includes(selectedRegion)
+  const regionOptions: string[] =
+    selectedRegion && !(REGION_OPTIONS as readonly string[]).includes(selectedRegion)
       ? [selectedRegion, ...REGION_OPTIONS]
-      : REGION_OPTIONS;
+      : [...REGION_OPTIONS];
 
   const toggleKeyword = (keyword: string) => {
     const current = selectedInterests;
