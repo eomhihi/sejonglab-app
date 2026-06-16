@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { SejongLogoLockup } from "@/components/brand/SejongLogoLockup";
+import { isAdminEmail } from "@/lib/admin";
 
 /** 고정 로고 바 높이: Tailwind `h-14` (3.5rem)과 동기화 */
 export const TOP_LOGO_BAR_HEIGHT_CLASS = "h-28 sm:h-24" as const;
@@ -13,9 +14,13 @@ const loginBtnClass =
 const panelCtaClass =
   "inline-flex items-center justify-center gap-2 h-11 px-4 rounded-xl font-semibold transition text-sm font-extrabold bg-header-footer border border-header-footer text-white shadow-sm hover:brightness-110";
 
+const adminBtnClass =
+  "inline-flex items-center justify-center gap-2 h-11 px-4 rounded-xl font-semibold transition text-sm font-extrabold bg-sejong-blue border border-sejong-blue text-white shadow-sm hover:brightness-110";
+
 export function TopLogoBar() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const authed = status === "authenticated";
+  const isAdmin = authed && isAdminEmail(session?.user?.email);
 
   return (
     <div
@@ -41,6 +46,12 @@ export function TopLogoBar() {
             ) : (
               <Link href="/auth/signin" className={loginBtnClass}>
                 로그인
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link href="/admin" className={adminBtnClass}>
+                관리자 모드
               </Link>
             )}
 

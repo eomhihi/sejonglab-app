@@ -25,14 +25,15 @@ export default async function OnboardingPage({
     redirect("/auth/signin?callbackUrl=" + encodeURIComponent("/auth/onboarding"));
   }
 
+  const allowEdit = searchParams?.edit === "1";
   const isAdmin = isAdminEmail(session.user?.email);
 
-  // 관리자 계정은 온보딩을 건너뛰고 바로 /admin으로 이동
-  if (isAdmin) {
+  // 관리자 계정은 온보딩을 건너뛰고 /admin으로 이동.
+  // 단, 본인 정보 수정(edit=1) 진입 시에는 일반 회원과 동일하게 수정 폼을 사용하도록 허용.
+  if (isAdmin && !allowEdit) {
     redirect("/admin");
   }
 
-  const allowEdit = searchParams?.edit === "1";
   const pageTitle = allowEdit ? "추가 정보 수정" : "추가 정보 입력";
   const pageDesc = allowEdit
     ? "기존 정보를 확인하고 필요한 항목을 수정해 주세요."
