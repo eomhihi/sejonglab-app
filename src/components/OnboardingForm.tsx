@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -35,6 +36,19 @@ const blue = {
   hover: "hover:border-sejong-blue/60",
 };
 
+const GENDER_LABEL: Record<string, string> = Object.fromEntries(
+  GENDER_OPTIONS.map((o) => [o.value, o.label])
+);
+const AGE_LABEL: Record<string, string> = Object.fromEntries(
+  AGE_GROUP_OPTIONS.map((o) => [o.value, o.label])
+);
+
+function formatSavedSignupPath(path?: string, etc?: string): string {
+  if (!path) return "-";
+  if (path === SIGNUP_PATH_ETC) return etc?.trim() ? `기타: ${etc.trim()}` : "기타";
+  return path;
+}
+
 type OnboardingFormProps = {
   userName?: string;
   userId?: string;
@@ -54,6 +68,7 @@ export function OnboardingForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreed, setAgreed] = useState(mode === "edit");
   const [openPolicy, setOpenPolicy] = useState<PolicyKind | null>(null);
+  const [savedSummary, setSavedSummary] = useState<OnboardingFormData | null>(null);
   const { data: session } = useSession();
 
   const requireAgreement = mode === "create";
@@ -145,7 +160,8 @@ export function OnboardingForm({
           router.push("/signup/complete");
           router.refresh();
         } else {
-          router.push("/main");
+          // 수정 완료: 페이지 이동 없이 완료 안내 + 요약 화면 노출
+          setSavedSummary(data);
           router.refresh();
         }
       } else {
@@ -158,6 +174,64 @@ export function OnboardingForm({
       setIsSubmitting(false);
     }
   };
+
+  if (savedSummary) {
+    const rows: { label: string; value: string }[] = [
+      { label: "연락처", value: savedSummary.phone || "-" },
+      { label: "성별", value: savedSummary.gender ? GENDER_LABEL[savedSummary.gender] ?? savedSummary.gender : "-" },
+      { label: "연령대", value: savedSummary.ageGroup ? AGE_LABEL[savedSummary.ageGroup] ?? savedSummary.ageGroup : "-" },
+      { label: "거주지역", value: savedSummary.region || "-" },
+      { label: "직업", value: savedSummary.occupation || "-" },
+      {
+        label: "가입 경로",
+        value: formatSavedSignupPath(savedSummary.signupPath, savedSummary.signupPathEtc),
+      },
+    ];
+
+    return (
+      <div className="space-y-7">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-center shadow-sm">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+            <svg className="h-7 w-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-emerald-900">정보가 수정되었습니다</h2>
+          <p className="mt-1 text-sm text-emerald-700">
+            {userName ? `${userName}님의 ` : ""}회원 정보가 정상적으로 저장되었습니다.
+          </p>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 ring-1 ring-slate-100">
+          <p className="text-base font-semibold text-slate-800 mb-3">수정된 정보 요약</p>
+          <dl className="divide-y divide-slate-100">
+            {rows.map((row) => (
+              <div key={row.label} className="flex items-start justify-between gap-4 py-2.5">
+                <dt className="text-sm text-slate-500 shrink-0">{row.label}</dt>
+                <dd className="text-sm font-medium text-slate-900 text-right break-keep">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link
+            href="/"
+            className="flex-1 inline-flex items-center justify-center rounded-2xl bg-sejong-blue text-white font-bold py-4 shadow-lg hover:bg-sejong-blue-dark transition border border-sejong-blue-dark/30"
+          >
+            홈으로 이동하기
+          </Link>
+          <button
+            type="button"
+            onClick={() => setSavedSummary(null)}
+            className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-4 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+          >
+            계속 수정하기
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
