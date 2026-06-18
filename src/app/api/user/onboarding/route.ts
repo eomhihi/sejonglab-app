@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { onboardingSchema } from "@/lib/onboarding-schema";
+import { SIGNUP_PATH_FREEFORM_VALUES } from "@/lib/onboarding-options";
 
 export const runtime = "nodejs";
 
@@ -39,7 +40,10 @@ export async function POST(request: Request) {
     } = validation.data;
     const areaOrRegion = region ?? (body.area as string | undefined) ?? null;
     const activities = participationActivities ?? [];
-    const signupPathEtcValue = signupPath === "기타 (직접 입력)" ? signupPathEtc?.trim() || null : null;
+    const signupPathEtcValue =
+      signupPath && SIGNUP_PATH_FREEFORM_VALUES.includes(signupPath)
+        ? signupPathEtc?.trim() || null
+        : null;
 
     if (!process.env.DATABASE_URL) {
       console.log("온보딩 데이터 (DB 미연결):", {

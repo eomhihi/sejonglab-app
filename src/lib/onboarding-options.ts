@@ -36,8 +36,9 @@ export const OCCUPATION_OPTIONS = [
 
 export const OCCUPATION_VALUES = [...OCCUPATION_OPTIONS] as [string, ...string[]];
 
-/** 가입 경로 (유입 경로 통계용, 단일 선택) — 표시 문구 그대로 저장 */
+/** 가입 경로 및 추천인 (유입 경로 통계용, 단일 선택) — 표시 문구 그대로 저장 */
 export const SIGNUP_PATH_OPTIONS = [
+  "추천인(직접입력)",
   "설문조사 참여",
   "지역 행사(홍보물/QR)",
   "공공기관 공고",
@@ -50,6 +51,12 @@ export const SIGNUP_PATH_VALUES = [...SIGNUP_PATH_OPTIONS] as [string, ...string
 
 /** '기타' 선택 시 직접 입력 필드를 노출하기 위한 값 */
 export const SIGNUP_PATH_ETC = "기타 (직접 입력)" as const;
+
+/** '추천인' 선택 시 직접 입력 필드를 노출하기 위한 값 */
+export const SIGNUP_PATH_REFERRER = "추천인(직접입력)" as const;
+
+/** 직접 입력(추천인/기타)이 필요한 가입 경로 값 목록 */
+export const SIGNUP_PATH_FREEFORM_VALUES: string[] = [SIGNUP_PATH_REFERRER, SIGNUP_PATH_ETC];
 
 /**
  * 관심 분야: 섹션 제목(비선택) + 키워드(다중 선택).

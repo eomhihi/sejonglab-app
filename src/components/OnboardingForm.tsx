@@ -16,6 +16,8 @@ import {
   PARTICIPATION_ACTIVITY_OPTIONS,
   SIGNUP_PATH_OPTIONS,
   SIGNUP_PATH_ETC,
+  SIGNUP_PATH_REFERRER,
+  SIGNUP_PATH_FREEFORM_VALUES,
 } from "@/lib/onboarding-options";
 import { PolicyModal } from "@/components/legal/PolicyModal";
 import { TERMS_OF_SERVICE_FULL, PRIVACY_POLICY_FULL } from "@/../constants/policy";
@@ -57,6 +59,7 @@ const AGE_LABEL: Record<string, string> = Object.fromEntries(
 
 function formatSavedSignupPath(path?: string, etc?: string): string {
   if (!path) return "-";
+  if (path === SIGNUP_PATH_REFERRER) return etc?.trim() ? `추천인: ${etc.trim()}` : "추천인";
   if (path === SIGNUP_PATH_ETC) return etc?.trim() ? `기타: ${etc.trim()}` : "기타";
   return path;
 }
@@ -390,13 +393,14 @@ export function OnboardingForm({
 
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6">
         <label className="block text-base font-semibold text-slate-800 mb-2">
-          가입 경로 <span className="text-red-500">*</span>
+          가입경로 및 추천인 <span className="text-red-500">*</span>
         </label>
         <select
           {...register("signupPath")}
+          defaultValue=""
           className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-700 focus:outline-none focus:ring-2 ${blue.ring} focus:border-sejong-blue`}
         >
-          <option value="">세종랩을 알게 된 경로를 선택해 주세요</option>
+          <option value="" hidden></option>
           {SIGNUP_PATH_OPTIONS.map((opt) => (
             <option key={opt} value={opt}>
               {opt}
@@ -407,11 +411,15 @@ export function OnboardingForm({
           <p className="mt-2 font-sans text-sm text-red-600">{errors.signupPath.message}</p>
         )}
 
-        {selectedSignupPath === SIGNUP_PATH_ETC && (
+        {selectedSignupPath && SIGNUP_PATH_FREEFORM_VALUES.includes(selectedSignupPath) && (
           <div className="mt-3">
             <input
               type="text"
-              placeholder="가입 경로를 직접 입력해 주세요"
+              placeholder={
+                selectedSignupPath === SIGNUP_PATH_REFERRER
+                  ? "추천인을 직접 입력해 주세요"
+                  : "가입 경로를 직접 입력해 주세요"
+              }
               {...register("signupPathEtc")}
               className={`w-full h-11 border border-slate-300 rounded-xl px-4 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${blue.ring} focus:border-sejong-blue`}
             />

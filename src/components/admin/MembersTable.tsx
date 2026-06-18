@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SIGNUP_PATH_ETC } from "@/lib/onboarding-options";
+import { SIGNUP_PATH_ETC, SIGNUP_PATH_REFERRER } from "@/lib/onboarding-options";
 
 type Member = {
   id: string;
@@ -29,6 +29,7 @@ function formatGender(g: string | null): string {
 
 function formatSignupPath(path: string | null, etc: string | null): string {
   if (!path) return "-";
+  if (path === SIGNUP_PATH_REFERRER) return etc?.trim() ? `추천인: ${etc.trim()}` : "추천인";
   if (path === SIGNUP_PATH_ETC) return etc?.trim() ? `기타: ${etc.trim()}` : "기타";
   return path;
 }

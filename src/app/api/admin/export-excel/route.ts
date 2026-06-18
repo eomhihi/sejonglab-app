@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { SIGNUP_PATH_ETC } from "@/lib/onboarding-options";
+import { SIGNUP_PATH_ETC, SIGNUP_PATH_REFERRER } from "@/lib/onboarding-options";
 import { isFullAdminEmail } from "@/lib/admin";
 
 function formatGender(g: string | null): string {
@@ -58,11 +58,15 @@ function usersToExcelRows(
         ? u.participationActivities.join(", ")
         : "-";
     const 가입경로 =
-      u.signupPath === SIGNUP_PATH_ETC
+      u.signupPath === SIGNUP_PATH_REFERRER
         ? u.signupPathEtc?.trim()
-          ? `기타: ${u.signupPathEtc.trim()}`
-          : "기타"
-        : u.signupPath ?? "-";
+          ? `추천인: ${u.signupPathEtc.trim()}`
+          : "추천인"
+        : u.signupPath === SIGNUP_PATH_ETC
+          ? u.signupPathEtc?.trim()
+            ? `기타: ${u.signupPathEtc.trim()}`
+            : "기타"
+          : u.signupPath ?? "-";
     return {
       이름: u.name ?? "-",
       이메일: u.email ?? "-",

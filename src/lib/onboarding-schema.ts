@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   OCCUPATION_VALUES,
   SIGNUP_PATH_VALUES,
-  SIGNUP_PATH_ETC,
+  SIGNUP_PATH_FREEFORM_VALUES,
 } from "./onboarding-options";
 
 /** 빈 값·null을 undefined로 통일해 required_error가 일관되게 동작하도록 함 */
@@ -73,12 +73,16 @@ export const onboardingSchema = z.object({
   signupPath: z.preprocess(emptyToUndefined, signupPathEnum),
   signupPathEtc: z.preprocess(emptyToUndefined, z.string().optional()),
 }).superRefine((data, ctx) => {
-  // '기타 (직접 입력)' 선택 시 직접 입력값 필수
-  if (data.signupPath === SIGNUP_PATH_ETC && !data.signupPathEtc?.trim()) {
+  // '추천인(직접입력)' 또는 '기타 (직접 입력)' 선택 시 직접 입력값 필수
+  if (
+    data.signupPath &&
+    SIGNUP_PATH_FREEFORM_VALUES.includes(data.signupPath) &&
+    !data.signupPathEtc?.trim()
+  ) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ["signupPathEtc"],
-      message: "가입 경로를 직접 입력해 주세요.",
+      message: "가입 경로(추천인)를 직접 입력해 주세요.",
     });
   }
 });
