@@ -1,11 +1,19 @@
 "use client";
 
+import { useMemo } from "react";
 import { signIn } from "next-auth/react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
-import { openGoogleLoginInExternalBrowser } from "@/lib/open-external-browser";
+import {
+  buildGoogleOAuthUrl,
+  buildKakaoTalkExternalHref,
+  openGoogleLoginInExternalBrowser,
+} from "@/lib/open-external-browser";
 
-/** 로그인 후 이동할 URL. signin/에러 페이지가 아닌 고정 경로만 사용해 콜백 루프 방지 */
-const SAFE_CALLBACK_URL = "/onboarding";
+/** 로그인 후 회원정보 입력(온보딩) — /onboarding 사용 시 미인증 루프 발생 */
+const SAFE_CALLBACK_URL = "/auth/onboarding";
+
+const btnBase =
+  "w-full h-11 flex items-center justify-center gap-2 rounded-lg px-4 font-medium transition";
 
 type SignInButtonsProps = {
   callbackUrl?: string;
@@ -16,14 +24,24 @@ export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
     callbackUrl &&
     callbackUrl.startsWith("/") &&
     !callbackUrl.startsWith("//") &&
-    !callbackUrl.startsWith("/auth/")
-      ? callbackUrl
+    !callbackUrl.startsWith("/auth/signin")
+      ? callbackUrl === "/onboarding"
+        ? SAFE_CALLBACK_URL
+        : callbackUrl
       : SAFE_CALLBACK_URL;
 
   const { userAgent, isGoogleOAuthBlocked, inAppName, isAndroid } = useInAppBrowser();
+  const isKakaoTalk = inAppName === "kakaotalk";
+
+  const googleOAuthUrl = useMemo(() => buildGoogleOAuthUrl({ callbackUrl: next }), [next]);
+  const kakaoTalkGoogleHref = useMemo(
+    () => (isKakaoTalk ? buildKakaoTalkExternalHref(googleOAuthUrl) : null),
+    [isKakaoTalk, googleOAuthUrl]
+  );
 
   const handleSignIn = (provider: string) => {
     if (provider === "google" && isGoogleOAuthBlocked) {
+      if (isKakaoTalk) return;
       const opened = openGoogleLoginInExternalBrowser({
         callbackUrl: next,
         inAppName,
@@ -45,7 +63,7 @@ export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
       <button
         type="button"
         onClick={() => handleSignIn("kakao")}
-        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-[#191919] px-4 font-medium hover:opacity-90 transition"
+        className={`${btnBase} bg-[#FEE500] text-[#191919] hover:opacity-90`}
       >
         <KakaoIcon />
         카카오로 로그인
@@ -53,19 +71,29 @@ export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
       <button
         type="button"
         onClick={() => handleSignIn("naver")}
-        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#03C75A] text-white px-4 font-medium hover:opacity-90 transition"
+        className={`${btnBase} bg-[#03C75A] text-white hover:opacity-90`}
       >
         <NaverIcon />
         네이버로 로그인
       </button>
-      <button
-        type="button"
-        onClick={() => handleSignIn("google")}
-        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 px-4 font-medium hover:bg-neutral-50 transition"
-      >
-        <GoogleIcon />
-        Google로 로그인
-      </button>
+      {kakaoTalkGoogleHref ? (
+        <a
+          href={kakaoTalkGoogleHref}
+          className={`${btnBase} bg-white border border-neutral-300 text-neutral-800 hover:bg-neutral-50 no-underline`}
+        >
+          <GoogleIcon />
+          Google로 로그인
+        </a>
+      ) : (
+        <button
+          type="button"
+          onClick={() => handleSignIn("google")}
+          className={`${btnBase} bg-white border border-neutral-300 text-neutral-800 hover:bg-neutral-50`}
+        >
+          <GoogleIcon />
+          Google로 로그인
+        </button>
+      )}
     </div>
   );
 }

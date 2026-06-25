@@ -251,9 +251,14 @@ export const authOptions: NextAuthOptions = {
         const err = (url.split("error=")[1]?.split("&")[0] ?? "Callback").replace(/#.*$/, "");
         finalUrl = `${canonical}/auth/error?error=${encodeURIComponent(err)}`;
         console.error("[Auth Error] OAuth redirect에 error 포함 → /auth/error로 이동:", err, { incomingUrl: url, finalUrl });
-      } else if (url.includes("/api/auth/callback") && !url.includes("error=")) {
+      } else if (
+        url.includes("/api/auth/callback") ||
+        url.includes("/onboarding") ||
+        url.includes("/auth/onboarding")
+      ) {
+        // OAuth 성공 후 회원정보 입력(온보딩)으로 — /onboarding은 미인증 시 signin 루프 유발
         finalUrl = `${canonical}/auth/onboarding`;
-        console.log("[auth] redirect: OAuth 콜백 성공 → callbackUrl /onboarding으로 이동:", { incomingUrl: url, finalUrl });
+        console.log("[auth] redirect: OAuth/온보딩 콜백 → /auth/onboarding:", { incomingUrl: url, finalUrl });
       } else {
         finalUrl = url.startsWith(canonical) ? url : url.startsWith("/") ? `${canonical}${url}` : canonical;
         if (process.env.NODE_ENV === "development") {

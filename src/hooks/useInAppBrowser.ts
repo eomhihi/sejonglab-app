@@ -119,7 +119,7 @@ export function useInAppBrowser(): InAppBrowserState {
   };
 
   const openKakaoTalkExternal = (url: string) => {
-    openKakaoTalkExternalBrowser(url, ua);
+    openKakaoTalkExternalBrowser(url);
   };
 
   return {

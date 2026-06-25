@@ -10,7 +10,7 @@ export function buildGoogleOAuthUrl(params: {
   callbackUrl?: string;
 }): string {
   const origin = params.origin ?? getOrigin();
-  const path = params.callbackUrl ?? "/onboarding";
+  const path = params.callbackUrl ?? "/auth/onboarding";
   const callback =
     path.startsWith("http") ? path : `${origin}${path.startsWith("/") ? path : `/${path}`}`;
   const search = new URLSearchParams({ callbackUrl: callback });
@@ -18,14 +18,14 @@ export function buildGoogleOAuthUrl(params: {
 }
 
 /** 카카오톡 인앱 → 외부 브라우저(Chrome/Safari)로 열기 (카카오 공식 스킴) */
-export function openKakaoTalkExternalBrowser(url: string, userAgent?: string): void {
-  const ua = (userAgent ?? (typeof navigator !== "undefined" ? navigator.userAgent : "")).toLowerCase();
+export function openKakaoTalkExternalBrowser(url: string): void {
   window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(url)}`;
-  setTimeout(() => {
-    window.location.href = /iphone|ipad|ipod/.test(ua)
-      ? "kakaoweb://closeBrowser"
-      : "kakaotalk://inappbrowser/close";
-  }, 400);
+  // 인앱 브라우저 강제 닫기는 생략 — 닫기 직후 같은 로그인 화면이 반복되는 경우 방지
+}
+
+/** 카카오톡에서 Google OAuth를 외부 브라우저로 열 때 사용하는 `<a href>` */
+export function buildKakaoTalkExternalHref(targetUrl: string): string {
+  return `kakaotalk://web/openExternal?url=${encodeURIComponent(targetUrl)}`;
 }
 
 /** Android 인앱 → Chrome intent */
@@ -50,7 +50,7 @@ export function openGoogleLoginInExternalBrowser(options: {
   const oauthUrl = buildGoogleOAuthUrl({ callbackUrl: options.callbackUrl });
 
   if (options.inAppName === "kakaotalk") {
-    openKakaoTalkExternalBrowser(oauthUrl, options.userAgent);
+    openKakaoTalkExternalBrowser(oauthUrl);
     return true;
   }
 
