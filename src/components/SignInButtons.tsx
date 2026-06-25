@@ -4,12 +4,12 @@ import { useMemo } from "react";
 import { signIn } from "next-auth/react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
 import {
-  buildGoogleOAuthUrl,
+  buildGoogleEntryUrl,
   buildKakaoTalkExternalHref,
   openGoogleLoginInExternalBrowser,
 } from "@/lib/open-external-browser";
 
-/** 로그인 후 회원정보 입력(온보딩) — /onboarding 사용 시 미인증 루프 발생 */
+/** 로그인 후 회원정보 입력(온보딩) */
 const SAFE_CALLBACK_URL = "/auth/onboarding";
 
 const btnBase =
@@ -30,13 +30,13 @@ export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
         : callbackUrl
       : SAFE_CALLBACK_URL;
 
-  const { userAgent, isGoogleOAuthBlocked, inAppName, isAndroid } = useInAppBrowser();
+  const { isGoogleOAuthBlocked, inAppName, isAndroid } = useInAppBrowser();
   const isKakaoTalk = inAppName === "kakaotalk";
 
-  const googleOAuthUrl = useMemo(() => buildGoogleOAuthUrl({ callbackUrl: next }), [next]);
+  const googleEntryUrl = useMemo(() => buildGoogleEntryUrl({ callbackUrl: next }), [next]);
   const kakaoTalkGoogleHref = useMemo(
-    () => (isKakaoTalk ? buildKakaoTalkExternalHref(googleOAuthUrl) : null),
-    [isKakaoTalk, googleOAuthUrl]
+    () => (isKakaoTalk ? buildKakaoTalkExternalHref(googleEntryUrl) : null),
+    [isKakaoTalk, googleEntryUrl]
   );
 
   const handleSignIn = (provider: string) => {
@@ -46,7 +46,6 @@ export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
         callbackUrl: next,
         inAppName,
         isAndroid,
-        userAgent,
       });
       if (!opened) {
         alert(
