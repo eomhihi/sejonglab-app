@@ -1,19 +1,20 @@
 type InAppName = "kakaotalk" | "instagram" | "facebook" | "line" | "naver" | "webview" | "unknown";
 
-/** 로그인 페이지 URL (외부 브라우저에서 Google 자동 로그인용) */
-export function buildSignInUrl(params: {
+function getOrigin(): string {
+  return typeof window !== "undefined" ? window.location.origin : "https://sejonglab.com";
+}
+
+/** NextAuth Google OAuth 시작 URL — 외부 브라우저에서 열면 곧바로 Google 로그인 화면으로 이동 */
+export function buildGoogleOAuthUrl(params: {
   origin?: string;
   callbackUrl?: string;
-  autoProvider?: "google";
 }): string {
-  const origin =
-    params.origin ??
-    (typeof window !== "undefined" ? window.location.origin : "https://sejonglab.com");
-  const search = new URLSearchParams();
-  if (params.callbackUrl) search.set("callbackUrl", params.callbackUrl);
-  if (params.autoProvider) search.set("autoProvider", params.autoProvider);
-  const q = search.toString();
-  return `${origin}/auth/signin${q ? `?${q}` : ""}`;
+  const origin = params.origin ?? getOrigin();
+  const path = params.callbackUrl ?? "/onboarding";
+  const callback =
+    path.startsWith("http") ? path : `${origin}${path.startsWith("/") ? path : `/${path}`}`;
+  const search = new URLSearchParams({ callbackUrl: callback });
+  return `${origin}/api/auth/signin/google?${search.toString()}`;
 }
 
 /** 카카오톡 인앱 → 외부 브라우저(Chrome/Safari)로 열기 (카카오 공식 스킴) */
@@ -37,8 +38,8 @@ export function openAndroidChrome(url: string): void {
 }
 
 /**
- * Google OAuth가 차단된 인앱 환경에서 외부 브라우저로 로그인 페이지를 열고 Google 로그인을 유도.
- * 카카오톡: kakaotalk://web/openExternal 스킴 사용 (가장 안정적).
+ * 인앱 브라우저에서 Google OAuth URL을 외부 브라우저로 직접 열기.
+ * 로그인 중간 페이지 없이 Google 계정 선택 화면으로 이동.
  */
 export function openGoogleLoginInExternalBrowser(options: {
   callbackUrl: string;
@@ -46,19 +47,16 @@ export function openGoogleLoginInExternalBrowser(options: {
   isAndroid: boolean;
   userAgent: string;
 }): boolean {
-  const signInUrl = buildSignInUrl({
-    callbackUrl: options.callbackUrl,
-    autoProvider: "google",
-  });
+  const oauthUrl = buildGoogleOAuthUrl({ callbackUrl: options.callbackUrl });
 
   if (options.inAppName === "kakaotalk") {
-    openKakaoTalkExternalBrowser(signInUrl, options.userAgent);
+    openKakaoTalkExternalBrowser(oauthUrl, options.userAgent);
     return true;
   }
 
   if (options.isAndroid) {
     try {
-      openAndroidChrome(signInUrl);
+      openAndroidChrome(oauthUrl);
       return true;
     } catch {
       return false;

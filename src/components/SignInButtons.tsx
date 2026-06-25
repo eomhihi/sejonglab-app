@@ -1,33 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
-import {
-  buildSignInUrl,
-  openGoogleLoginInExternalBrowser,
-} from "@/lib/open-external-browser";
+import { openGoogleLoginInExternalBrowser } from "@/lib/open-external-browser";
 
 /** 로그인 후 이동할 URL. signin/에러 페이지가 아닌 고정 경로만 사용해 콜백 루프 방지 */
 const SAFE_CALLBACK_URL = "/onboarding";
 
-const IN_APP_LABELS: Record<string, string> = {
-  kakaotalk: "카카오톡",
-  instagram: "인스타그램",
-  facebook: "페이스북",
-  line: "라인",
-  naver: "네이버",
-  webview: "앱 내 브라우저",
-  unknown: "앱 내 브라우저",
-};
-
 type SignInButtonsProps = {
   callbackUrl?: string;
-  /** 외부 브라우저에서 열린 뒤 Google 로그인 자동 시작 */
-  autoProvider?: "google";
 };
 
-export function SignInButtons({ callbackUrl, autoProvider }: SignInButtonsProps) {
+export function SignInButtons({ callbackUrl }: SignInButtonsProps) {
   const next =
     callbackUrl &&
     callbackUrl.startsWith("/") &&
@@ -36,28 +20,7 @@ export function SignInButtons({ callbackUrl, autoProvider }: SignInButtonsProps)
       ? callbackUrl
       : SAFE_CALLBACK_URL;
 
-  const {
-    userAgent,
-    isGoogleOAuthBlocked,
-    inAppName,
-    isIOS,
-    isAndroid,
-    canTryOpenChrome,
-    tryOpenInChrome,
-    openKakaoTalkExternal,
-    copyCurrentUrl,
-  } = useInAppBrowser();
-
-  const [showGoogleBlocked, setShowGoogleBlocked] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const autoGoogleStarted = useRef(false);
-
-  // Chrome/Safari 등 외부 브라우저에서 autoProvider=google 로 열렸을 때 자동 로그인
-  useEffect(() => {
-    if (autoProvider !== "google" || isGoogleOAuthBlocked || autoGoogleStarted.current) return;
-    autoGoogleStarted.current = true;
-    signIn("google", { callbackUrl: next }).catch(() => {});
-  }, [autoProvider, isGoogleOAuthBlocked, next]);
+  const { userAgent, isGoogleOAuthBlocked, inAppName, isAndroid } = useInAppBrowser();
 
   const handleSignIn = (provider: string) => {
     if (provider === "google" && isGoogleOAuthBlocked) {
@@ -67,136 +30,43 @@ export function SignInButtons({ callbackUrl, autoProvider }: SignInButtonsProps)
         isAndroid,
         userAgent,
       });
-      if (opened) return;
-      setShowGoogleBlocked(true);
+      if (!opened) {
+        alert(
+          "이 앱에서는 Google 로그인이 차단됩니다.\n화면 우측 상단 ⋯ → Safari·Chrome에서 열기 후 다시 시도해 주세요."
+        );
+      }
       return;
     }
     signIn(provider, { callbackUrl: next }).catch(() => {});
   };
 
-  const inAppLabel = inAppName ? IN_APP_LABELS[inAppName] ?? "앱 내 브라우저" : "앱 내 브라우저";
-  const isKakaoTalk = inAppName === "kakaotalk";
-
-  const onCopyLink = async () => {
-    const ok = await copyCurrentUrl();
-    if (ok) {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } else {
-      alert("링크 복사에 실패했습니다. 주소창의 URL을 수동으로 복사해 주세요.");
-    }
-  };
-
-  const onOpenExternalForGoogle = () => {
-    const opened = openGoogleLoginInExternalBrowser({
-      callbackUrl: next,
-      inAppName,
-      isAndroid,
-      userAgent,
-    });
-    if (!opened) {
-      const signInUrl = buildSignInUrl({ callbackUrl: next, autoProvider: "google" });
-      if (isKakaoTalk) {
-        openKakaoTalkExternal(signInUrl);
-      } else if (canTryOpenChrome) {
-        tryOpenInChrome(signInUrl);
-      }
-    }
-    setShowGoogleBlocked(false);
-  };
-
   return (
-    <>
-      <div className="flex flex-col gap-3">
-        {isGoogleOAuthBlocked && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-900 leading-relaxed">
-            <p className="font-semibold mb-1">Google 로그인 안내</p>
-            <p>
-              {isKakaoTalk
-                ? "Google 로그인 버튼을 누르면 Chrome·Safari로 자동 연결됩니다. 카카오·네이버는 이 화면에서 그대로 이용할 수 있습니다."
-                : `${inAppLabel}에서는 Google 보안 정책으로 로그인이 차단됩니다. Chrome·Safari 등 외부 브라우저에서 다시 시도해 주세요.`}
-            </p>
-          </div>
-        )}
-
-        <button
-          type="button"
-          onClick={() => handleSignIn("google")}
-          className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 px-4 font-medium hover:bg-neutral-50 transition"
-        >
-          <GoogleIcon />
-          {isKakaoTalk ? "Google로 로그인 (외부 브라우저)" : "Google로 로그인"}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleSignIn("kakao")}
-          className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-[#191919] px-4 font-medium hover:opacity-90 transition"
-        >
-          <KakaoIcon />
-          카카오로 로그인
-        </button>
-        <button
-          type="button"
-          onClick={() => handleSignIn("naver")}
-          className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#03C75A] text-white px-4 font-medium hover:opacity-90 transition"
-        >
-          <NaverIcon />
-          네이버로 로그인
-        </button>
-      </div>
-
-      {showGoogleBlocked && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="google-blocked-title"
-        >
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h2 id="google-blocked-title" className="text-lg font-bold text-slate-900 mb-2">
-              외부 브라우저에서 Google 로그인
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed mb-4">
-              {isKakaoTalk
-                ? "카카오톡에서는 Google 로그인이 차단됩니다. 아래 버튼을 누르면 Chrome·Safari로 이동한 뒤 Google 로그인이 자동으로 시작됩니다."
-                : `현재 ${inAppLabel}에서는 Google 보안 정책(disallowed_useragent)으로 로그인이 차단됩니다. 카카오·네이버 로그인은 이 화면에서 계속 이용할 수 있습니다.`}
-            </p>
-
-            {!isKakaoTalk && isIOS ? (
-              <ol className="text-sm text-slate-700 space-y-2 mb-5 list-decimal list-inside">
-                <li>화면 우측 상단 <strong>⋯</strong> 또는 <strong>공유</strong> 버튼을 누르세요</li>
-                <li><strong>Safari에서 열기</strong>를 선택하세요</li>
-                <li>Safari에서 <strong>Google로 로그인</strong>을 다시 시도하세요</li>
-              </ol>
-            ) : null}
-
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={onOpenExternalForGoogle}
-                className="w-full h-11 rounded-lg bg-sejong-blue text-white font-semibold text-sm hover:bg-sejong-blue-dark transition"
-              >
-                {isKakaoTalk ? "Chrome·Safari에서 Google 로그인" : "외부 브라우저에서 열기"}
-              </button>
-              <button
-                type="button"
-                onClick={onCopyLink}
-                className="w-full h-11 rounded-lg border border-slate-300 bg-white text-slate-800 font-semibold text-sm hover:bg-slate-50 transition"
-              >
-                {copied ? "링크가 복사되었습니다" : "로그인 페이지 링크 복사"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowGoogleBlocked(false)}
-                className="w-full h-11 rounded-lg text-slate-600 font-medium text-sm hover:text-slate-900 transition"
-              >
-                닫기
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <div className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={() => handleSignIn("kakao")}
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-[#191919] px-4 font-medium hover:opacity-90 transition"
+      >
+        <KakaoIcon />
+        카카오로 로그인
+      </button>
+      <button
+        type="button"
+        onClick={() => handleSignIn("naver")}
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-[#03C75A] text-white px-4 font-medium hover:opacity-90 transition"
+      >
+        <NaverIcon />
+        네이버로 로그인
+      </button>
+      <button
+        type="button"
+        onClick={() => handleSignIn("google")}
+        className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 px-4 font-medium hover:bg-neutral-50 transition"
+      >
+        <GoogleIcon />
+        Google로 로그인
+      </button>
+    </div>
   );
 }
 

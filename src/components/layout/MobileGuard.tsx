@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
 
 const MESSAGE =
-  "Google 로그인은 Chrome·Safari에서 진행됩니다. Google 버튼을 누르면 외부 브라우저로 자동 연결됩니다.";
+  "Google 로그인은 Chrome·Safari에서만 가능합니다. Google 버튼을 누르면 자동으로 연결됩니다.";
 
 function storageKey(host: string) {
   return `mobile_guard_dismissed:${host}`;
 }
 
 export function MobileGuard() {
+  const pathname = usePathname();
   const { isInApp, isMobile, canTryOpenChrome, tryOpenInChrome } = useInAppBrowser();
   const [dismissed, setDismissed] = useState(false);
 
@@ -29,7 +31,7 @@ export function MobileGuard() {
     }
   }, [host]);
 
-  const visible = isMobile && isInApp && !dismissed;
+  const visible = isMobile && isInApp && !dismissed && pathname !== "/auth/signin";
 
   const onDismiss = () => {
     setDismissed(true);
