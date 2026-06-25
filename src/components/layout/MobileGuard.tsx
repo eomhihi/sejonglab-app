@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
 
 const MESSAGE =
-  "구글 로그인 등 원활한 이용을 위해 오른쪽 상단 메뉴를 눌러 '크롬/사파리로 열기'를 해주세요.";
+  "Google 로그인은 카카오톡·네이버 등 앱 내 브라우저에서 차단됩니다. Chrome·Safari로 열어서 이용해 주세요.";
 
 function storageKey(host: string) {
   return `mobile_guard_dismissed:${host}`;

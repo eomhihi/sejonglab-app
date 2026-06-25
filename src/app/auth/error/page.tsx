@@ -65,6 +65,11 @@ export default async function AuthErrorPage({
           <p className="text-sm font-mono bg-slate-100 p-2 rounded mb-2 break-all select-all">
             {callbackUrls.google}
           </p>
+          <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded p-3 mb-4 leading-relaxed">
+            <strong>Google 403 disallowed_useragent:</strong> 카카오톡·네이버 메일 등{" "}
+            <strong>앱 내 브라우저</strong>에서는 Google 로그인이 차단됩니다. Chrome·Safari에서
+            sejonglab.com을 열고 다시 시도하세요. 카카오·네이버 로그인은 앱 내에서도 이용 가능합니다.
+          </p>
           <p className="text-xs text-slate-500 mb-2">카카오: 개발자 콘솔 → 로그인 → Redirect URI</p>
           <p className="text-sm font-mono bg-slate-100 p-2 rounded mb-2 break-all select-all">
             {callbackUrls.kakao}

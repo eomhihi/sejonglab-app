@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-type InAppName = "kakaotalk" | "instagram" | "facebook" | "line" | "unknown";
+type InAppName = "kakaotalk" | "instagram" | "facebook" | "line" | "naver" | "webview" | "unknown";
 
 export type InAppBrowserState = {
   userAgent: string;
@@ -9,22 +9,34 @@ export type InAppBrowserState = {
   isIOS: boolean;
   isInApp: boolean;
   inAppName: InAppName | null;
+  /** Google OAuth가 차단되는 인앱/WebView 환경 (disallowed_useragent 예방) */
+  isGoogleOAuthBlocked: boolean;
   canTryOpenChrome: boolean;
   tryOpenInChrome: () => void;
+  copyCurrentUrl: () => Promise<boolean>;
 };
 
 function detectInApp(ua: string): { isInApp: boolean; inAppName: InAppName | null } {
   const s = ua.toLowerCase();
 
-  // 대표 인앱 브라우저 UA 토큰
   if (s.includes("kakaotalk")) return { isInApp: true, inAppName: "kakaotalk" };
   if (s.includes("instagram")) return { isInApp: true, inAppName: "instagram" };
   if (s.includes("fbav") || s.includes("fban") || s.includes("facebook")) {
     return { isInApp: true, inAppName: "facebook" };
   }
   if (s.includes("line/")) return { isInApp: true, inAppName: "line" };
+  // 네이버 메일·검색 등 인앱 (Whale 브라우저는 제외)
+  if (s.includes("naver(inapp") || s.includes("naversearch")) {
+    return { isInApp: true, inAppName: "naver" };
+  }
+  if (s.includes("tiktok")) return { isInApp: true, inAppName: "unknown" };
+  if (s.includes("twitter") || s.includes("x.com")) return { isInApp: true, inAppName: "unknown" };
 
-  // 기타 WebView류 (정확도 낮아 false로 두되, 필요 시 확장)
+  // Android WebView (Google OAuth disallowed_useragent 주요 원인)
+  if (s.includes("; wv)") || s.includes("; wv;") || s.includes("webview")) {
+    return { isInApp: true, inAppName: "webview" };
+  }
+
   return { isInApp: false, inAppName: null };
 }
 
@@ -50,7 +62,6 @@ function isIOSUA(ua: string): boolean {
  */
 export function useInAppBrowser(): InAppBrowserState {
   const [ua, setUa] = useState("");
-  const triedRef = useRef(false);
 
   useEffect(() => {
     setUa(typeof navigator !== "undefined" ? navigator.userAgent : "");
@@ -61,24 +72,46 @@ export function useInAppBrowser(): InAppBrowserState {
   const isAndroid = useMemo(() => isAndroidUA(ua), [ua]);
   const isIOS = useMemo(() => isIOSUA(ua), [ua]);
 
-  const tryOpenInChrome = () => {
-    // Android에서만 intent:// 시도. iOS는 시스템 정책상 직접 전환이 제한적이라 안내만.
+  const tryOpenInChrome = (targetUrl?: string) => {
     if (!isAndroid || !isInApp) return;
-    if (triedRef.current) return;
-    triedRef.current = true;
 
     try {
-      const url = typeof window !== "undefined" ? window.location.href : "";
+      const url = targetUrl || (typeof window !== "undefined" ? window.location.href : "");
       if (!url) return;
 
-      // intent 스킴 구성: 현재 URL을 그대로 Chrome에 전달
-      // 예) intent://sejonglab.com/auth/signin#Intent;scheme=https;package=com.android.chrome;end
       const u = new URL(url);
-      const intentUrl = `intent://${u.host}${u.pathname}${u.search}${u.hash}` +
+      const intentUrl =
+        `intent://${u.host}${u.pathname}${u.search}${u.hash}` +
         `#Intent;scheme=${u.protocol.replace(":", "")};package=com.android.chrome;end`;
       window.location.href = intentUrl;
     } catch {
       // 실패해도 안내 배너로 유도되므로 무시
+    }
+  };
+
+  const copyCurrentUrl = async (): Promise<boolean> => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    if (!url) return false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        return true;
+      }
+    } catch {
+      // fallback below
+    }
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
     }
   };
 
@@ -89,8 +122,10 @@ export function useInAppBrowser(): InAppBrowserState {
     isIOS,
     isInApp,
     inAppName,
+    isGoogleOAuthBlocked: isInApp,
     canTryOpenChrome: isAndroid && isInApp,
     tryOpenInChrome,
+    copyCurrentUrl,
   };
 }
 
