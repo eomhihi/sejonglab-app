@@ -12,7 +12,7 @@ export type InAppBrowserState = {
   /** Google OAuth가 차단되는 인앱/WebView 환경 (disallowed_useragent 예방) */
   isGoogleOAuthBlocked: boolean;
   canTryOpenChrome: boolean;
-  tryOpenInChrome: () => void;
+  tryOpenInChrome: (targetUrl?: string) => void;
   copyCurrentUrl: () => Promise<boolean>;
 };
 
