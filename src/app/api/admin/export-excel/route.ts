@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SIGNUP_PATH_ETC, SIGNUP_PATH_REFERRER } from "@/lib/onboarding-options";
-import { isFullAdminEmail } from "@/lib/admin";
+import { isExcelExportAdminEmail } from "@/lib/admin";
 
 function formatGender(g: string | null): string {
   if (!g) return "-";
@@ -86,7 +86,7 @@ function usersToExcelRows(
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!isFullAdminEmail(session?.user?.email)) {
+  if (!isExcelExportAdminEmail(session?.user?.email)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

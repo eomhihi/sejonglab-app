@@ -4,7 +4,7 @@ import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ArrowLeft, ShieldX, Users } from "lucide-react";
-import { isFullAdminEmail } from "@/lib/admin";
+import { isFullAdminEmail, isMemberListAdminEmail } from "@/lib/admin";
 import { ExcelDownloadButton } from "@/components/admin/ExcelDownloadButton";
 import { MembersTable } from "@/components/admin/MembersTable";
 
@@ -47,9 +47,10 @@ export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/auth/signin");
 
-  // 전체 데이터 테이블·엑셀 다운로드는 전체 권한 관리자에게만 허용
-  const isFullAdmin = isFullAdminEmail(session.user?.email);
-  if (!isFullAdmin) {
+  // 회원 목록·엑셀: 엑셀 다운로드 권한 이상. 수정·삭제는 전체 관리자만
+  const canAccessMemberList = isMemberListAdminEmail(session.user?.email);
+  const canManageMembers = isFullAdminEmail(session.user?.email);
+  if (!canAccessMemberList) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <div className="max-w-md w-full rounded-2xl bg-slate-800 border border-slate-700 p-8 text-center shadow-xl">
@@ -118,7 +119,7 @@ export default async function AdminUsersPage() {
             </div>
           </div>
 
-          <MembersTable initialMembers={membersForClient} />
+          <MembersTable initialMembers={membersForClient} canManageMembers={canManageMembers} />
         </div>
       </main>
     </div>

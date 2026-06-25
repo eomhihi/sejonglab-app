@@ -47,9 +47,11 @@ function formatDate(iso: string): string {
 
 type Props = {
   initialMembers: Member[];
+  /** 회원 수정·삭제 가능 여부 (전체 관리자만) */
+  canManageMembers?: boolean;
 };
 
-export function MembersTable({ initialMembers }: Props) {
+export function MembersTable({ initialMembers, canManageMembers = false }: Props) {
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -172,15 +174,17 @@ export function MembersTable({ initialMembers }: Props) {
             <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
               직업
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
-              관리
-            </th>
+            {canManageMembers && (
+              <th className="px-4 py-3 text-left text-xs font-semibold text-sky-200 uppercase tracking-wider">
+                관리
+              </th>
+            )}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-700">
           {members.length === 0 ? (
             <tr>
-              <td colSpan={10} className="px-4 py-12 text-center text-slate-500 text-sm">
+              <td colSpan={canManageMembers ? 10 : 9} className="px-4 py-12 text-center text-slate-500 text-sm">
                 DB가 연결되지 않았거나 등록된 회원이 없습니다.
               </td>
             </tr>
@@ -283,47 +287,49 @@ export function MembersTable({ initialMembers }: Props) {
                       user.occupation ?? "-"
                     )}
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">
-                    {isEditing ? (
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          disabled={disabled}
-                          onClick={saveEdit}
-                          className="px-3 py-1.5 rounded-md bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 disabled:opacity-50"
-                        >
-                          저장
-                        </button>
-                        <button
-                          type="button"
-                          disabled={disabled}
-                          onClick={cancelEdit}
-                          className="px-3 py-1.5 rounded-md bg-slate-700 text-slate-100 text-xs font-semibold hover:bg-slate-600 disabled:opacity-50"
-                        >
-                          취소
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          disabled={pendingId !== null}
-                          onClick={() => startEdit(user)}
-                          className="px-3 py-1.5 rounded-md bg-slate-700 text-slate-100 text-xs font-semibold hover:bg-slate-600 disabled:opacity-50"
-                        >
-                          수정
-                        </button>
-                        <button
-                          type="button"
-                          disabled={pendingId !== null}
-                          onClick={() => deleteMember(user.id)}
-                          className="px-3 py-1.5 rounded-md bg-red-600/90 text-white text-xs font-semibold hover:bg-red-600 disabled:opacity-50"
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    )}
-                  </td>
+                  {canManageMembers && (
+                    <td className="px-4 py-3 text-sm text-slate-300 whitespace-nowrap">
+                      {isEditing ? (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={saveEdit}
+                            className="px-3 py-1.5 rounded-md bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 disabled:opacity-50"
+                          >
+                            저장
+                          </button>
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={cancelEdit}
+                            className="px-3 py-1.5 rounded-md bg-slate-700 text-slate-100 text-xs font-semibold hover:bg-slate-600 disabled:opacity-50"
+                          >
+                            취소
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={pendingId !== null}
+                            onClick={() => startEdit(user)}
+                            className="px-3 py-1.5 rounded-md bg-slate-700 text-slate-100 text-xs font-semibold hover:bg-slate-600 disabled:opacity-50"
+                          >
+                            수정
+                          </button>
+                          <button
+                            type="button"
+                            disabled={pendingId !== null}
+                            onClick={() => deleteMember(user.id)}
+                            className="px-3 py-1.5 rounded-md bg-red-600/90 text-white text-xs font-semibold hover:bg-red-600 disabled:opacity-50"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  )}
                 </tr>
               );
             })

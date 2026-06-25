@@ -12,7 +12,7 @@ import {
   Table2,
   CheckCircle2,
 } from "lucide-react";
-import { isAdminEmail, isDashboardAdminEmail, isFullAdminEmail } from "@/lib/admin";
+import { isAdminEmail, isDashboardAdminEmail, isMemberListAdminEmail } from "@/lib/admin";
 import { AdminDashboard, type AdminDashboardData } from "@/components/admin/AdminDashboard";
 import {
   GENDER_OPTIONS,
@@ -185,7 +185,7 @@ export default async function AdminPage() {
     );
   }
 
-  const isFullAdmin = isFullAdminEmail(session.user?.email);
+  const canAccessMemberList = isMemberListAdminEmail(session.user?.email);
   const canViewDashboard = isDashboardAdminEmail(session.user?.email);
   const stats = await getStats();
   // 분포/추이 차트는 대시보드 권한 이상에게만 노출 (통계 전용 계정은 가입자 수 카드만)
@@ -288,8 +288,8 @@ export default async function AdminPage() {
 
         {canViewDashboard ? (
           <>
-            {/* 전체 데이터 테이블 + 엑셀 다운로드 페이지로 이동 (전체 권한 관리자만) */}
-            {isFullAdmin && (
+            {/* 회원 목록·엑셀 다운로드 (엑셀 권한 이상) */}
+            {canAccessMemberList && (
               <div className="mb-6 flex justify-end">
                 <Link
                   href="/admin/users"
