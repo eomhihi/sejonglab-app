@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
+import {
+  buildSignInUrl,
+  openGoogleLoginInExternalBrowser,
+} from "@/lib/open-external-browser";
 
 /** 로그인 후 이동할 URL. signin/에러 페이지가 아닌 고정 경로만 사용해 콜백 루프 방지 */
 const SAFE_CALLBACK_URL = "/onboarding";
@@ -17,7 +21,13 @@ const IN_APP_LABELS: Record<string, string> = {
   unknown: "앱 내 브라우저",
 };
 
-export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
+type SignInButtonsProps = {
+  callbackUrl?: string;
+  /** 외부 브라우저에서 열린 뒤 Google 로그인 자동 시작 */
+  autoProvider?: "google";
+};
+
+export function SignInButtons({ callbackUrl, autoProvider }: SignInButtonsProps) {
   const next =
     callbackUrl &&
     callbackUrl.startsWith("/") &&
@@ -27,21 +37,37 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
       : SAFE_CALLBACK_URL;
 
   const {
+    userAgent,
     isGoogleOAuthBlocked,
     inAppName,
     isIOS,
     isAndroid,
     canTryOpenChrome,
     tryOpenInChrome,
+    openKakaoTalkExternal,
     copyCurrentUrl,
   } = useInAppBrowser();
 
   const [showGoogleBlocked, setShowGoogleBlocked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const autoGoogleStarted = useRef(false);
+
+  // Chrome/Safari 등 외부 브라우저에서 autoProvider=google 로 열렸을 때 자동 로그인
+  useEffect(() => {
+    if (autoProvider !== "google" || isGoogleOAuthBlocked || autoGoogleStarted.current) return;
+    autoGoogleStarted.current = true;
+    signIn("google", { callbackUrl: next }).catch(() => {});
+  }, [autoProvider, isGoogleOAuthBlocked, next]);
 
   const handleSignIn = (provider: string) => {
-    // Google은 인앱/WebView에서 OAuth 차단(disallowed_useragent) → 사전 차단·안내
     if (provider === "google" && isGoogleOAuthBlocked) {
+      const opened = openGoogleLoginInExternalBrowser({
+        callbackUrl: next,
+        inAppName,
+        isAndroid,
+        userAgent,
+      });
+      if (opened) return;
       setShowGoogleBlocked(true);
       return;
     }
@@ -49,6 +75,7 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
   };
 
   const inAppLabel = inAppName ? IN_APP_LABELS[inAppName] ?? "앱 내 브라우저" : "앱 내 브라우저";
+  const isKakaoTalk = inAppName === "kakaotalk";
 
   const onCopyLink = async () => {
     const ok = await copyCurrentUrl();
@@ -60,9 +87,22 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
     }
   };
 
-  const onOpenInChrome = () => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    tryOpenInChrome(`${origin}/auth/signin`);
+  const onOpenExternalForGoogle = () => {
+    const opened = openGoogleLoginInExternalBrowser({
+      callbackUrl: next,
+      inAppName,
+      isAndroid,
+      userAgent,
+    });
+    if (!opened) {
+      const signInUrl = buildSignInUrl({ callbackUrl: next, autoProvider: "google" });
+      if (isKakaoTalk) {
+        openKakaoTalkExternal(signInUrl);
+      } else if (canTryOpenChrome) {
+        tryOpenInChrome(signInUrl);
+      }
+    }
+    setShowGoogleBlocked(false);
   };
 
   return (
@@ -72,8 +112,9 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-900 leading-relaxed">
             <p className="font-semibold mb-1">Google 로그인 안내</p>
             <p>
-              {inAppLabel}에서는 Google 보안 정책으로 로그인이 차단됩니다. Chrome·Safari 등
-              <strong> 외부 브라우저</strong>에서 다시 시도해 주세요.
+              {isKakaoTalk
+                ? "Google 로그인 버튼을 누르면 Chrome·Safari로 자동 연결됩니다. 카카오·네이버는 이 화면에서 그대로 이용할 수 있습니다."
+                : `${inAppLabel}에서는 Google 보안 정책으로 로그인이 차단됩니다. Chrome·Safari 등 외부 브라우저에서 다시 시도해 주세요.`}
             </p>
           </div>
         )}
@@ -84,7 +125,7 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
           className="w-full h-11 flex items-center justify-center gap-2 rounded-lg bg-white border border-neutral-300 text-neutral-800 px-4 font-medium hover:bg-neutral-50 transition"
         >
           <GoogleIcon />
-          Google로 로그인
+          {isKakaoTalk ? "Google로 로그인 (외부 브라우저)" : "Google로 로그인"}
         </button>
         <button
           type="button"
@@ -113,41 +154,30 @@ export function SignInButtons({ callbackUrl }: { callbackUrl?: string }) {
         >
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
             <h2 id="google-blocked-title" className="text-lg font-bold text-slate-900 mb-2">
-              Google 로그인을 사용할 수 없습니다
+              외부 브라우저에서 Google 로그인
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed mb-4">
-              현재 <strong>{inAppLabel}</strong> 화면에서는 Google 보안 정책(
-              <span className="font-mono text-xs">disallowed_useragent</span>)으로 로그인이 차단됩니다.
-              카카오·네이버 로그인은 이 화면에서 계속 이용할 수 있습니다.
+              {isKakaoTalk
+                ? "카카오톡에서는 Google 로그인이 차단됩니다. 아래 버튼을 누르면 Chrome·Safari로 이동한 뒤 Google 로그인이 자동으로 시작됩니다."
+                : `현재 ${inAppLabel}에서는 Google 보안 정책(disallowed_useragent)으로 로그인이 차단됩니다. 카카오·네이버 로그인은 이 화면에서 계속 이용할 수 있습니다.`}
             </p>
 
-            {isIOS ? (
+            {!isKakaoTalk && isIOS ? (
               <ol className="text-sm text-slate-700 space-y-2 mb-5 list-decimal list-inside">
                 <li>화면 우측 상단 <strong>⋯</strong> 또는 <strong>공유</strong> 버튼을 누르세요</li>
-                <li><strong>Safari에서 열기</strong> 또는 <strong>브라우저로 열기</strong>를 선택하세요</li>
-                <li>열린 Safari에서 <strong>Google로 로그인</strong>을 다시 시도하세요</li>
+                <li><strong>Safari에서 열기</strong>를 선택하세요</li>
+                <li>Safari에서 <strong>Google로 로그인</strong>을 다시 시도하세요</li>
               </ol>
-            ) : isAndroid ? (
-              <ol className="text-sm text-slate-700 space-y-2 mb-5 list-decimal list-inside">
-                <li>아래 <strong>Chrome으로 열기</strong>를 누르거나, 링크를 복사해 Chrome에서 열어주세요</li>
-                <li>Chrome에서 <strong>Google로 로그인</strong>을 다시 시도하세요</li>
-              </ol>
-            ) : (
-              <p className="text-sm text-slate-700 mb-5">
-                Chrome·Safari 등 일반 브라우저에서 <strong>sejonglab.com</strong>을 열고 다시 시도해 주세요.
-              </p>
-            )}
+            ) : null}
 
             <div className="flex flex-col gap-2">
-              {canTryOpenChrome && (
-                <button
-                  type="button"
-                  onClick={onOpenInChrome}
-                  className="w-full h-11 rounded-lg bg-sejong-blue text-white font-semibold text-sm hover:bg-sejong-blue-dark transition"
-                >
-                  Chrome으로 열기
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={onOpenExternalForGoogle}
+                className="w-full h-11 rounded-lg bg-sejong-blue text-white font-semibold text-sm hover:bg-sejong-blue-dark transition"
+              >
+                {isKakaoTalk ? "Chrome·Safari에서 Google 로그인" : "외부 브라우저에서 열기"}
+              </button>
               <button
                 type="button"
                 onClick={onCopyLink}

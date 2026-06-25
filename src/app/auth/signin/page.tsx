@@ -8,7 +8,7 @@ export const metadata = {
   description: "Google, 카카오, 네이버로 간편 로그인하세요.",
 };
 
-type Props = { searchParams: { callbackUrl?: string } };
+type Props = { searchParams: { callbackUrl?: string; autoProvider?: string } };
 
 export default async function SignInPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
@@ -18,6 +18,8 @@ export default async function SignInPage({ searchParams }: Props) {
     raw.startsWith("/") && !raw.startsWith("//") && !raw.startsWith("/auth/")
       ? raw
       : "/onboarding";
+  const autoProvider =
+    searchParams?.autoProvider === "google" ? ("google" as const) : undefined;
   if (session) redirect(afterLogin);
 
   return (
@@ -27,7 +29,7 @@ export default async function SignInPage({ searchParams }: Props) {
         <p className="text-neutral-600 dark:text-neutral-400 text-center text-sm mb-6">
           Google, 카카오, 네이버 계정으로 간편 로그인
         </p>
-        <SignInButtons callbackUrl={afterLogin} />
+        <SignInButtons callbackUrl={afterLogin} autoProvider={autoProvider} />
       </div>
     </div>
   );

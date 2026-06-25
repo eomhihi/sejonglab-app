@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { openKakaoTalkExternalBrowser } from "@/lib/open-external-browser";
 
 type InAppName = "kakaotalk" | "instagram" | "facebook" | "line" | "naver" | "webview" | "unknown";
 
@@ -13,6 +14,8 @@ export type InAppBrowserState = {
   isGoogleOAuthBlocked: boolean;
   canTryOpenChrome: boolean;
   tryOpenInChrome: (targetUrl?: string) => void;
+  /** 카카오톡 인앱에서 외부 브라우저로 URL 열기 */
+  openKakaoTalkExternal: (url: string) => void;
   copyCurrentUrl: () => Promise<boolean>;
 };
 
@@ -115,6 +118,10 @@ export function useInAppBrowser(): InAppBrowserState {
     }
   };
 
+  const openKakaoTalkExternal = (url: string) => {
+    openKakaoTalkExternalBrowser(url, ua);
+  };
+
   return {
     userAgent: ua,
     isMobile,
@@ -125,6 +132,7 @@ export function useInAppBrowser(): InAppBrowserState {
     isGoogleOAuthBlocked: isInApp,
     canTryOpenChrome: isAndroid && isInApp,
     tryOpenInChrome,
+    openKakaoTalkExternal,
     copyCurrentUrl,
   };
 }

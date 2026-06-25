@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
 
 const MESSAGE =
-  "Google 로그인은 카카오톡·네이버 등 앱 내 브라우저에서 차단됩니다. Chrome·Safari로 열어서 이용해 주세요.";
+  "Google 로그인은 Chrome·Safari에서 진행됩니다. Google 버튼을 누르면 외부 브라우저로 자동 연결됩니다.";
 
 function storageKey(host: string) {
   return `mobile_guard_dismissed:${host}`;
