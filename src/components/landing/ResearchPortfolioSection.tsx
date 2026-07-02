@@ -26,12 +26,12 @@ const ICON_COLOR = "text-brand-secondary";
 function pickProjectIcon(project: SejongLabProject): LucideIcon {
   const text = `${project.title} ${project.client}`;
 
-  if (text.includes("자율주행")) return Car;
+  if (text.includes("자율주행") || text.includes("모빌리티")) return Car;
   if (text.includes("방송") || text.includes("미디어") || text.includes("영상")) return Video;
   if (text.includes("인권")) return Scale;
   if (text.includes("마음건강") || text.includes("상담")) return HeartPulse;
   if (text.includes("RISE") || text.includes("대학") || text.includes("대학교")) return Building2;
-  if (text.includes("연구원") || text.includes("테크노파크") || text.includes("교육청")) return Landmark;
+  if (text.includes("연구원") || text.includes("테크노파크") || text.includes("교육청") || text.includes("공공기관") || text.includes("연구기관")) return Landmark;
   if (text.includes("산학") || text.includes("협의체") || text.includes("연합회")) return Network;
   if (text.includes("SW") || text.includes("융합")) return Cpu;
   if (text.includes("평생") || text.includes("학습") || text.includes("교육")) return GraduationCap;
