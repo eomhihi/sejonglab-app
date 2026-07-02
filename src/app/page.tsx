@@ -7,6 +7,7 @@ import { CTASection } from "@/components/landing/CTASection";
 import { SejongFooter } from "@/components/landing/SejongFooter";
 import { NewsTicker } from "@/components/landing/NewsTicker";
 import { LifelongEducationInsightsSection } from "@/components/landing/LifelongEducationInsightsSection";
+import { ResearchPortfolioSection } from "@/components/landing/ResearchPortfolioSection";
 import { getNews } from "@/lib/get-news";
 import { TopLogoBar } from "@/components/layout/TopLogoBar";
 import { isAdminEmail } from "@/lib/admin";
@@ -27,6 +28,7 @@ export default async function LandingPage() {
         <SejongFeatureCards />
         <BenefitsSection />
         <LifelongEducationInsightsSection />
+        <ResearchPortfolioSection />
         <CTASection />
       </main>
       <SejongFooter isAdmin={isAdmin} />

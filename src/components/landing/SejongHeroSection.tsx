@@ -6,6 +6,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+const SURVEY_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfwkn2YbER1MsB7EQrDazQH85cEFbvBO5vcBHjRBxsav69iwQ/viewform?usp=header";
+
+const HERO_CTA_BTN =
+  "btn btn-lg font-extrabold shadow-lg hover:-translate-y-0.5 font-display inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:flex-1 sm:max-w-[13rem] border-2 box-border";
+
 export function SejongHeroSection() {
   const { status } = useSession();
   const authed = status === "authenticated";
@@ -37,14 +43,22 @@ export function SejongHeroSection() {
               시민 패널로 참여하여 우리 도시의 변화를 함께 이끌어 주세요.
             </p>
 
-            <div className="flex justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row items-stretch justify-center lg:justify-start gap-3 sm:gap-4 w-full max-w-sm sm:max-w-xl mx-auto lg:mx-0">
               <Link
                 href={authed ? "/mypage" : "/signup"}
-                className="btn btn-primary btn-lg font-extrabold shadow-lg hover:-translate-y-0.5 font-display"
+                className={`${HERO_CTA_BTN} btn-primary border-transparent`}
               >
                 {authed ? "마이페이지" : "패널 신청하기"}
                 <ArrowRight className="w-6 h-6" />
               </Link>
+              <a
+                href={SURVEY_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${HERO_CTA_BTN} border-2 border-[#124559] text-[#124559] hover:bg-gray-100 transition-colors`}
+              >
+                설문 참여하기
+              </a>
             </div>
 
             {/* 통계 */}

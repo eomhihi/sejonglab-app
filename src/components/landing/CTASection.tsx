@@ -48,7 +48,6 @@ export function CTASection() {
             <ArrowRight className="w-5 h-5" />
           </Link>
         )}
-
       </div>
     </section>
   );
