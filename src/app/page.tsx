@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { SejongHeroSection } from "@/components/landing/SejongHeroSection";
 import { SejongFeatureCards } from "@/components/landing/SejongFeatureCards";
 import { BenefitsSection } from "@/components/landing/BenefitsSection";
+import { SejongIndexSection } from "@/components/landing/SejongIndexSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { SejongFooter } from "@/components/landing/SejongFooter";
 import { NewsTicker } from "@/components/landing/NewsTicker";
@@ -27,6 +28,7 @@ export default async function LandingPage() {
         <SejongHeroSection />
         <SejongFeatureCards />
         <BenefitsSection />
+        <SejongIndexSection />
         <LifelongEducationInsightsSection />
         <ResearchPortfolioSection />
         <CTASection />
