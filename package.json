@@ -9,6 +9,7 @@
     "lint": "next lint",
     "generate:qr": "node scripts/generate-sejonglab-qr.mjs",
     "generate:og": "node scripts/generate-og-share.mjs",
+    "generate:logo": "node scripts/generate-sejong-logo.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "eslint-config-next": "^14.2.0",
     "postcss": "^8.4.0",
     "prisma": "^5.22.0",
+    "puppeteer-core": "^24.43.1",
     "qrcode": "^1.5.4",
     "sharp": "^0.34.5",
     "typescript": "^5.0.0"
