@@ -19,7 +19,7 @@ export default function ScreeningOutPage() {
       style={{ wordBreak: "keep-all" }}
     >
       <header className="flex shrink-0 justify-center pt-8 sm:pt-10">
-        <SejongLogoLockup variant="footer" href="/" />
+        <SejongLogoLockup variant="footer" href="/" exportScale={2} />
       </header>
 
       <div className="flex flex-1 flex-col items-center justify-center w-full max-w-lg mx-auto text-center">

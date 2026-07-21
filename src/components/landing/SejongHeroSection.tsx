@@ -6,8 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-const SURVEY_FORM_URL =
-  "https://ko.research.net/r/SejongLifelongPublic"; // link updated
+const SURVEY_FORM_URL = "https://ko.research.net/r/SejongLifelongPublic";
 
 const HERO_CTA_BTN =
   "btn btn-lg font-extrabold shadow-lg hover:-translate-y-0.5 font-display inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:flex-1 sm:max-w-[13rem] border-2 box-border";
