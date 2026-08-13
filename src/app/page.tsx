@@ -13,6 +13,9 @@ import { getNews } from "@/lib/get-news";
 import { TopLogoBar } from "@/components/layout/TopLogoBar";
 import { isAdminEmail } from "@/lib/admin";
 
+/** 패널 인사이트 섹션 노출 여부 — 다시 켤 때 true로 변경 */
+const SHOW_PANEL_INSIGHTS_SECTION = false;
+
 /** 뉴스는 서버에서 주 1회 갱신(revalidate=604800) */
 export const revalidate = 604800;
 
@@ -29,7 +32,7 @@ export default async function LandingPage() {
         <SejongFeatureCards />
         <BenefitsSection />
         <SejongIndexSection />
-        <LifelongEducationInsightsSection />
+        {SHOW_PANEL_INSIGHTS_SECTION && <LifelongEducationInsightsSection />}
         <ResearchPortfolioSection />
         <CTASection />
       </main>
