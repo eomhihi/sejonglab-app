@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI, Content } from "@google/generative-ai";
-import { searchSejongNewsHybrid, RetrievedNewsSource } from "@/lib/sejongNewsRag";
+import {
+  searchSejongNewsHybrid,
+  RetrievedNewsSource,
+  resolveGeminiApiKey,
+} from "@/lib/sejongNewsRag";
 
 export interface ChatHistoryItem {
   role: "user" | "model" | "ai";
@@ -116,6 +120,10 @@ export async function POST(req: Request) {
     const apiKey = (
       process.env.GEMINI_API_KEY ||
       process.env.GOOGLE_API_KEY ||
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
+      process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+      process.env.NEXT_PUBLIC_GOOGLE_API_KEY ||
+      resolveGeminiApiKey() ||
       ""
     ).trim();
 

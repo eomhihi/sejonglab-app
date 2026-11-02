@@ -1,4 +1,66 @@
+import fs from "fs";
+import path from "path";
 import newsDataRaw from "@/data/sejong_news_10years.json";
+
+/**
+ * GEMINI_API_KEY 조회 (모든 후보 환경변수 폴백 및 로컬 .env.local / .env 동적 로드)
+ */
+export function resolveGeminiApiKey(): string {
+  const fromEnv = (
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+    process.env.NEXT_PUBLIC_GOOGLE_API_KEY ||
+    process.env.GEMINI_KEY ||
+    ""
+  ).trim();
+  if (fromEnv) return fromEnv;
+
+  // Vercel 환경변수에 다른 이름으로 AIza... 형식의 Google API 키가 등록되어 있는 경우 자동 감지
+  for (const [k, v] of Object.entries(process.env)) {
+    if (
+      typeof v === "string" &&
+      v.trim().startsWith("AIza") &&
+      (k.includes("GEMINI") || k.includes("GOOGLE") || k.includes("AI") || k.includes("KEY"))
+    ) {
+      return v.trim();
+    }
+  }
+
+  try {
+    const cwd = process.cwd();
+    for (const fileName of [".env.local", ".env"]) {
+      const envPath = path.join(cwd, fileName);
+      if (!fs.existsSync(envPath)) continue;
+      const content = fs.readFileSync(envPath, "utf-8");
+      for (const rawLine of content.split(/\r?\n/)) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith("#") || !line.includes("=")) continue;
+        const eqIdx = line.indexOf("=");
+        const key = line.slice(0, eqIdx).trim();
+        const val = line
+          .slice(eqIdx + 1)
+          .trim()
+          .replace(/^['"]|['"]$/g, "");
+        if (
+          (key === "GEMINI_API_KEY" ||
+            key === "GOOGLE_API_KEY" ||
+            key === "NEXT_PUBLIC_GEMINI_API_KEY" ||
+            key === "GOOGLE_GENERATIVE_AI_API_KEY") &&
+          val
+        ) {
+          process.env[key] = val;
+          return val;
+        }
+      }
+    }
+  } catch {
+    // 파일 시스템 접근이 제한된 환경에서는 process.env만 사용
+  }
+
+  return "";
+}
 
 export interface SejongNewsArticle {
   id: string;
@@ -726,7 +788,10 @@ export async function searchSejongNewsHybrid(
   const apiKey =
     process.env.GEMINI_API_KEY?.trim() ||
     process.env.GOOGLE_API_KEY?.trim() ||
-    "";
+    process.env.NEXT_PUBLIC_GEMINI_API_KEY?.trim() ||
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_GOOGLE_API_KEY?.trim() ||
+    resolveGeminiApiKey();
 
   if (!apiKey) {
     throw new Error(
