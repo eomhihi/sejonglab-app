@@ -103,7 +103,7 @@ const INITIAL_WELCOME_MESSAGE: ChatMessageItem = {
   id: "sejong-rag-welcome",
   role: "ai",
   content:
-    "안녕하세요. 2012년부터 2026년까지 15년간의 세종특별자치시 뉴스 및 시정 데이터를 학습한 **세종랩 AI 뉴스·정책 분석가**입니다.\n\n**도시·교통·상권**, **10년 정책 변천사**, **정주·교육·복지**, **기업·사업기회(입찰·특구 혜택)**, **대학·산학연** 등 6대 핵심 도메인에 대해 궁금하신 질문을 입력하거나 아래 카테고리 탭에서 추천 질문을 선택해 주세요.",
+    "안녕하세요. 2012년부터 2026년까지 15년간의 세종특별자치시 뉴스 및 시정 데이터를 학습한 **세종랩 AI 뉴스·정책 분석가**입니다. 궁금하신 질문을 입력하거나 아래 카테고리 탭에서 추천 질문을 선택해 주세요.",
   timestamp: "방금 전",
 };
 
@@ -604,12 +604,9 @@ export function SejongNewsChat() {
 
           {/* 5-Category Domain Tabs & Recommended Question Chips (Swiss Grid Bar) */}
           <div className="px-3 py-2.5 sm:px-4 sm:py-3 bg-[#f0f9ff] border-t border-slate-200 shrink-0 space-y-2">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center">
               <span className="text-[10.5px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#002d56] flex items-center gap-1">
-                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#124559] shrink-0" /> 도메인별 심층 분석 질문
-              </span>
-              <span className="hidden sm:inline text-[10px] text-[#124559] font-medium">
-                탭 전환 후 질문 클릭 시 즉시 분석
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#124559] shrink-0" /> 분야별 추천 질문
               </span>
             </div>
 
