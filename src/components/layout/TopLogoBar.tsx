@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { SejongLogoLockup } from "@/components/brand/SejongLogoLockup";
+import { SejongCompanyLogo } from "@/components/brand/SejongCompanyLogo";
 import { isAdminEmail } from "@/lib/admin";
 
-/** 고정 로고 바 높이: Tailwind `h-14` (3.5rem)과 동기화 */
 export const TOP_LOGO_BAR_HEIGHT_CLASS = "h-28 sm:h-24" as const;
 
 const loginBtnClass =
@@ -23,13 +22,11 @@ export function TopLogoBar() {
   const isAdmin = authed && isAdminEmail(session?.user?.email);
 
   return (
-    <div
-      className={`fixed top-0 left-0 right-0 z-[80] ${TOP_LOGO_BAR_HEIGHT_CLASS} flex items-center bg-white border-b border-slate-200/80`}
-    >
+    <div className={`fixed top-0 left-0 right-0 z-[80] ${TOP_LOGO_BAR_HEIGHT_CLASS} flex items-center bg-white border-b border-slate-200/80`}>
       <div className="max-w-7xl mx-auto w-full px-4">
         <div className="flex flex-row items-center justify-between gap-3 sm:gap-6 w-full min-w-0">
           <div className="flex flex-row items-center gap-4 sm:gap-7 min-w-0 flex-1 flex-wrap">
-            <SejongLogoLockup variant="topbar" href="/" />
+            <SejongCompanyLogo href="/" />
 
             <p className="min-w-0 text-xs sm:text-sm text-gray-500 leading-snug k-keep">
               세종랩은 세종시 정책의 근거를 만드는 데이터 전문가 그룹이{" "}

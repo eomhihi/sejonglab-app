@@ -1,0 +1,999 @@
+{
+  "schema_version": 1,
+  "kind": "debt",
+  "migrated_from": "",
+  "tool_version": "1.4.0",
+  "created": "2026-10-06",
+  "entries": [
+    {
+      "fingerprint": "a8ddb32cd7de60375da2",
+      "loose": "7bf2392bc249558a6865",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 4,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "5c72c331e8fb01ff25d3",
+      "loose": "d297a0ae989a5d2b571b",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 8,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "1ac63557da79925e49fc",
+      "loose": "d297a0ae989a5d2b571b",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 12,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "041c243c4bc213f0e25b",
+      "loose": "8671612f6177e1146c0d",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 19,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "f65f82f31c0a2be4d17a",
+      "loose": "3885ee6b3c3c5094c2fc",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 20,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "0658d7484e0364638673",
+      "loose": "d297a0ae989a5d2b571b",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env",
+      "line": 25,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "bd58be941ffac402e822",
+      "loose": "0c94127439097df74eb0",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": ".env.local",
+      "line": 12,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "6ce92ddbe1a5bdbe1e68",
+      "loose": "a496979ba17695158f6c",
+      "rule_id": "ARC-206",
+      "rule_version": 1,
+      "path": "constants/policy.ts",
+      "line": 1,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "0aba64bd82ca56d428a8",
+      "loose": "a2aff17b91087fdee7af",
+      "rule_id": "PERF-101",
+      "rule_version": 1,
+      "path": "prisma/clear-auth-except-admin.mjs",
+      "line": 11,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "76d868e5245b168705c4",
+      "loose": "ed90ab6cbd7f77f54227",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "scripts/generate-sejong-logo.mjs",
+      "line": 45,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "9fcf32720a23cecd676d",
+      "loose": "556a619761eee2421f85",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "scripts/generate-sejonglab-qr.mjs",
+      "line": 10,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "40481fc61d5c153fdaa6",
+      "loose": "3d0150ba491a36f8b1ee",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 53,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "56c10e8e10c1b785fedc",
+      "loose": "becdb21d17e6de217555",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 59,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "e1dbe1e881ff2067adbb",
+      "loose": "23a338cc21fc8fc81490",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 159,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "565ea751543cd8e448aa",
+      "loose": "7afc90102f05b1310f66",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 205,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "051f5f927bbb2978c713",
+      "loose": "b1aa711fde174c1d8f84",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 213,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "924edd66c05af8f28700",
+      "loose": "a07202cb112d6b388700",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/admin/page.tsx",
+      "line": 214,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "d1098a5ae5401a3f689b",
+      "loose": "7381788a6aeffe025ee8",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/admin/users/page.tsx",
+      "line": 41,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "0d22b589394cff159ba7",
+      "loose": "cecb77c54342e3caa62d",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/admin/users/page.tsx",
+      "line": 46,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "eecaafc07a0295b03689",
+      "loose": "9dcc55f39308be1ee49b",
+      "rule_id": "ARC-211",
+      "rule_version": 1,
+      "path": "src/app/api/admin/export-excel/route.ts",
+      "line": 18,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "bc4ccac6a406730d2cae",
+      "loose": "0195eecb628b66ce94ad",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/api/admin/users/[id]/route.ts",
+      "line": 25,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "ba00310f32e0012eb2ca",
+      "loose": "6ababe06d3c0a13faa14",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 11,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "30eba774977a74060dc4",
+      "loose": "51a77a9e60d73ecd7dab",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 103,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "3ef85c05cd8d63424e81",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 141,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "2d1689d0814ae2cc7885",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 147,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "00371e8ee9cbeeb276fb",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 153,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "7f598ce415b864962a1a",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 159,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "3ba5c535e35fd926f30e",
+      "loose": "7157434bb86928f2ca5a",
+      "rule_id": "IL-109",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 159,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "587e5adc677063ac2bf2",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 165,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "3770cdeae68eef0d4771",
+      "loose": "3d8a2490c096a7966c4f",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/api/news/route.ts",
+      "line": 220,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "92e6f699693f6fab3dab",
+      "loose": "e3acdc552ea4f839fa08",
+      "rule_id": "TYP-301",
+      "rule_version": 1,
+      "path": "src/app/api/user/onboarding/route.ts",
+      "line": 66,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "27bbf97abeafff567409",
+      "loose": "2a750a8f7ca9eb0b8620",
+      "rule_id": "TYP-301",
+      "rule_version": 1,
+      "path": "src/app/api/user/onboarding/route.ts",
+      "line": 109,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "76d0f44e795d5607709d",
+      "loose": "3d55915823a0beb8d793",
+      "rule_id": "IL-307",
+      "rule_version": 1,
+      "path": "src/app/api/webhook/survey-response/route.ts",
+      "line": 25,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "700c78a55a878ced1c69",
+      "loose": "83968160edf7cc8baa41",
+      "rule_id": "IL-307",
+      "rule_version": 1,
+      "path": "src/app/api/webhook/survey-response/route.ts",
+      "line": 33,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "dc59ed1b98fc2c57a0a8",
+      "loose": "a6f4891a1b8710cc69b8",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/api/webhook/survey-response/route.ts",
+      "line": 35,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "29b4a625ab10a5a5ab7b",
+      "loose": "949350c7a432c3f942c1",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/api/webhook/survey-response/route.ts",
+      "line": 48,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "6e68351aae22c4cd48e8",
+      "loose": "09cbd5e8931aa6e16c23",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/api/webhook/survey-response/route.ts",
+      "line": 70,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "3abdb9d1c05e570ca0fc",
+      "loose": "233be4f54ff7e109b825",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/auth/check/page.tsx",
+      "line": 1,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "a70108f6a89be6cdb4fa",
+      "loose": "d3c501bd27ee23797e95",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/auth/check/page.tsx",
+      "line": 14,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "21f96fbbc41e29bfbd61",
+      "loose": "8f3c1428bab49b298ae0",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/app/auth/google/page.tsx",
+      "line": 22,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "7435cc7e1f9f04fd92c7",
+      "loose": "8518f68b0f1a1cc5edcc",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/briefing/page.tsx",
+      "line": 12,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "46658016461089c9cd9e",
+      "loose": "0b077a3274df5830d0df",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/dashboard/DashboardClient.tsx",
+      "line": 9,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "1721053f32b9f4a68ba2",
+      "loose": "0f2f142e63b8bd56b2e9",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/layout.tsx",
+      "line": 20,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "8f5dbf57d5f5b1863f7e",
+      "loose": "f81b3603571654916c1c",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/app/layout.tsx",
+      "line": 26,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "36c83a3b2867690a71b4",
+      "loose": "cd559f60776361c9fefe",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 9,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "44cb9eeaa0beee3d9b36",
+      "loose": "149937007a99d6904399",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 26,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "94e08a2e9b7b238099df",
+      "loose": "042f170f6d169358b824",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 31,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "40e82494940d7580ffc7",
+      "loose": "9d6225f6a732f5e4db94",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 32,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "5364364d114d8b648b3c",
+      "loose": "5ba186234f1e52f658d4",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 34,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "8f0f6bf5dba934aa1893",
+      "loose": "89425e776f04a90aced7",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/app/privacy/page.tsx",
+      "line": 56,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "6acbc321f21df8d122f7",
+      "loose": "22964f344f7a40be3b3e",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/app/terms/page.tsx",
+      "line": 9,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "42139e2f39eab6ac48c5",
+      "loose": "4f46f4bb19d373c4ea18",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/IdleLogoutGuard.tsx",
+      "line": 28,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "ba64a5e625b90cc25076",
+      "loose": "1c693c6024cf5d9f8b9d",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/IdleLogoutGuard.tsx",
+      "line": 55,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "48e667f2a0d0775d6998",
+      "loose": "1c693c6024cf5d9f8b9d",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/IdleLogoutGuard.tsx",
+      "line": 60,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "80f0ffa7c0e00322eb98",
+      "loose": "551690f262e041ee9ccb",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/components/KakaoChannelBanner.tsx",
+      "line": 3,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "b1c13422cd054f41d33c",
+      "loose": "1ac4d8c32a2dd30085b4",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/OnboardingForm.tsx",
+      "line": 75,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "74f6b6c6f30023259e62",
+      "loose": "5345798e6b5d5f7376e9",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/OnboardingForm.tsx",
+      "line": 194,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "0a2b1f7dc975a7d54472",
+      "loose": "13ab00d31f187e529a6d",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/SignInButtons.tsx",
+      "line": 57,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "4df22dcc84ad7ee8d0a4",
+      "loose": "9dcc55f39308be1ee49b",
+      "rule_id": "ARC-211",
+      "rule_version": 1,
+      "path": "src/components/admin/MembersTable.tsx",
+      "line": 39,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "e9a4271505b936f5975f",
+      "loose": "4a4353c98700492f5d37",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/admin/MembersTable.tsx",
+      "line": 54,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "85171b5e6c0ca97a67d0",
+      "loose": "d53f40c50e70df610dc2",
+      "rule_id": "TYP-301",
+      "rule_version": 1,
+      "path": "src/components/admin/MembersTable.tsx",
+      "line": 100,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "13623138789cb3878a9f",
+      "loose": "89529c6d9a9bd2940a52",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/admin/MembersTable.tsx",
+      "line": 192,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "1ce92a526c23153c393d",
+      "loose": "2bdd03f6e47fd2d42435",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/brand/SejongLabWordmark.tsx",
+      "line": 43,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "b17a1b5b2230894f9cbf",
+      "loose": "a21182a580d7861aa3b9",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/brand/SejongLogoLockup.tsx",
+      "line": 21,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "06e4340ccd3b7391e1df",
+      "loose": "2792208f4f729603b42d",
+      "rule_id": "IL-505",
+      "rule_version": 1,
+      "path": "src/components/briefing/BriefingInteractiveDashboard.tsx",
+      "line": 57,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "6c5051b770496abac54c",
+      "loose": "1a1c9eb8ebb12d31b86b",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/insights/FilteredInsightCards.tsx",
+      "line": 74,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "fb35c03b34d0d9541aa5",
+      "loose": "5b57ddb7c2331ffdb0a8",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/insights/SejongChoroplethMap.tsx",
+      "line": 51,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "470f402841a695695c89",
+      "loose": "877c6bacb4969e47368b",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/insights/SejongInsightsDashboard.tsx",
+      "line": 74,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "69fae691292abf9dede8",
+      "loose": "df6a8c6f4c89e4e4382b",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/components/landing/BenefitsSection.tsx",
+      "line": 9,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "4a36e9472551369ef86b",
+      "loose": "3a47120b77fc9393a716",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/components/landing/BenefitsSection.tsx",
+      "line": 10,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "d9ffe2493e64000d8dee",
+      "loose": "eb19f74d0467f8ccbfd3",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/components/landing/CTASection.tsx",
+      "line": 30,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "e872e813b5d0870bb0d8",
+      "loose": "2b0fbeca73868e3afec9",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/landing/EungBridgeGraphic.tsx",
+      "line": 11,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "cc7c03bb8a8a95f7dee2",
+      "loose": "9971601aa29c68ec4821",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/components/landing/EungBridgeGraphic.tsx",
+      "line": 64,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "cd108b616343fae2738e",
+      "loose": "e5e8e60d160a19ed1048",
+      "rule_id": "ARC-204",
+      "rule_version": 1,
+      "path": "src/components/landing/LandingFooter.tsx",
+      "line": 3,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "54da324db1223d1bd82b",
+      "loose": "7a6ae898e677a58822c7",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/landing/LifelongEducationInsightsSection.tsx",
+      "line": 172,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "b89c8e1dfe4dbceacf08",
+      "loose": "7b7b60a709b041add458",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/landing/ResearchPortfolioSection.tsx",
+      "line": 73,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "cc5f5d6018c1011395d0",
+      "loose": "5129c776683f75c807ca",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/landing/SejongFooter.tsx",
+      "line": 9,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "6bdd8b49b726cb7af796",
+      "loose": "a56f5eef4eab979ea2b2",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/components/landing/SejongHeroSection.tsx",
+      "line": 9,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "83c0f1d421fcad8030b9",
+      "loose": "b28f3981eb3fc645ca19",
+      "rule_id": "ARC-201",
+      "rule_version": 1,
+      "path": "src/components/landing/SejongHeroSection.tsx",
+      "line": 14,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "69496fe17a948be62759",
+      "loose": "fea3fffe96b6be585c89",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/layout/MobileGuard.tsx",
+      "line": 29,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "6cb2f731db52138af430",
+      "loose": "34f354120ba02e3bdc41",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/components/layout/MobileGuard.tsx",
+      "line": 40,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "444f402b4c203b7e9fca",
+      "loose": "0b1be466530177560ed7",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/hooks/useInAppBrowser.ts",
+      "line": 90,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "02cd1368ec7a1682413d",
+      "loose": "966550de2a2af26beaa7",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/hooks/useInAppBrowser.ts",
+      "line": 103,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "a2168a1bcd34841178a6",
+      "loose": "966550de2a2af26beaa7",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/hooks/useInAppBrowser.ts",
+      "line": 116,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "eb0fb7cf2890f8b30b55",
+      "loose": "6d3d436631cce5d2d19c",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 13,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "bd3a09ed54aaf922511d",
+      "loose": "05375966415e678240b5",
+      "rule_id": "IL-101",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 15,
+      "severity": "CRITICAL"
+    },
+    {
+      "fingerprint": "30b5842cb8a5c28b981a",
+      "loose": "d965a02de8748341d9e5",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 30,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "0d4e4386865212457383",
+      "loose": "60f4b339b988ac40a9bf",
+      "rule_id": "ARC-205",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 36,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "86964b770032f2755676",
+      "loose": "9c673f7210c827dc1e23",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 67,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "05f2b91b161f868e4e05",
+      "loose": "f81b3603571654916c1c",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 98,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "d415a9ac14aca6f31921",
+      "loose": "7620c2847476768af3c1",
+      "rule_id": "AI-112",
+      "rule_version": 1,
+      "path": "src/lib/auth.ts",
+      "line": 149,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "34a5e1db43e6c1a9b3fc",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 14,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "98f657736dff100ce9dd",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 20,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "9c62dbd3dd2aa9a2bb6b",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 26,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "7ece0704d5a404ea5672",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 32,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "1fb0ceb52247a5d8816e",
+      "loose": "7157434bb86928f2ca5a",
+      "rule_id": "IL-109",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 32,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "463a89e3ed1d9c431ca1",
+      "loose": "6bf1943c5f4c9b069fbc",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 38,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "ef6741cf492d06ff4547",
+      "loose": "81e1e7c075af85480fab",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/lib/get-news.ts",
+      "line": 63,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "9ebc33986891b370bd78",
+      "loose": "56b870a08ca91fc1975f",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/open-external-browser.ts",
+      "line": 4,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "34aee4be5aec9b0dce55",
+      "loose": "5c2175f6ad61c02a1486",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/lib/open-external-browser.ts",
+      "line": 58,
+      "severity": "HIGH"
+    },
+    {
+      "fingerprint": "e08d973bf780deb8ca28",
+      "loose": "83ac0d0f3d87085a8b44",
+      "rule_id": "TYP-301",
+      "rule_version": 1,
+      "path": "src/lib/prisma.ts",
+      "line": 3,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "9a8adbb5530448fbc8b9",
+      "loose": "76bef6da3c6d71f84624",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/lib/sejonglab-url.ts",
+      "line": 1,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "dc1011bfc48c7f731889",
+      "loose": "bbb5b850f8f9e84eeb88",
+      "rule_id": "AI-101",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 23,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "d027c1e695f83193e599",
+      "loose": "72b2645233baa5d0bb1d",
+      "rule_id": "AI-103",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 27,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "ec36c487f826196287aa",
+      "loose": "918b00519e7169a3cfe3",
+      "rule_id": "IL-307",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 45,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "7f0d26e5a6a23dc9e993",
+      "loose": "f01b3e1ed9c5d1edd587",
+      "rule_id": "IL-307",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 73,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "9c9693544ef8943d7d47",
+      "loose": "28d4945f840a4dec8ee2",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 93,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "f4b3580caf5e5070da9e",
+      "loose": "8443fed2895a0b34f107",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 120,
+      "severity": "LOW"
+    },
+    {
+      "fingerprint": "0c9450201def1158f788",
+      "loose": "8443fed2895a0b34f107",
+      "rule_id": "IL-301",
+      "rule_version": 1,
+      "path": "src/utils/fetchOuling.ts",
+      "line": 146,
+      "severity": "MEDIUM"
+    },
+    {
+      "fingerprint": "31f96a01e94a062d9f34",
+      "loose": "b0d4495d937076bd5a96",
+      "rule_id": "TYP-301",
+      "rule_version": 1,
+      "path": "tsconfig.json",
+      "line": 1,
+      "severity": "LOW"
+    }
+  ]
+}

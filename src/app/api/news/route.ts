@@ -133,40 +133,6 @@ function publisherQualityScore(source: string, link: string): number {
   return 0;
 }
 
-// 네이버 API 실패/결과 없음 시 노출되는 기본 5건(로컬/배포 동일하게 고정)
-const FALLBACK_NEWS: NewsItem[] = [
-  {
-    title: "범정부 생성형 AI 플랫폼 구축…'공공 AI법' 국회 본회의 통과",
-    source: "연합뉴스",
-    link: "https://www.yna.co.kr/view/AKR20260129138900530",
-    pubDate: new Date().toISOString(),
-  },
-  {
-    title: "생성형을 넘어 에이전트로…공공 행정 분야 AI 2.0 전환 박차",
-    source: "동아일보",
-    link: "https://www.donga.com/news/It/article/all/20260116/133171582/1",
-    pubDate: new Date().toISOString(),
-  },
-  {
-    title: "AI 기반 행정혁신 나선 관악구…주민체감형 스마트서비스 확충",
-    source: "연합뉴스",
-    link: "https://www.yna.co.kr/view/AKR20260303152200004",
-    pubDate: new Date().toISOString(),
-  },
-  {
-    title: "민원 답변부터 정책 결정까지…지자체 행정에 생성형 AI가 들어왔다",
-    source: "더포스트",
-    link: "http://www.thepostkorea.com/17160",
-    pubDate: new Date().toISOString(),
-  },
-  {
-    title: "데이터 기반 행정 활성화…공공부문 AI 활용 법적 기반 마련",
-    source: "연합뉴스",
-    link: "https://www.yna.co.kr/view/AKR20260129138900530",
-    pubDate: new Date().toISOString(),
-  },
-];
-
 type NaverNewsItem = {
   title?: string;
   originallink?: string;
@@ -223,12 +189,12 @@ export async function GET() {
     if (!clientId || !clientSecret) {
       return NextResponse.json(
         {
-          news: FALLBACK_NEWS,
+          news: [],
           updatedAt: new Date().toISOString(),
           error: true,
-          message: "네이버 뉴스 API 키가 설정되지 않아 기본 뉴스로 대체합니다. (.env.local: NAVER_CLIENT_ID/SECRET)",
+          message: "네이버 뉴스 API 키(NAVER_CLIENT_ID/SECRET)가 설정되지 않았습니다.",
         },
-        { status: 200 }
+        { status: 500 }
       );
     }
 
@@ -247,12 +213,15 @@ export async function GET() {
     });
 
     if (!res.ok) {
-      return NextResponse.json({
-        news: FALLBACK_NEWS,
-        updatedAt: new Date().toISOString(),
-        error: true,
-        message: `네이버 뉴스 API 호출 실패 (HTTP ${res.status})`,
-      });
+      return NextResponse.json(
+        {
+          news: [],
+          updatedAt: new Date().toISOString(),
+          error: true,
+          message: `네이버 뉴스 API 호출 실패 (HTTP ${res.status})`,
+        },
+        { status: res.status }
+      );
     }
 
     const data = (await res.json()) as NaverNewsResponse;
@@ -291,10 +260,10 @@ export async function GET() {
 
     if (news.length === 0) {
       return NextResponse.json({
-        news: FALLBACK_NEWS,
+        news: [],
         updatedAt: new Date().toISOString(),
         error: false,
-        message: "뉴스 결과가 없어 기본 공지로 대체합니다.",
+        message: "관련된 실제 뉴스 기사를 찾지 못했습니다.",
       });
     }
 
@@ -305,11 +274,14 @@ export async function GET() {
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    return NextResponse.json({
-      news: FALLBACK_NEWS,
-      updatedAt: new Date().toISOString(),
-      error: true,
-      message: `뉴스 API 처리 중 예외가 발생했습니다: ${msg}`,
-    });
+    return NextResponse.json(
+      {
+        news: [],
+        updatedAt: new Date().toISOString(),
+        error: true,
+        message: `뉴스 API 처리 중 예외가 발생했습니다: ${msg}`,
+      },
+      { status: 500 }
+    );
   }
 }

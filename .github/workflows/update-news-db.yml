@@ -1,0 +1,71 @@
+name: Update Sejong News 15-Year RAG Database
+
+on:
+  schedule:
+    # 매주 월요일 오전 6시 (KST, UTC+9) = 일요일 21:00 UTC 자동 실행
+    - cron: "0 21 * * 0"
+  workflow_dispatch:
+    inputs:
+      naver_display:
+        description: "쿼리당 네이버 뉴스 수집 개수"
+        required: false
+        default: "5"
+      google_limit:
+        description: "쿼리당 구글 뉴스 RSS 수집 개수"
+        required: false
+        default: "3"
+
+permissions:
+  contents: write
+
+jobs:
+  crawl-and-upsert-news:
+    name: Crawl Real Sejong News & Generate Gemini Embeddings
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run 100% Real Sejong News Crawler & Embedding Upsert
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          NAVER_NEWS_CLIENT_ID: ${{ secrets.NAVER_NEWS_CLIENT_ID }}
+          NAVER_NEWS_CLIENT_SECRET: ${{ secrets.NAVER_NEWS_CLIENT_SECRET }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        run: |
+          NAVER_COUNT="${{ github.event.inputs.naver_display || '5' }}"
+          GOOGLE_COUNT="${{ github.event.inputs.google_limit || '3' }}"
+          python scripts/crawl_real_sejong_news.py --naver-display "$NAVER_COUNT" --google-limit "$GOOGLE_COUNT"
+
+      - name: Check for updates in sejong_news_10years.json
+        id: git_check
+        run: |
+          git status --porcelain src/data/sejong_news_10years.json
+          if [[ -n $(git status --porcelain src/data/sejong_news_10years.json) ]]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and Push updated news database (Triggers Vercel Auto-Deploy)
+        if: steps.git_check.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/sejong_news_10years.json
+          TIMESTAMP_KST=$(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')
+          git commit -m "chore(data): auto-upsert Sejong real news & embeddings ($TIMESTAMP_KST)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+

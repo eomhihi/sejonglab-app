@@ -6,28 +6,22 @@ import { BenefitsSection } from "@/components/landing/BenefitsSection";
 import { SejongIndexSection } from "@/components/landing/SejongIndexSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { SejongFooter } from "@/components/landing/SejongFooter";
-import { NewsTicker } from "@/components/landing/NewsTicker";
+import { SejongNewsChat } from "@/components/chat/SejongNewsChat";
 import { LifelongEducationInsightsSection } from "@/components/landing/LifelongEducationInsightsSection";
 import { ResearchPortfolioSection } from "@/components/landing/ResearchPortfolioSection";
-import { getNews } from "@/lib/get-news";
 import { TopLogoBar } from "@/components/layout/TopLogoBar";
 import { isAdminEmail } from "@/lib/admin";
 
-/** 패널 인사이트 섹션 노출 여부 — 다시 켤 때 true로 변경 */
 const SHOW_PANEL_INSIGHTS_SECTION = false;
 
-/** 뉴스는 서버에서 주 1회 갱신(revalidate=604800) */
-export const revalidate = 604800;
-
 export default async function LandingPage() {
-  const [newsResult, session] = await Promise.all([getNews(), getServerSession(authOptions)]);
+  const session = await getServerSession(authOptions);
   const isAdmin = isAdminEmail(session?.user?.email);
 
   return (
-    <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden relative">
       <TopLogoBar />
-      <NewsTicker initialNews={newsResult.news} error={newsResult.error} message={newsResult.message} />
-      <main className="flex-1 mt-28 sm:mt-24 md:mt-0">
+      <main className="flex-1 mt-28 sm:mt-24">
         <SejongHeroSection />
         <SejongFeatureCards />
         <BenefitsSection />
@@ -37,6 +31,7 @@ export default async function LandingPage() {
         <CTASection />
       </main>
       <SejongFooter isAdmin={isAdmin} />
+      <SejongNewsChat />
     </div>
   );
 }
