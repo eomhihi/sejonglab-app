@@ -333,8 +333,8 @@ function isRedundantWithSelected(
  */
 function getPreferredModelCandidates(): string[] {
   const savedModel = NEWS_CORPUS.find((a) => a.embeddingModel)?.embeddingModel;
-  const defaults = ["gemini-embedding-001", "text-embedding-004"];
-  if (savedModel) {
+  const defaults = ["gemini-embedding-001"];
+  if (savedModel && savedModel !== "text-embedding-004") {
     return [savedModel, ...defaults.filter((m) => m !== savedModel)];
   }
   return defaults;
